@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Button, Card, CardContent, TextField, Typography } from '@mui/material'
 import { Box } from '@mui/system'
-import useForm from '../hooks/useForm'
+import useForm from '../../components/hooks/useForm'
 import { useNavigate } from 'react-router'
 import { Grid } from '@mui/material'
 import axios from 'axios'
@@ -29,12 +29,11 @@ function Center(props) {
     )
 }
 
-export default function Login() {
+export default function LoginPage() {
     const navigate = useNavigate()
 
     const {
         values,
-        setValues,
         errors,
         setErrors,
         handleInputChange
@@ -43,9 +42,9 @@ export default function Login() {
     const validate = () => {
         let temp = {}
         temp.email = (/\S+@\S+\.\S+/).test(values.email) ? "" : "Некоректный адрес"
-        temp.password = values.password != "" ? "" : "Это обязательное поле"
+        temp.password = values.password !== "" ? "" : "Это обязательное поле"
         setErrors(temp)
-        return Object.values(temp).every(x => x == "")
+        return Object.values(temp).every(x => x === "")
     }
 
     const login = e => {

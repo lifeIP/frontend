@@ -1,8 +1,8 @@
 import React from 'react'
 import { Button, Card, CardContent, TextField, Typography } from '@mui/material'
 import { Box } from '@mui/system'
-import useForm from '../hooks/useForm'
-import { redirect, useNavigate } from 'react-router'
+import useForm from '../../components/hooks/useForm'
+import { useNavigate } from 'react-router'
 import { Grid } from '@mui/material'
 import axios from 'axios'
 
@@ -28,12 +28,11 @@ function Center(props) {
     )
 }
 
-export default function Registration() {
+export default function RegistrationPage() {
     const navigate = useNavigate()
 
     const {
         values,
-        setValues,
         errors,
         setErrors,
         handleInputChange
@@ -42,10 +41,10 @@ export default function Registration() {
     const validate = () => {
         let temp = {}
         temp.email = (/\S+@\S+\.\S+/).test(values.email) ? "" : "Некоректный адрес"
-        temp.password = values.password != "" ? "" : "Это обязательное поле"
-        temp.password2 = values.password == values.password2 ? "" : "Пароль не совпадает"
+        temp.password = values.password !== "" ? "" : "Это обязательное поле"
+        temp.password2 = values.password === values.password2 ? "" : "Пароль не совпадает"
         setErrors(temp);
-        return Object.values(temp).every(x => x == "")
+        return Object.values(temp).every(x => x === "")
     }
 
     const registration = e => {

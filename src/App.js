@@ -3,11 +3,18 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useState } from 'react';
 
-
+import { useCookies } from 'react-cookie';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import Login from "./components/Form/Login";
-import Registration from "./components/Form/Registration";
+
+import MyHeader from "./components/Header/MyHeader";
+import HomePage from "./Pages/Home/HomePage";
+import AboutPage from "./Pages/About/AboutPage";
+import ProfilePage from "./Pages/Profile/ProfilePage";
+import WelcomePage from "./Pages/Welcome/WelcomePage";
+
+import LoginPage from "./Pages/Login/LoginPage";
+import RegistrationPage from "./Pages/Registration/RegistrationPage";
 
 const darkTheme = createTheme({
   palette: {
@@ -22,30 +29,75 @@ const lightTheme = createTheme({
 });
 
 function App() {
-  const [theme, setTheme] = useState(darkTheme);
+  const [cookies, setCookie] = useCookies(['my_theme']);
 
+  const [selectedTheme, setSelectedTheme] = useState(() => {
+    if (cookies.my_theme === undefined) {
+      setCookie('my_theme', true, { path: '/' });
+      return lightTheme;
+    }
+    else {
+      if (cookies.my_theme) return lightTheme;
+      else return darkTheme;
+    }
+  });
+
+  function changeTheme() {
+    if (selectedTheme === lightTheme) setSelectedTheme(darkTheme);
+    else setSelectedTheme(lightTheme);
+    setCookie('my_theme', selectedTheme === lightTheme ? false : true, { path: '/' });
+  }
+
+  const [header] = useState(0);
+  function RenderHeader() {
+    if (header) {
+      return <MyHeader selectedTheme={selectedTheme === lightTheme ? true : false} changeTheme={changeTheme} />
+    }
+    else {
+      return <MyHeader selectedTheme={selectedTheme === lightTheme ? true : false} changeTheme={changeTheme} />
+    }
+  }
 
   return (
-    <div>
-      <ThemeProvider theme={theme}>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={
-              <div>
-                <Login />
-              </div>}
-            />
-            <Route path="/registration" element={
-              <div>
-                <Registration />
-              </div>
-            } />
-            
-          </Routes>
-        </BrowserRouter>
-        <CssBaseline />
-      </ThemeProvider>
-    </div>
+    <ThemeProvider theme={selectedTheme}>
+      <BrowserRouter>
+        <RenderHeader />
+        <Routes>
+          <Route path="/" element={
+            <div>
+              <HomePage />
+            </div>}
+          />
+          <Route path="/welcome" element={
+            <div>
+              <WelcomePage />
+            </div>}
+          />
+          <Route path="/login" element={
+            <div>
+              <LoginPage />
+            </div>}
+          />
+          <Route path="/registration" element={
+            <div>
+              <RegistrationPage />
+            </div>
+          } />
+          <Route path="/about" element={
+            <div>
+              <AboutPage />
+            </div>}
+          />
+          <Route path="/profile" element={
+            <div>
+              <ProfilePage />
+            </div>}
+          />
+
+        </Routes>
+      </BrowserRouter>
+      <CssBaseline />
+    </ThemeProvider>
   );
 }
 
