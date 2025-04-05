@@ -5,7 +5,7 @@ import useForm from '../../components/hooks/useForm'
 import { useNavigate } from 'react-router'
 import { Grid } from '@mui/material'
 import axios from 'axios'
-
+import settings from "../../settings.json"
 
 const getFreshModel = () => ({
     name: '',
@@ -31,7 +31,7 @@ function Center(props) {
 
 export default function LoginPage() {
     const navigate = useNavigate()
-
+ 
     const {
         values,
         errors,
@@ -50,10 +50,13 @@ export default function LoginPage() {
     const login = e => {
         e.preventDefault();
         if (validate()) {
-            axios.post("http://localhost:8000/login/", values)
+            axios.post(settings.server.addr + "/login/", values)
                 .then(res => {
                     console.log(res);
-                    localStorage.setItem('token', res.data.token);
+                    localStorage.setItem('access_token', res.data.access_token);
+                    localStorage.setItem('refresh_token', res.data.refresh_token);
+                    localStorage.setItem('Authorization', "Bearer " + res.data.refresh_token);
+                    axios.defaults.headers.common['Authorization'] = "Bearer " + res.data.access_token
                     navigate("/")
                 })
                 .catch(err => {

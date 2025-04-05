@@ -5,7 +5,7 @@ import useForm from '../../components/hooks/useForm'
 import { useNavigate } from 'react-router'
 import { Grid } from '@mui/material'
 import axios from 'axios'
-
+import settings from "../../settings.json"
 
 const getFreshModel = () => ({
     name: '',
@@ -50,7 +50,7 @@ export default function RegistrationPage() {
     const registration = e => {
         e.preventDefault();
         if (validate())
-            axios.post("http://localhost:8000/sign-up/", {"email":values.email, "username": values.name, "password": values.password})
+            axios.post( settings.server.addr + "/sign-up/", {"email":values.email, "username": values.name, "password": values.password})
                 .then(res => {
                     console.log(res);
                     navigate("/login")
