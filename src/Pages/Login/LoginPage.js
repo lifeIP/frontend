@@ -8,10 +8,7 @@ import axios from 'axios'
 import settings from "../../settings.json"
 
 const getFreshModel = () => ({
-    name: '',
     email: '',
-    telephone: '',
-    date_of_birth: '',
     password: '',
 })
 
