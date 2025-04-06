@@ -1,8 +1,7 @@
 import "./App.css";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { useState } from 'react';
-
+import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
@@ -15,16 +14,40 @@ import WelcomePage from "./Pages/Welcome/WelcomePage";
 
 import LoginPage from "./Pages/Login/LoginPage";
 import RegistrationPage from "./Pages/Registration/RegistrationPage";
+import axios from "axios";
 
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-  },
-});
+
 
 const lightTheme = createTheme({
   palette: {
     mode: 'light',
+    primary: {
+      main: '#3f51b5',
+    },
+    secondary: {
+      main: '#f50057',
+    },
+    background: {
+      paper: '#fffbf1',
+      default: '#e0dede',
+    },
+  },
+});
+
+
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#3f51b5',
+    },
+    secondary: {
+      main: '#f50057',
+    },
+    background: {
+      default: '#101010',
+    },
   },
 });
 
@@ -57,6 +80,7 @@ function App() {
       return <MyHeader selectedTheme={selectedTheme === lightTheme ? true : false} changeTheme={changeTheme} />
     }
   }
+
 
   return (
     <ThemeProvider theme={selectedTheme}>

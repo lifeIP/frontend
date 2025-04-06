@@ -8,7 +8,8 @@ import axios from 'axios'
 import settings from "../../settings.json"
 
 const getFreshModel = () => ({
-    name: '',
+    first_name: '',
+    last_name: '',
     email: '',
     password: '',
     password2: '',
@@ -20,7 +21,7 @@ function Center(props) {
             direction="column"
             alignItems="center"
             justifyContent="center"
-            sx={{ minHeight: '100vh' }}>
+            sx={{ minHeight: '80vh' }}>
             <Grid item xs={1}>
                 {props.children}
             </Grid>
@@ -50,7 +51,13 @@ export default function RegistrationPage() {
     const registration = e => {
         e.preventDefault();
         if (validate())
-            axios.post( settings.server.addr + "/sign-up/", {"email":values.email, "username": values.name, "password": values.password})
+            axios.post(settings.server.addr + "/sign-up/", { 
+        "email": values.email, 
+        "first_name": values.first_name,
+        "last_name": values.last_name, 
+        "password": values.password,
+        "patronymic": ""
+    })
                 .then(res => {
                     console.log(res);
                     navigate("/login")
@@ -76,12 +83,20 @@ export default function RegistrationPage() {
                         <form noValidate autoComplete="off" onSubmit={registration}>
                             <TextField
                                 label="Имя"
-                                name="name"
-                                type="name"
-                                value={values.name}
+                                name="first_name"
+                                type="first_name"
+                                value={values.first_name}
                                 onChange={handleInputChange}
                                 variant="outlined"
-                                {...(errors.name && { error: true, helperText: errors.name })} />
+                                {...(errors.first_name && { error: true, helperText: errors.first_name })} />
+                            <TextField
+                                label="Фамилия"
+                                name="last_name"
+                                type="last_name"
+                                value={values.last_name}
+                                onChange={handleInputChange}
+                                variant="outlined"
+                                {...(errors.last_name && { error: true, helperText: errors.last_name })} />
                             <TextField
                                 label="Ваша почта*"
                                 name="email"
