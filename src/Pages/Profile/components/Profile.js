@@ -20,12 +20,35 @@ import {
 
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 
+
+function sendImageOnServer(path = "/upload-image-on-profile/", event){
+    var formData = new FormData();
+    formData.append(
+        "file",
+        event.target.files[0],
+        event.target.files[0].name
+    );
+    const headers = { 'Content-Type': event.target.files[0].type }
+    axios.post(settings.server.addr + path, formData, headers)
+        .then(
+            res => {
+                console.log(res);
+            }
+        )
+        .catch(
+            err => {
+                console.log(err);
+            }
+        );
+}
+
 export default function Profile() {
     const [is_load, setLoad] = useState(false);
     const [image, setImage] = useState();
 
     const fileInputRef = useRef();
     const handleChange = (event) => {
+        sendImageOnServer("/upload-image-on-profile/", event)
         setLoad(false);
     }
 
@@ -40,9 +63,13 @@ export default function Profile() {
     )
 
     useEffect(() => {
+        if (is_load) {
+            return
+        }
+
         axios.get(settings.server.addr + "/get-image-on-profile/" + localStorage.getItem("user_id"), {
             responseType: "arraybuffer"
-          })
+        })
             .then(res => {
                 const base64 = btoa(
                     new Uint8Array(res.data).reduce(
@@ -51,26 +78,24 @@ export default function Profile() {
                     )
                 )
                 setImage(base64)
-
-                axios.get(settings.server.addr + "/user_info/")
-                    .then(res => {
-                        setData({
-                            first_name: res.data.first_name,
-                            last_name: res.data.last_name,
-                            patronymic: res.data.patronymic,
-                            email: res.data.email,
-                            is_admin: res.data.is_admin
-                        })
-                        setLoad(true);
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    })
             })
             .catch(err => {
                 console.log(err);
             })
-
+        axios.get(settings.server.addr + "/user_info/")
+            .then(res => {
+                setData({
+                    first_name: res.data.first_name,
+                    last_name: res.data.last_name,
+                    patronymic: res.data.patronymic,
+                    email: res.data.email,
+                    is_admin: res.data.is_admin
+                })
+                setLoad(true);
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }, [is_load]);
 
 
