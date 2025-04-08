@@ -21,11 +21,14 @@ import {
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 
 export default function Profile() {
-    const [is_load, setLoad] = useState(false)
+    const [is_load, setLoad] = useState(false);
+    const [image, setImage] = useState();
+
     const fileInputRef = useRef();
     const handleChange = (event) => {
-        // do something with event data
+        setLoad(false);
     }
+
     const [data, setData] = useState(
         {
             first_name: "",
@@ -35,36 +38,56 @@ export default function Profile() {
             is_admin: ""
         }
     )
+
     useEffect(() => {
-        axios.get(settings.server.addr + "/user_info/")
+        axios.get(settings.server.addr + "/get-image-on-profile/" + localStorage.getItem("user_id"), {
+            responseType: "arraybuffer"
+          })
             .then(res => {
-                setData({
-                    first_name: res.data.first_name,
-                    last_name: res.data.last_name,
-                    patronymic: res.data.patronymic,
-                    email: res.data.email,
-                    is_admin: res.data.is_admin
-                })
-                setLoad(true);
+                const base64 = btoa(
+                    new Uint8Array(res.data).reduce(
+                        (data, byte) => data + String.fromCharCode(byte),
+                        ''
+                    )
+                )
+                setImage(base64)
+
+                axios.get(settings.server.addr + "/user_info/")
+                    .then(res => {
+                        setData({
+                            first_name: res.data.first_name,
+                            last_name: res.data.last_name,
+                            patronymic: res.data.patronymic,
+                            email: res.data.email,
+                            is_admin: res.data.is_admin
+                        })
+                        setLoad(true);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
             })
             .catch(err => {
                 console.log(err);
             })
-    }, []);
+
+    }, [is_load]);
+
+
     return (
         <Card sx={{ borderRadius: "12px", width: "20vw", height: "45vh" }}>
 
             {!is_load ? (
                 <Skeleton sx={{ height: "25vh" }} animation="wave" variant="rectangular" />
             ) : (
-                <CardActionArea onClick={()=>fileInputRef.current.click()}>
+                <CardActionArea onClick={() => fileInputRef.current.click()}>
                     <CardMedia
                         sx={{ height: "25vh", resize: "horizontal" }}
-                        image="https://orthomoda.ru/bitrix/templates/.default/img/no-photo.jpg"
+                        src={`data:image/jpeg;charset=utf-8;base64,${image}`}
                         title="user"
                         component="img"
                     />
-                    <input onChange={handleChange} multiple={false} ref={fileInputRef} type='file' accept=".jpg, .png, .jpeg"  hidden/>
+                    <input onChange={handleChange} multiple={false} ref={fileInputRef} type='file' accept=".jpg, .png, .jpeg" hidden />
                 </CardActionArea>
             )}
             <CardContent>

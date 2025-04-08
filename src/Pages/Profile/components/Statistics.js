@@ -13,7 +13,7 @@ import { PieChart } from '@mui/x-charts';
 
 
 export default function Statistics() {
-    const [is_load, setLoad] = useState(false)  
+    const [is_load, setLoad] = useState(true)  
     return (
         <Card sx={{ borderRadius: "12px", width: "30vw", height: "45vh" }}>
             <CardContent>

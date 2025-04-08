@@ -52,7 +52,9 @@ export default function LoginPage() {
                     console.log(res);
                     localStorage.setItem('access_token', res.data.access_token);
                     localStorage.setItem('refresh_token', res.data.refresh_token);
-                    localStorage.setItem('Authorization', "Bearer " + res.data.refresh_token);
+                    localStorage.setItem('user_id', res.data.user_id);
+
+                    localStorage.setItem('Authorization', "Bearer " + res.data.access_token);
                     axios.defaults.headers.common['Authorization'] = "Bearer " + res.data.access_token
                     navigate("/")
                 })
