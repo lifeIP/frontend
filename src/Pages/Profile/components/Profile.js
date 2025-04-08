@@ -21,7 +21,7 @@ import {
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 
 
-function sendImageOnServer(path = "/upload-image-on-profile/", event){
+function sendImageOnServer(path = "/upload-image-on-profile/", event, setLoad){
     var formData = new FormData();
     formData.append(
         "file",
@@ -33,6 +33,7 @@ function sendImageOnServer(path = "/upload-image-on-profile/", event){
         .then(
             res => {
                 console.log(res);
+                setLoad(false);
             }
         )
         .catch(
@@ -48,8 +49,7 @@ export default function Profile() {
 
     const fileInputRef = useRef();
     const handleChange = (event) => {
-        sendImageOnServer("/upload-image-on-profile/", event)
-        setLoad(false);
+        sendImageOnServer("/upload-image-on-profile/", event, setLoad)
     }
 
     const [data, setData] = useState(
