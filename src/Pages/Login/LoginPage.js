@@ -55,7 +55,8 @@ export default function LoginPage() {
                     localStorage.setItem('user_id', res.data.user_id);
 
                     localStorage.setItem('Authorization', "Bearer " + res.data.access_token);
-                    axios.defaults.headers.common['Authorization'] = "Bearer " + res.data.access_token
+                    
+                    axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
                     navigate("/")
                 })
                 .catch(err => {

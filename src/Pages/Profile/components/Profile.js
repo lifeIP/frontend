@@ -1,5 +1,6 @@
 import settings from "../../../settings.json"
 import axios from 'axios'
+import { useNavigate } from 'react-router'
 
 import React, {
     useEffect,
@@ -21,36 +22,99 @@ import {
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 
 
-function sendImageOnServer(path = "/upload-image-on-profile/", event, setLoad){
-    var formData = new FormData();
-    formData.append(
-        "file",
-        event.target.files[0],
-        event.target.files[0].name
-    );
-    const headers = { 'Content-Type': event.target.files[0].type }
-    axios.post(settings.server.addr + path, formData, headers)
-        .then(
-            res => {
-                console.log(res);
-                setLoad(false);
+function ProfileImage() {
+    const navigate = useNavigate()
+    const [isLoading, setLoading] = useState(true);
+    const [image, setImage] = useState();
+
+    const fileInputRef = useRef();
+
+    const handleChange = async (event) => {
+        try {
+            const formData = new FormData(); // Создаем объект FormData для отправки файла
+            formData.append(
+                "file",
+                event.target.files[0],
+                event.target.files[0].name
+            );
+            
+            await sendImageOnServer('/upload-image-on-profile/', formData); // Отправка файла на сервер
+            
+            setLoading(true);
+        } catch (error) {
+            console.error(error);
+            alert('Произошла ошибка при загрузке фото');
+        }
+    };
+
+    const sendImageOnServer = async (url, formData) => {
+        try {
+            axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+            const res = await axios.post(`${settings.server.addr}${url}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            if (res.status === 200 || res.status === 201) {
+                console.log('Файл успешно отправлен!');
+            } else {
+                throw new Error('Ошибка при отправке файла');
             }
-        )
-        .catch(
-            err => {
+        } catch (err) {
+            console.error(err);
+            throw err;
+        }
+    };
+
+    
+
+    useEffect(() => {
+        if(isLoading!=false){
+        
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+        axios.get(`${settings.server.addr}/get-image-on-profile/${localStorage.getItem('user_id')}?t=${Date.now()}`, {
+            responseType: "arraybuffer"
+        })
+            .then(res => {
+                const base64 = btoa(
+                    new Uint8Array(res.data).reduce(
+                        (data, byte) => data + String.fromCharCode(byte),
+                        ''
+                    )
+                )
+                setImage(`data:image/jpeg;charset=utf-8;base64,${base64}`);
+                setLoading(false);
+            })
+            .catch(err => {
                 console.log(err);
-            }
-        );
+            })
+        }
+    }, [isLoading]);
+
+
+    
+    if (isLoading) {
+        return <Skeleton sx={{ height: "25vh" }} animation="wave" variant="rectangular" />;
+    }
+
+    return (
+        <CardActionArea onClick={() => fileInputRef.current.click()}>
+            <CardMedia
+                key={image}
+                sx={{ height: "25vh", resize: "horizontal" }}
+                image={image}
+                title="user"
+                component="img"
+            />
+            <input onChange={handleChange} multiple={false} ref={fileInputRef} type='file' accept=".jpg, .png, .jpeg" hidden />
+        </CardActionArea>
+    );
 }
 
 export default function Profile() {
     const [is_load, setLoad] = useState(false);
-    const [image, setImage] = useState();
 
-    const fileInputRef = useRef();
-    const handleChange = (event) => {
-        sendImageOnServer("/upload-image-on-profile/", event, setLoad)
-    }
 
     const [data, setData] = useState(
         {
@@ -67,21 +131,7 @@ export default function Profile() {
             return
         }
 
-        axios.get(settings.server.addr + "/get-image-on-profile/" + localStorage.getItem("user_id"), {
-            responseType: "arraybuffer"
-        })
-            .then(res => {
-                const base64 = btoa(
-                    new Uint8Array(res.data).reduce(
-                        (data, byte) => data + String.fromCharCode(byte),
-                        ''
-                    )
-                )
-                setImage(base64)
-            })
-            .catch(err => {
-                console.log(err);
-            })
+
         axios.get(settings.server.addr + "/user_info/")
             .then(res => {
                 setData({
@@ -101,20 +151,7 @@ export default function Profile() {
 
     return (
         <Card sx={{ borderRadius: "12px", width: "20vw", height: "45vh" }}>
-
-            {!is_load ? (
-                <Skeleton sx={{ height: "25vh" }} animation="wave" variant="rectangular" />
-            ) : (
-                <CardActionArea onClick={() => fileInputRef.current.click()}>
-                    <CardMedia
-                        sx={{ height: "25vh", resize: "horizontal" }}
-                        src={`data:image/jpeg;charset=utf-8;base64,${image}`}
-                        title="user"
-                        component="img"
-                    />
-                    <input onChange={handleChange} multiple={false} ref={fileInputRef} type='file' accept=".jpg, .png, .jpeg" hidden />
-                </CardActionArea>
-            )}
+            <ProfileImage />
             <CardContent>
                 {!is_load ? (
                     <Skeleton animation="wave" variant="rectangular" />
