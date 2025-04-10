@@ -1,8 +1,8 @@
-import { 
-    Box, 
-    Card,  
-    CardContent, 
-    Grid, 
+import {
+    Box,
+    Card,
+    CardContent,
+    Grid,
     Typography,
 } from '@mui/material'
 
@@ -10,37 +10,21 @@ import React, { useEffect } from 'react';
 import Profile from './components/Profile'
 import Statistics from './components/Statistics';
 import History from './components/History';
+import Center from '../../components/Center/Center';
+import Hat from '../../components/Hat/Hat';
 
-
-
-function Center(props) {
-    return (
-        <Grid container
-            direction="column"
-            alignItems="center"
-            justifyContent="center"
-        >
-            <Grid item xs={1}>
-                {props.children}
-            </Grid>
-        </Grid>
-    )
-}
 
 export default function ProfilePage() {
 
     return (
 
         <Center>
-            <Box sx={{ display: "flex", justifyContent: "center", marginBottom: '1.85vh' }}>
-                <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px" }}>
-                    <CardContent>
-                        <Typography gutterBottom variant="h3" component="div" textAlign="center">
-                            Профиль
-                        </Typography>
-                    </CardContent>
-                </Card>
-            </Box>
+            <Hat>
+                <Typography gutterBottom variant="h3" component="div" textAlign="center">
+                    Профиль
+                </Typography>
+            </Hat>
+
             <Grid container spacing={1}>
                 <Grid size={4.88}>
                     <Profile />
