@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Card, CardMedia, CardContent, Typography } from '@mui/material';
+import { Card, CardMedia} from '@mui/material';
 
 
 export default function ImageView({ id }) {
@@ -18,18 +18,9 @@ export default function ImageView({ id }) {
 
     return (
         <Card sx={{ width: "51.05vw" }}>
-            <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                    Название Карточки
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                    Описание карточки
-                </Typography>
-            </CardContent>
-
             <CardMedia
                 component="img"
-                image={"https://static1.cbrimages.com/wordpress/wp-content/uploads/2025/04/1e85f85b-ec22-4aff-9ad7-998b018ddd25.jpeg"}
+                image={"https://avatars.mds.yandex.net/i?id=f7454bc3badcefdfbef33cfd38fdc121_l-5194719-images-thumbs&n=13"}
                 alt="Фотография"
                 sx={{
                     width: '100%',   // Ширина фотографии — 100% ширины контейнера
