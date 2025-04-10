@@ -15,7 +15,7 @@ import WelcomePage from "./Pages/Welcome/WelcomePage";
 import LoginPage from "./Pages/Login/LoginPage";
 import RegistrationPage from "./Pages/Registration/RegistrationPage";
 import axios from "axios";
-import WorkingField from "./Pages/WorkingField/WorkingField";
+import WorkingPage from "./Pages/WorkingField/WorkingPage";
 
 
 
@@ -95,7 +95,7 @@ function App() {
           />
           <Route path="/working-field" element={
             <div>
-              <WorkingField/>
+              <WorkingPage/>
             </div>}
           />
           <Route path="/welcome" element={
