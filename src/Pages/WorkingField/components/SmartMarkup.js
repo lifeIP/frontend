@@ -3,6 +3,7 @@ import React from 'react';
 import ImageView from './ImageView';
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 import Actions from './Actions';
+import DrawRectangle from './DrawRectangle/DrawRectangle';
 
 
 export default function SmartMarkup() {
@@ -11,6 +12,8 @@ export default function SmartMarkup() {
             <TransformWrapper>
                 <TransformComponent>
                     <ImageView />
+                    
+                    {/* <DrawRectangle/> */}
                 </TransformComponent>
             </TransformWrapper>
             <Actions />
