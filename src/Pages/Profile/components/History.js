@@ -9,7 +9,7 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
 
 export default function History() {
-    const [is_load, setLoad] = useState(true)
+    const [is_load, setLoad] = useState(false)
     return (
         <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px" }}>
             <CardContent>

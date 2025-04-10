@@ -15,6 +15,7 @@ import WelcomePage from "./Pages/Welcome/WelcomePage";
 import LoginPage from "./Pages/Login/LoginPage";
 import RegistrationPage from "./Pages/Registration/RegistrationPage";
 import axios from "axios";
+import WorkingField from "./Pages/WorkingField/WorkingField";
 
 
 
@@ -90,6 +91,11 @@ function App() {
           <Route path="/" element={
             <div>
               <HomePage />
+            </div>}
+          />
+          <Route path="/working-field" element={
+            <div>
+              <WorkingField/>
             </div>}
           />
           <Route path="/welcome" element={
