@@ -1,7 +1,6 @@
 import { Box, Button, CardActionArea, CardActions, CardContent, Grid, Typography } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import Card from '@mui/material/Card';
-import ImageView from './components/ImageView';
 import SmartMarkup from './components/SmartMarkup';
 import Center from '../../components/Center/Center'
 import Hat from '../../components/Hat/Hat';

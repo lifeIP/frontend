@@ -1,6 +1,5 @@
 import { Box, Button, Card, CardActionArea, CardActions, CardContent, Grid, Typography } from '@mui/material';
 import React from 'react';
-import ImageView from './ImageView';
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 import Actions from './Actions';
 import CanvasOverImage from './CanvasOverImage';
