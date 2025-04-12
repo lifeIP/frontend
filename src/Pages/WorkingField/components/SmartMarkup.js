@@ -3,7 +3,7 @@ import React from 'react';
 import ImageView from './ImageView';
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 import Actions from './Actions';
-import DrawRectangle from './DrawRectangle/DrawRectangle';
+import CanvasOverImage from './CanvasOverImage';
 
 
 export default function SmartMarkup() {
@@ -11,9 +11,7 @@ export default function SmartMarkup() {
         <Card sx={{ width: "51.05vw" }}>
             <TransformWrapper>
                 <TransformComponent>
-                    <ImageView />
-                    
-                    {/* <DrawRectangle/> */}
+                        <CanvasOverImage/>
                 </TransformComponent>
             </TransformWrapper>
             <Actions />

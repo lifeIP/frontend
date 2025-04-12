@@ -11,11 +11,11 @@ export default function Actions() {
         <Box sx={{
             position: 'fixed',  // Закрепляем блок
             left: "76.5%",             // Слева от экрана
-            top: "25.5%",          // Отступ снизу 20 пикселей
+            top: "24%",          // Отступ снизу 20 пикселей
             zIndex: 10,          // Убедимся, что блок поверх остальных
             display: "flex",
             justifyContent: "left",
-            height: '12%'
+            // height: '12%'
         }}>
             <Card sx={{ borderRadius: "12px" }}>
                 <CardActions >
