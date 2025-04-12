@@ -1,7 +1,6 @@
 import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Grid, IconButton, Typography } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
-import CanvasOverImage from './CanvasOverImage';
 
 
 import RectangleOutlinedIcon from '@mui/icons-material/RectangleOutlined';
@@ -26,7 +25,10 @@ export default function SmartMarkup() {
             const relativeX = event.clientX - rect.left;
             const relativeY = event.clientY - rect.top;
     
-            setMousePosition({ x: relativeX, y: relativeY });
+            if (relativeX > 0 && relativeX < canvasSize.width && relativeY > 0 && relativeY < canvasSize.height){
+                setMousePosition({ x: relativeX, y: relativeY });    
+            }
+            
         };
     
     
@@ -131,11 +133,13 @@ export default function SmartMarkup() {
 
     return (
         <Card sx={{ width: "51.05vw" }}>
+            <Box>
             <TransformWrapper >
                 <TransformComponent>
                     <CanvasOverImage />
                 </TransformComponent>
             </TransformWrapper>
+            </Box>
             <Actions />
         </Card>
     );
