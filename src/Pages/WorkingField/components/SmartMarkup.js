@@ -1,6 +1,11 @@
 import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Grid, IconButton, Typography } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
-import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
+
+import {
+    TransformWrapper,
+    TransformComponent,
+    useControls
+} from "react-zoom-pan-pinch";
 
 
 import RectangleOutlinedIcon from '@mui/icons-material/RectangleOutlined';
@@ -11,12 +16,15 @@ import PanToolOutlinedIcon from '@mui/icons-material/PanToolOutlined';
 export default function SmartMarkup() {
     const [stateEditing, setStateEditing] = useState(true);
 
-    const CanvasOverImage = () => {
+
+    const CanvasOverImage = ({ currentScale, currentPosition }) => {
         const imageRef = useRef(null);
         const canvasRef = useRef(null);
 
         const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
         const [canvasSize, setCanvasSize] = useState({ width: 2000, height: 2000 });
+        // const {  } = useControls();
+
 
         const handleMouseMove = (event) => {
             if (!canvasRef.current) return;
@@ -25,10 +33,15 @@ export default function SmartMarkup() {
             const relativeX = event.clientX - rect.left;
             const relativeY = event.clientY - rect.top;
 
-            if (relativeX > 0 && relativeX < canvasSize.width && relativeY > 0 && relativeY < canvasSize.height) {
-                setMousePosition({ x: relativeX, y: relativeY });
-            }
+            
 
+            let x_pos = relativeX / currentScale;
+            let y_pos = relativeY / currentScale;
+            
+            if (relativeX > 0 && relativeX < canvasSize.width && relativeY > 0 && relativeY < canvasSize.height) {
+                setMousePosition({ x: x_pos, y: y_pos });
+            }
+            // console.log({ x: relativeX / currentScale, y: relativeY / currentScale });
         };
 
 
@@ -139,8 +152,12 @@ export default function SmartMarkup() {
                 <Card sx={{ borderRadius: "12px" }}>
                     <CardActions >
                         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                            <IconButton><PanToolOutlinedIcon /></IconButton>
-                            <IconButton><RectangleOutlinedIcon /></IconButton>
+                            <IconButton onClick={() => {
+                                setStateEditing(false);
+                            }}><PanToolOutlinedIcon /></IconButton>
+                            <IconButton onClick={() => {
+                                setStateEditing(true);
+                            }}><RectangleOutlinedIcon /></IconButton>
                             <IconButton><OpenInFullOutlinedIcon /></IconButton>
                         </Box>
                     </CardActions>
@@ -149,13 +166,26 @@ export default function SmartMarkup() {
         );
     }
 
-
+    const [currentScale, setCurrentScale] = React.useState(1);
+    const [currentPosition, setCurrentPosition] = React.useState({x: 0, y: 0});
     return (
         <Card sx={{ width: "51.05vw" }}>
             <Box>
-                <TransformWrapper disabled={true}>
+                <TransformWrapper
+                    disabled={stateEditing}
+                    onZoom={(e) => {
+                        setCurrentScale(e.state.scale);
+                        setCurrentPosition({ x: e.state.positionX, y: e.state.positionY });
+                    }}
+                    onPanning={(e) => {
+                        setCurrentPosition({ x: e.state.positionX, y: e.state.positionY });
+                    }}
+                    onPanningStop={(e) => {
+                        setCurrentPosition({ x: e.state.positionX, y: e.state.positionY });
+                    }}
+                >
                     <TransformComponent>
-                        <CanvasOverImage />
+                        <CanvasOverImage currentScale={currentScale} currentPosition={currentPosition}/>
                     </TransformComponent>
                 </TransformWrapper>
             </Box>
