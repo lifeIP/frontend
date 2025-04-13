@@ -14,14 +14,42 @@ import PanToolOutlinedIcon from '@mui/icons-material/PanToolOutlined';
 
 
 export default function SmartMarkup() {
-    const [stateEditing, setStateEditing] = useState(true);
+    const mainRef = useRef(null);
+    const [inBoundingBox, setInBoundingBox] = useState(false);
+    
+    const handleMouseMove = (event) => {
+        if (!mainRef.current) return;
+
+        const rect = mainRef.current.getBoundingClientRect();
+        const relativeX = event.clientX - rect.left;
+        const relativeY = event.clientY - rect.top;
+        
+        // console.log(mainRef.current);
+        if(!mainRef.current){return}
+
+        if(relativeX > 0 && relativeX < mainRef.current.clientWidth && relativeY > 0 && relativeY < mainRef.current.clientHeight){
+            setInBoundingBox(true);
+        }
+        else{
+            setInBoundingBox(false);
+        }
+    };
 
 
-    const CanvasOverImage = ({ currentScale, currentPosition }) => {
+    useEffect(() => {
+        document.addEventListener('mousemove', handleMouseMove);
+        return () => {
+            document.removeEventListener('mousemove', handleMouseMove);
+        };
+    }, [])
+
+
+
+    const CanvasOverImage = ({ currentScale, inBoundingBox }) => {
         const imageRef = useRef(null);
         const canvasRef = useRef(null);
 
-        const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+        const [mousePosition, setMousePosition] = useState({ x: -1, y: -1 });
         const [canvasSize, setCanvasSize] = useState({ width: 2000, height: 2000 });
         // const {  } = useControls();
 
@@ -33,15 +61,12 @@ export default function SmartMarkup() {
             const relativeX = event.clientX - rect.left;
             const relativeY = event.clientY - rect.top;
 
-            
-
             let x_pos = relativeX / currentScale;
             let y_pos = relativeY / currentScale;
-            
-            if (relativeX > 0 && relativeX < canvasSize.width && relativeY > 0 && relativeY < canvasSize.height) {
+
+            if(inBoundingBox){
                 setMousePosition({ x: x_pos, y: y_pos });
             }
-            // console.log({ x: relativeX / currentScale, y: relativeY / currentScale });
         };
 
 
@@ -137,7 +162,7 @@ export default function SmartMarkup() {
         );
     };
 
-
+    const [stateEditing, setStateEditing] = useState(true);
     function Actions() {
         return (
             <Box sx={{
@@ -166,26 +191,19 @@ export default function SmartMarkup() {
         );
     }
 
+
     const [currentScale, setCurrentScale] = React.useState(1);
-    const [currentPosition, setCurrentPosition] = React.useState({x: 0, y: 0});
     return (
-        <Card sx={{ width: "51.05vw" }}>
+        <Card sx={{ width: "51.05vw" }} ref={mainRef}>
             <Box>
                 <TransformWrapper
                     disabled={stateEditing}
                     onZoom={(e) => {
                         setCurrentScale(e.state.scale);
-                        setCurrentPosition({ x: e.state.positionX, y: e.state.positionY });
-                    }}
-                    onPanning={(e) => {
-                        setCurrentPosition({ x: e.state.positionX, y: e.state.positionY });
-                    }}
-                    onPanningStop={(e) => {
-                        setCurrentPosition({ x: e.state.positionX, y: e.state.positionY });
                     }}
                 >
                     <TransformComponent>
-                        <CanvasOverImage currentScale={currentScale} currentPosition={currentPosition}/>
+                        <CanvasOverImage currentScale={currentScale} inBoundingBox={inBoundingBox} />
                     </TransformComponent>
                 </TransformWrapper>
             </Box>
