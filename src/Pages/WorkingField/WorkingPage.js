@@ -13,10 +13,9 @@ export default function WorkingField() {
                     Разметка
                 </Typography>
             </Hat>
-            
-                                
+
             <Box>
-            <SmartMarkup />
+                <SmartMarkup />
             </Box>
 
             <Box sx={{ display: "flex", justifyContent: "center", marginTop: '1.85vh' }}>
