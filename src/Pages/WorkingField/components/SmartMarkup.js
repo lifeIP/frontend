@@ -29,6 +29,7 @@ export default function SmartMarkup() {
     };
 
     useEffect(() => {
+        localStorage.setItem('rect_list', JSON.stringify([]));
         document.addEventListener('mousemove', handleMouseMove);
         return () => {
             document.removeEventListener('mousemove', handleMouseMove);
@@ -52,6 +53,7 @@ export default function SmartMarkup() {
         let rect_pos_y = 0;
         let rect_shape_w = 0;
         let rect_shape_h = 0;
+        let rect_list = [];
 
         // Функция для рисования на канвасе
         const drawCanvas = () => {
@@ -59,12 +61,25 @@ export default function SmartMarkup() {
                 const context = canvasRef.current.getContext('2d');
 
                 context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+                context.lineWidth = 3;
+                context.strokeStyle = "blue";
+
+                if(rect_list.length === 0){
+                    rect_list = JSON.parse(localStorage.getItem('rect_list'))
+                }
+                rect_list.map((item, index) => {
+                    const path1 = new Path2D();
+                    path1.rect(
+                        item.x, item.y,
+                        item.w, item.h
+                    );
+                    path1.closePath();
+                    context.stroke(path1);
+                })
 
                 const path1 = new Path2D();
-                context.lineWidth = 3;
                 path1.rect(rect_pos_x, rect_pos_y, rect_shape_w, rect_shape_h)
                 path1.closePath();    //  закрываем путь
-                context.strokeStyle = "blue";
                 context.stroke(path1);
             }
         };
@@ -111,6 +126,14 @@ export default function SmartMarkup() {
             if (leftButtonPressed && event.button === 0) { // Левая кнопка мыши
                 leftButtonPressed = false;
                 console.log('Левая кнопка отпущена');
+
+                rect_list.push({
+                    x: rect_pos_x,
+                    y: rect_pos_y,
+                    w: rect_shape_w,
+                    h: rect_shape_h
+                })
+                localStorage.setItem('rect_list', JSON.stringify(rect_list));
             }
         };
 

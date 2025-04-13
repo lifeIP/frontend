@@ -6,6 +6,7 @@ import Center from '../../components/Center/Center'
 import Hat from '../../components/Hat/Hat';
 
 export default function WorkingField() {
+    useEffect(()=>{localStorage.setItem('rect_list', JSON.stringify([]));}, [])
     return (
         <Center>
             <Hat>
