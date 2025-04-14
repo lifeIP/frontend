@@ -6,6 +6,7 @@ import {
     CardContent,
     CardMedia,
     Divider,
+    Skeleton,
     Typography
 } from '@mui/material';
 
@@ -26,7 +27,7 @@ import axios from 'axios';
 
 
 
-export default function SmartMarkup({project_id}) {
+export default function SmartMarkup({ project_id }) {
     const mainRef = useRef(null);
     const [inBoundingBox, setInBoundingBox] = useState(false);
 
@@ -60,6 +61,7 @@ export default function SmartMarkup({project_id}) {
         const imageRef = useRef(null);
         const canvasRef = useRef(null);
 
+        const [isLoading, setLoading] = useState(false);
         const [mousePosition, setMousePosition] = useState({ x: -1, y: -1 });
         let mouse_pos_x = -1;
         let mouse_pos_y = -1;
@@ -172,6 +174,7 @@ export default function SmartMarkup({project_id}) {
 
         // Эффект для инициализации канваса после рендера
         useEffect(() => {
+
             drawCanvas();
 
             document.addEventListener('mousemove', handleMouseMove);
@@ -187,41 +190,49 @@ export default function SmartMarkup({project_id}) {
         return (
             <Box sx={{ position: 'relative', width: '100%', height: 'auto' }}>
                 <Card sx={{ width: "51.05vw" }}>
-                    <CardMedia
-                        ref={imageRef}
-                        component="img"
-                        onLoad={() => {
-                            setCanvasSize({
-                                width: imageRef.current.width,
-                                height: imageRef.current.height
-                            });
-                        }}
-                        image=
-                        {"https://avatars.mds.yandex.net/i?id=f7454bc3badcefdfbef33cfd38fdc121_l-5194719-images-thumbs&n=13"}
-                        alt="Фотография"
-                        sx={{
-                            width: '100%',   // Ширина фотографии — 100% ширины контейнера
-                            height: 'auto',  // Высота автоматически адаптируется под ширину
-                            objectFit: 'contain',  // Подгоняем картинку без искажений
-                            display: 'block',
-                            margin: '0 auto'  // Центрируем изображение горизонтально
-                        }}
-                    />
+                    {
+                        isLoading ? (
+                            <Skeleton animation="wave" variant="rectangular" sx={{ height: "15vh" }} />
+                        ) : (
+                            <Box>
+                                <CardMedia
+                                    ref={imageRef}
+                                    component="img"
+                                    onLoad={() => {
+                                        setCanvasSize({
+                                            width: imageRef.current.width,
+                                            height: imageRef.current.height
+                                        });
+                                    }}
+                                    image=
+                                    {"https://avatars.mds.yandex.net/i?id=f7454bc3badcefdfbef33cfd38fdc121_l-5194719-images-thumbs&n=13"}
+                                    alt="Фотография"
+                                    sx={{
+                                        width: '100%',   // Ширина фотографии — 100% ширины контейнера
+                                        height: 'auto',  // Высота автоматически адаптируется под ширину
+                                        objectFit: 'contain',  // Подгоняем картинку без искажений
+                                        display: 'block',
+                                        margin: '0 auto'  // Центрируем изображение горизонтально
+                                    }}
+                                />
+                                <canvas
+                                    ref={canvasRef}
+                                    width={canvasSize.width}
+                                    height={canvasSize.height}
+                                    style={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        width: '100%',
+                                        height: '100%',
+                                        zIndex: 15,
+                                    }}
+                                />
+                            </Box>
+                        )
+                    }
                 </Card>
 
-                <canvas
-                    ref={canvasRef}
-                    width={canvasSize.width}
-                    height={canvasSize.height}
-                    style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                        zIndex: 15,
-                    }}
-                />
                 {/* <p>x: {mousePosition.x}, y: {mousePosition.y}</p>
                 <p>width: {canvasSize.width}, height: {canvasSize.height}</p> */}
             </Box>
