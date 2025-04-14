@@ -1,8 +1,8 @@
-import { Box, Button, Card, CardContent, Divider, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, Divider, Skeleton, Typography } from '@mui/material';
 import React from 'react';
 
 
-export default function ClassesList({data_markup_classes, setSelectedClass, selectedClass}) {
+export default function ClassesList({ data_markup_classes, setSelectedClass, selectedClass }) {
     return (
         <Box sx={{
             position: 'fixed',
@@ -19,21 +19,28 @@ export default function ClassesList({data_markup_classes, setSelectedClass, sele
                         variant='h4'
                         align='center'
                         color={data_markup_classes.at(selectedClass).class_color}
-                        >Список</Typography>
-                    {data_markup_classes.map((item, index) => (
-                        <Box>
-                            <Divider />
-                            <Button onClick={() => {
-                                setSelectedClass(index);
-                            }}>
-                                <Typography
-                                    color={item.class_color}
-                                >
-                                    {item.class_name}
-                                </Typography>
-                            </Button>
-                        </Box>
-                    ))}
+                    >Список</Typography>
+
+                    {
+                        data_markup_classes.map((item, index) => {
+                            if(item.id === -1) return <Skeleton  animation="wave" variant="rectangular" />;
+                            return (
+                                <Box>
+                                    <Divider />
+                                    <Button onClick={() => {
+                                        setSelectedClass(index);
+                                    }}>
+                                        <Typography
+                                            color={item.class_color}
+                                        >
+                                            {item.class_name}
+                                        </Typography>
+                                    </Button>
+                                </Box>
+                            );
+                        }
+                        )
+                    }
                 </CardContent>
             </Card>
         </Box>

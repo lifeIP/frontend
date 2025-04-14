@@ -4,9 +4,10 @@ import Card from '@mui/material/Card';
 import SmartMarkup from './components/SmartMarkup';
 import Center from '../../components/Center/Center'
 import Hat from '../../components/Hat/Hat';
+import { SmartMarkupProvider } from './components/SmartMarkupContext';
 
 export default function WorkingField() {
-    useEffect(()=>{localStorage.setItem('rect_list', JSON.stringify([]));}, [])
+    useEffect(() => { localStorage.setItem('rect_list', JSON.stringify([])); }, [])
     return (
         <Center>
             <Hat>
@@ -16,7 +17,9 @@ export default function WorkingField() {
             </Hat>
 
             <Box>
-                <SmartMarkup />
+                {/* <SmartMarkupProvider> */}
+                    <SmartMarkup project_id={1} />
+                {/* </SmartMarkupProvider> */}
             </Box>
 
             <Box sx={{ display: "flex", justifyContent: "center", marginTop: '1.85vh' }}>

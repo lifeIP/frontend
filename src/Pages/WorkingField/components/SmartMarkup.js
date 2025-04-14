@@ -1,3 +1,4 @@
+import settings from "../../../settings.json"
 import {
     Box,
     Button,
@@ -21,10 +22,11 @@ import {
 
 import Actions from './Actions';
 import ClassesList from './ClassesList';
+import axios from 'axios';
 
 
 
-export default function SmartMarkup() {
+export default function SmartMarkup({project_id}) {
     const mainRef = useRef(null);
     const [inBoundingBox, setInBoundingBox] = useState(false);
 
@@ -228,23 +230,41 @@ export default function SmartMarkup() {
 
 
 
-    const data_markup_classes = [
-        {
-            id: 0,
-            class_name: "eyes",
-            class_color: "#FF0000"
-        },
-        {
-            id: 1,
-            class_name: "lip",
-            class_color: "#0000FF"
-        },
-        {
-            id: 2,
-            class_name: "hair",
-            class_color: "#00FF00"
-        },
-    ];
+    // const data_markup_classes = [
+    //     {
+    //         id: 0,
+    //         class_name: "eyes",
+    //         class_color: "#FF0000"
+    //     },
+    //     {
+    //         id: 1,
+    //         class_name: "lip",
+    //         class_color: "#0000FF"
+    //     },
+    //     {
+    //         id: 2,
+    //         class_name: "hair",
+    //         class_color: "#00FF00"
+    //     },
+    // ];
+    const [data_markup_classes, setDataMarkupClasses] = useState([{
+        id: -1,
+        class_name: "item",
+        class_color: "#FF0000"
+    }]);
+    // Загрузка информации о проекте
+    useEffect(() => {
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+        axios.get(settings.server.addr + "/get_list_of_classes_in_project/" + project_id)
+            .then(res => {
+                setDataMarkupClasses(res.data);
+                console.log(res.data);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+
+    }, [])
 
     const [stateEditing, setStateEditing] = useState(true);
     const [currentScale, setCurrentScale] = useState(1);
