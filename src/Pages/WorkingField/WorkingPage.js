@@ -1,4 +1,4 @@
-import { Box, Button, CardActionArea, CardActions, CardContent, Grid, Typography } from '@mui/material';
+import { Box, Button, CardActionArea, CardActions, CardContent, Grid, Skeleton, Typography } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import Card from '@mui/material/Card';
 import SmartMarkup from './components/SmartMarkup';
@@ -25,6 +25,7 @@ export default function WorkingField() {
                         <Typography gutterBottom variant="h3" component="div" textAlign="center">
                             Информация
                         </Typography>
+                        <Skeleton sx={{ height: "10vh" }} animation="wave" variant="rectangular" />
                     </CardContent>
                 </Card>
             </Box>

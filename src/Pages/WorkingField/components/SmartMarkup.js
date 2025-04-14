@@ -1,5 +1,18 @@
-import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Grid, IconButton, Typography } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
+import {
+    Box,
+    Button,
+    Card,
+    CardContent,
+    CardMedia,
+    Divider,
+    Typography
+} from '@mui/material';
+
+import React, {
+    useEffect,
+    useRef,
+    useState
+} from 'react';
 
 import {
     TransformWrapper,
@@ -7,6 +20,8 @@ import {
 } from "react-zoom-pan-pinch";
 
 import Actions from './Actions';
+import ClassesList from './ClassesList';
+
 
 
 export default function SmartMarkup() {
@@ -20,7 +35,8 @@ export default function SmartMarkup() {
         const relativeX = event.clientX - rect.left;
         const relativeY = event.clientY - rect.top;
 
-        if (relativeX > 0 && relativeX < mainRef.current.clientWidth && relativeY > 0 && relativeY < mainRef.current.clientHeight) {
+        if (relativeX > 0 && relativeX < mainRef.current.clientWidth
+            && relativeY > 0 && relativeY < mainRef.current.clientHeight) {
             setInBoundingBox(true);
         }
         else {
@@ -38,7 +54,7 @@ export default function SmartMarkup() {
 
 
 
-    const CanvasOverImage = ({ currentScale, inBoundingBox, stateEditing }) => {
+    const CanvasOverImage = ({ currentClass, currentScale, inBoundingBox, stateEditing }) => {
         const imageRef = useRef(null);
         const canvasRef = useRef(null);
 
@@ -47,12 +63,13 @@ export default function SmartMarkup() {
         let mouse_pos_y = -1;
 
         const [canvasSize, setCanvasSize] = useState({ width: 2000, height: 2000 });
-        
+
 
         let rect_pos_x = 0;
         let rect_pos_y = 0;
         let rect_shape_w = 0;
         let rect_shape_h = 0;
+        let rect_class_c = "#00FF00";
         let rect_list = [];
 
         // Функция для рисования на канвасе
@@ -62,13 +79,14 @@ export default function SmartMarkup() {
 
                 context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
                 context.lineWidth = 3;
-                context.strokeStyle = "blue";
 
-                if(rect_list.length === 0){
+                if (rect_list.length === 0) {
                     rect_list = JSON.parse(localStorage.getItem('rect_list'))
                 }
                 rect_list.map((item, index) => {
                     const path1 = new Path2D();
+                    // path1.strokeStyle = item.c;
+                    context.strokeStyle = item.c.class_color;
                     path1.rect(
                         item.x, item.y,
                         item.w, item.h
@@ -78,6 +96,7 @@ export default function SmartMarkup() {
                 })
 
                 const path1 = new Path2D();
+                context.strokeStyle = currentClass.class_color;
                 path1.rect(rect_pos_x, rect_pos_y, rect_shape_w, rect_shape_h)
                 path1.closePath();    //  закрываем путь
                 context.stroke(path1);
@@ -88,9 +107,9 @@ export default function SmartMarkup() {
 
         let leftButtonPressed = false;
         const handleMouseMove = (event) => {
-            if(!inBoundingBox || !stateEditing) {return}
-            
-            if(leftButtonPressed){
+            if (!inBoundingBox || !stateEditing) { return }
+
+            if (leftButtonPressed) {
                 console.log('Левая кнопка зажата');
                 rect_shape_w = mouse_pos_x - rect_pos_x;
                 rect_shape_h = mouse_pos_y - rect_pos_y;
@@ -112,7 +131,7 @@ export default function SmartMarkup() {
         };
 
         function handleLeftButtonPressed(event) {
-            if(!inBoundingBox || !stateEditing) {return}
+            if (!inBoundingBox || !stateEditing) { return }
             if (event.button === 0) { // Левая кнопка мыши
                 leftButtonPressed = true;
                 console.log('Левая кнопка нажата');
@@ -122,24 +141,31 @@ export default function SmartMarkup() {
         };
 
         const handleLeftButtonReleased = (event) => {
-            if(!inBoundingBox || !stateEditing) {return}
+            if (!inBoundingBox || !stateEditing) { return }
             if (leftButtonPressed && event.button === 0) { // Левая кнопка мыши
                 leftButtonPressed = false;
                 console.log('Левая кнопка отпущена');
 
+                rect_class_c = currentClass.class_color;
                 rect_list.push({
                     x: rect_pos_x,
                     y: rect_pos_y,
                     w: rect_shape_w,
-                    h: rect_shape_h
+                    h: rect_shape_h,
+                    c: currentClass
                 })
                 localStorage.setItem('rect_list', JSON.stringify(rect_list));
+                // handleClickOpen({
+                //     x: rect_pos_x,
+                //     y: rect_pos_y,
+                //     w: rect_shape_w,
+                //     h: rect_shape_h
+                // });
             }
         };
 
 
 
-        
 
 
         // Эффект для инициализации канваса после рендера
@@ -163,9 +189,13 @@ export default function SmartMarkup() {
                         ref={imageRef}
                         component="img"
                         onLoad={() => {
-                            setCanvasSize({ width: imageRef.current.width, height: imageRef.current.height });
+                            setCanvasSize({
+                                width: imageRef.current.width,
+                                height: imageRef.current.height
+                            });
                         }}
-                        image={"https://avatars.mds.yandex.net/i?id=f7454bc3badcefdfbef33cfd38fdc121_l-5194719-images-thumbs&n=13"}
+                        image=
+                        {"https://avatars.mds.yandex.net/i?id=f7454bc3badcefdfbef33cfd38fdc121_l-5194719-images-thumbs&n=13"}
                         alt="Фотография"
                         sx={{
                             width: '100%',   // Ширина фотографии — 100% ширины контейнера
@@ -197,8 +227,28 @@ export default function SmartMarkup() {
     };
 
 
+
+    const data_markup_classes = [
+        {
+            id: 0,
+            class_name: "eyes",
+            class_color: "#FF0000"
+        },
+        {
+            id: 1,
+            class_name: "lip",
+            class_color: "#0000FF"
+        },
+        {
+            id: 2,
+            class_name: "hair",
+            class_color: "#00FF00"
+        },
+    ];
+
     const [stateEditing, setStateEditing] = useState(true);
     const [currentScale, setCurrentScale] = useState(1);
+    const [selectedClass, setSelectedClass] = useState(0);
     return (
         <Card sx={{ width: "51.05vw" }} ref={mainRef}>
             <Box>
@@ -209,11 +259,19 @@ export default function SmartMarkup() {
                     }}
                 >
                     <TransformComponent>
-                        <CanvasOverImage currentScale={currentScale} inBoundingBox={inBoundingBox} stateEditing={stateEditing}/>
+                        <CanvasOverImage
+                            currentClass={data_markup_classes.at(selectedClass)}
+                            currentScale={currentScale}
+                            inBoundingBox={inBoundingBox}
+                            stateEditing={stateEditing} />
                     </TransformComponent>
                 </TransformWrapper>
             </Box>
-            <Actions setStateEditing={setStateEditing}/>
+            <Actions setStateEditing={setStateEditing} />
+            <ClassesList
+                selectedClass={selectedClass}
+                data_markup_classes={data_markup_classes}
+                setSelectedClass={setSelectedClass} />
         </Card>
     );
 }
