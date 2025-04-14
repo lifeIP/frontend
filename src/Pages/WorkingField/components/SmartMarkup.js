@@ -61,7 +61,34 @@ export default function SmartMarkup({ project_id }) {
         const imageRef = useRef(null);
         const canvasRef = useRef(null);
 
-        const [isLoading, setLoading] = useState(false);
+        const [isLoading, setLoading] = useState(true);
+        const [image, setImage] = useState();
+
+        useEffect(() => {
+            if(isLoading!=false){
+            
+            axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+            axios.get(`${settings.server.addr}/get-image-by-id/${1}?t=${Date.now()}`, {
+                responseType: "arraybuffer"
+            })
+                .then(res => {
+                    const base64 = btoa(
+                        new Uint8Array(res.data).reduce(
+                            (data, byte) => data + String.fromCharCode(byte),
+                            ''
+                        )
+                    )
+                    setImage(`data:image/jpeg;charset=utf-8;base64,${base64}`);
+                    setLoading(false);
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+            }
+        }, []);
+
+
+
         const [mousePosition, setMousePosition] = useState({ x: -1, y: -1 });
         let mouse_pos_x = -1;
         let mouse_pos_y = -1;
@@ -196,6 +223,7 @@ export default function SmartMarkup({ project_id }) {
                         ) : (
                             <Box>
                                 <CardMedia
+                                    key={image}
                                     ref={imageRef}
                                     component="img"
                                     onLoad={() => {
@@ -204,8 +232,7 @@ export default function SmartMarkup({ project_id }) {
                                             height: imageRef.current.height
                                         });
                                     }}
-                                    image=
-                                    {"https://avatars.mds.yandex.net/i?id=f7454bc3badcefdfbef33cfd38fdc121_l-5194719-images-thumbs&n=13"}
+                                    src={image}
                                     alt="Фотография"
                                     sx={{
                                         width: '100%',   // Ширина фотографии — 100% ширины контейнера
