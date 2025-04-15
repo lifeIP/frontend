@@ -1,5 +1,15 @@
-import { Box, Button, CardActionArea, CardActions, CardContent, Grid, Skeleton, Typography } from '@mui/material';
-import React, { memo, useEffect, useRef, useState } from 'react';
+import { 
+    Box, 
+    CardContent, 
+    Skeleton, 
+    Typography 
+} from '@mui/material';
+
+import React, { 
+    memo, 
+    useEffect
+} from 'react';
+
 import Card from '@mui/material/Card';
 import SmartMarkup from './components/SmartMarkup';
 import Center from '../../components/Center/Center'

@@ -1,9 +1,13 @@
-import { Box, Card, CardActions, IconButton } from '@mui/material';
+import { 
+    Box, 
+    Card, 
+    CardActions, 
+    IconButton 
+} from '@mui/material';
 import React from 'react';
 
 
 import RectangleOutlinedIcon from '@mui/icons-material/RectangleOutlined';
-import OpenInFullOutlinedIcon from '@mui/icons-material/OpenInFullOutlined';
 import PanToolOutlinedIcon from '@mui/icons-material/PanToolOutlined';
 
 
