@@ -1,5 +1,5 @@
 import { Box, Button, CardActionArea, CardActions, CardContent, Grid, Skeleton, Typography } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import Card from '@mui/material/Card';
 import SmartMarkup from './components/SmartMarkup';
 import Center from '../../components/Center/Center'
@@ -17,9 +17,7 @@ export default function WorkingField() {
             </Hat>
 
             <Box>
-                {/* <SmartMarkupProvider> */}
-                    <SmartMarkup project_id={1} />
-                {/* </SmartMarkupProvider> */}
+                <SmartMarkupComponent project_id={0}/>
             </Box>
 
             <Box sx={{ display: "flex", justifyContent: "center", marginTop: '1.85vh' }}>
@@ -35,3 +33,7 @@ export default function WorkingField() {
         </Center>
     );
 }
+
+const SmartMarkupComponent = memo(({ project_id }) => {
+    return <SmartMarkup project_id={project_id} />
+});

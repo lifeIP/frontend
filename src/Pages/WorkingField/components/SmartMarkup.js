@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 
 import React, {
+    memo,
     useEffect,
     useRef,
     useState
@@ -29,7 +30,7 @@ import axios from 'axios';
 
 export default function SmartMarkup({ project_id }) {
     const mainRef = useRef(null);
-    const [inBoundingBox, setInBoundingBox] = useState(false);
+    const [inBoundingBox, setInBoundingBox] = useState(true);
 
     const handleMouseMove = (event) => {
         if (!mainRef.current) return;
@@ -40,10 +41,10 @@ export default function SmartMarkup({ project_id }) {
 
         if (relativeX > 0 && relativeX < mainRef.current.clientWidth
             && relativeY > 0 && relativeY < mainRef.current.clientHeight) {
-            setInBoundingBox(true);
+            // setInBoundingBox(true);
         }
         else {
-            setInBoundingBox(false);
+            // setInBoundingBox(false);
         }
     };
 
@@ -56,7 +57,7 @@ export default function SmartMarkup({ project_id }) {
     }, [])
 
 
-
+   
     const CanvasOverImage = ({ currentClass, currentScale, inBoundingBox, stateEditing }) => {
         const imageRef = useRef(null);
         const canvasRef = useRef(null);
@@ -65,10 +66,10 @@ export default function SmartMarkup({ project_id }) {
         const [image, setImage] = useState();
 
         useEffect(() => {
-            if(isLoading!=false){
+            // if(isLoading!=false){
             
             axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
-            axios.get(`${settings.server.addr}/get-image-by-id/${1}?t=${Date.now()}`, {
+            axios.get(`${settings.server.addr}/get-image-by-id/${1}`, {
                 responseType: "arraybuffer"
             })
                 .then(res => {
@@ -84,7 +85,7 @@ export default function SmartMarkup({ project_id }) {
                 .catch(err => {
                     console.log(err);
                 })
-            }
+            // }
         }, []);
 
 
@@ -214,8 +215,14 @@ export default function SmartMarkup({ project_id }) {
             };
         }, [canvasSize]);
 
+
+        
         return (
             <Box sx={{ position: 'relative', width: '100%', height: 'auto' }}>
+                {
+                isLoading ? (
+                    <Skeleton animation="wave" variant="rectangular" sx={{ height: "15vh" }} />
+                ):(
                 <Card sx={{ width: "51.05vw" }}>
                     {
                         isLoading ? (
@@ -259,6 +266,8 @@ export default function SmartMarkup({ project_id }) {
                         )
                     }
                 </Card>
+                )
+            }
 
                 {/* <p>x: {mousePosition.x}, y: {mousePosition.y}</p>
                 <p>width: {canvasSize.width}, height: {canvasSize.height}</p> */}
@@ -307,6 +316,14 @@ export default function SmartMarkup({ project_id }) {
     const [stateEditing, setStateEditing] = useState(true);
     const [currentScale, setCurrentScale] = useState(1);
     const [selectedClass, setSelectedClass] = useState(0);
+
+    const CanvasOverImageComponent = memo(({ currentClass, currentScale, inBoundingBox, stateEditing }) => {
+        return <CanvasOverImage
+        currentClass={currentClass}
+        currentScale={currentScale}
+        inBoundingBox={inBoundingBox}
+        stateEditing={stateEditing} />
+    });
     return (
         <Card sx={{ width: "51.05vw" }} ref={mainRef}>
             <Box>
@@ -317,7 +334,7 @@ export default function SmartMarkup({ project_id }) {
                     }}
                 >
                     <TransformComponent>
-                        <CanvasOverImage
+                        <CanvasOverImageComponent
                             currentClass={data_markup_classes.at(selectedClass)}
                             currentScale={currentScale}
                             inBoundingBox={inBoundingBox}
