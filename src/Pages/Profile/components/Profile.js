@@ -101,7 +101,7 @@ function ProfileImage() {
     return (
         <CardActionArea onClick={() => fileInputRef.current.click()}>
             <CardMedia
-                key={image}
+                // key={image}
                 sx={{ height: "25vh", resize: "horizontal" }}
                 image={image}
                 title="user"
@@ -131,7 +131,7 @@ export default function Profile() {
             return
         }
 
-
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
         axios.get(settings.server.addr + "/user_info/")
             .then(res => {
                 setData({

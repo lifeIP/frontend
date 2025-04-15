@@ -1,5 +1,5 @@
 import { CardMedia } from "@mui/material";
-import settings from "../../../settings.json"
+import settings from "../../../../settings.json"
 import axios from 'axios';
 import React, {
     useEffect,

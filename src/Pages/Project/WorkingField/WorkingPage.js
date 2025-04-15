@@ -12,8 +12,8 @@ import React, {
 
 import Card from '@mui/material/Card';
 import SmartMarkup from './components/SmartMarkup';
-import Center from '../../components/Center/Center'
-import Hat from '../../components/Hat/Hat';
+import Center from '../../../components/Center/Center'
+import Hat from '../../../components/Hat/Hat';
 
 export default function WorkingField() {
     useEffect(() => { localStorage.setItem('rect_list', JSON.stringify([])); }, [])

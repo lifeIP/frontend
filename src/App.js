@@ -12,11 +12,11 @@ import AboutPage from "./Pages/About/AboutPage";
 import ProfilePage from "./Pages/Profile/ProfilePage";
 import WelcomePage from "./Pages/Welcome/WelcomePage";
 
-import LoginPage from "./Pages/Login/LoginPage";
-import RegistrationPage from "./Pages/Registration/RegistrationPage";
-import axios from "axios";
-import WorkingPage from "./Pages/WorkingField/WorkingPage";
-
+import LoginPage from "./Pages/Auth/Login/LoginPage";
+import RegistrationPage from "./Pages/Auth/Registration/RegistrationPage";
+import WorkingPage from "./Pages/Project/WorkingField/WorkingPage"
+import CreateProjectPage from "./Pages/Project/CreateProject/CreateProjectPage";
+import UploadImagesPage from "./Pages/Project/UploadImages/UploadImagesPage";
 
 
 const lightTheme = createTheme({
@@ -91,6 +91,16 @@ function App() {
           <Route path="/" element={
             <div>
               <HomePage />
+            </div>}
+          />
+          <Route path="/upload-images" element={
+            <div>
+              <UploadImagesPage/>
+            </div>}
+          />
+          <Route path="/create-project" element={
+            <div>
+              <CreateProjectPage/>
             </div>}
           />
           <Route path="/working-field" element={

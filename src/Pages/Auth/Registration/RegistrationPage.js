@@ -1,11 +1,12 @@
 import React from 'react'
 import { Button, Card, CardContent, TextField, Typography } from '@mui/material'
 import { Box } from '@mui/system'
-import useForm from '../../components/hooks/useForm'
+
 import { useNavigate } from 'react-router'
 import { Grid } from '@mui/material'
 import axios from 'axios'
-import settings from "../../settings.json"
+import settings from "../../../settings.json"
+import useForm from '../../../components/hooks/useForm'
 
 const getFreshModel = () => ({
     first_name: '',
