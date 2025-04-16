@@ -4,12 +4,13 @@ import React, { useRef, useState } from 'react';
 import Center from '../../../components/Center/Center';
 import Hat from '../../../components/Hat/Hat';
 import axios from 'axios';
-import { ChromePicker } from "react-color";
+
+import { HuePicker } from "react-color";
 
 
 // Основной компонент
 const DynamicRowsWithColor = () => {
-    const [rows, setRows] = React.useState([]);
+    const [rows, setRows] = useState([]);
 
     // Добавляем новую пустую строку
     const addNewRow = () => {
@@ -43,13 +44,13 @@ const DynamicRowsWithColor = () => {
                 {rows.length > 0 && rows.map(row => (
                     <Box key={row.id} mb={2}>
                         <TextField
-                            fullWidth
                             value={row.label}
-                            placeholder="Название строки"
+                            placeholder="Название класса"
                             onChange={event => changeLabel(row.id, event.target.value)}
                         />
-                        <ChromePicker
+                        <HuePicker
                             color={row.color}
+                            onChange={color => changeColor(row.id, color.hex)}
                             onChangeComplete={color => changeColor(row.id, color.hex)}
                         />
                     </Box>
