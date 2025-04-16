@@ -1,4 +1,4 @@
-import { Card, CardContent, CardMedia, Typography } from '@mui/material';
+import { Card, CardContent, CardMedia, Divider, Typography } from '@mui/material';
 import React from 'react';
 
 
@@ -20,8 +20,9 @@ function ProjectCardPreview() {
                 <Typography variant="body2" sx={{ color: 'text.secondary' }} textAlign="justify">
                     Краткое описание проекта, оно не должно превышать определённого количества символов.
                 </Typography>
-
+                
                 <Typography variant="body2" sx={{ color: 'text.secondary', marginTop: "10px" }}>
+                <Divider/>
                     глаза, губы, самолёты
                 </Typography>
             </CardContent>
