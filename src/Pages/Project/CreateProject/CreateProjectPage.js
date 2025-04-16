@@ -1,10 +1,10 @@
 import settings from "../../../settings.json"
-import { Box, Button, Card, CardActionArea, CardContent, CardMedia, Grid, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, CardActionArea, CardContent, CardMedia, Divider, Fab, Grid, TextField, Typography } from '@mui/material';
 import React, { useRef, useState } from 'react';
 import Center from '../../../components/Center/Center';
 import Hat from '../../../components/Hat/Hat';
 import axios from 'axios';
-
+import AddIcon from '@mui/icons-material/Add';
 import { HuePicker } from "react-color";
 
 
@@ -35,27 +35,59 @@ const DynamicRowsWithColor = () => {
         );
     };
 
+    const changeDescription = (id, newDescription) => {
+        setRows(
+            rows.map(row =>
+                row.id === id ? { ...row, description: newDescription } : row
+            )
+        );
+    };
     return (
         <>
-            <Button variant="contained" onClick={addNewRow}>
-                Добавить строку
-            </Button>
-            <Box mt={2}>
-                {rows.length > 0 && rows.map(row => (
-                    <Box key={row.id} mb={2}>
-                        <TextField
-                            value={row.label}
-                            placeholder="Название класса"
-                            onChange={event => changeLabel(row.id, event.target.value)}
-                        />
-                        <HuePicker
-                            color={row.color}
-                            onChange={color => changeColor(row.id, color.hex)}
-                            onChangeComplete={color => changeColor(row.id, color.hex)}
-                        />
-                    </Box>
-                ))}
+            <Box sx={{ display: "flex", justifyContent: "center" }}>
+                <Fab size="medium" aria-label="добавить класс" onClick={addNewRow}>
+                    <AddIcon />
+                </Fab>
             </Box>
+            <CardContent>
+                <Box mt={2}>
+                    {rows.length > 0 && rows.map(row => (
+                        <CardContent>
+                            <Box key={row.id}>
+
+                                <TextField
+                                    sx={{ marginBottom: "15px", width: "23%", marginRight: "2%" }}
+                                    value={row.label}
+                                    placeholder="Название класса"
+                                    onChange={event => changeLabel(row.id, event.target.value)}
+                                />
+                                <TextField
+                                    sx={{ marginBottom: "15px", width: "58%", marginRight: "2%" }}
+                                    value={row.description}
+                                    placeholder="Краткое описание"
+                                    onChange={event => changeDescription(row.id, event.target.value)}
+                                />
+                                <TextField
+                                    sx={{ marginBottom: "15px", width: "15%", input: { color: row.color } }}
+                                    color={row.color}
+                                    value={row.color}
+                                    placeholder="Цвет"
+                                    onChange={event => changeColor(row.id, event.target.value)}
+                                />
+                                <Box sx={{ display: "flex", justifyContent: "center" }}>
+                                    <HuePicker
+                                        width="100%"
+                                        color={row.color}
+                                        onChange={color => changeColor(row.id, color.hex)}
+                                        onChangeComplete={color => changeColor(row.id, color.hex)}
+                                    />
+                                </Box>
+                            </Box>
+                        </CardContent>
+
+                    ))}
+                </Box>
+            </CardContent>
         </>
     );
 };
@@ -134,24 +166,28 @@ function ProjectCardPreviewSettings() {
                 <Typography gutterBottom variant="h4" component="div" textAlign="center">
                     Внешний вид
                 </Typography>
-            </CardContent>
 
-            <CardContent>
-                <Box>
-                    <Button onClick={() => fileInputRef.current.click()}>Сменить фотографию</Button>
-                    <input onChange={handleChange} multiple={false} ref={fileInputRef} type='file' accept=".jpg, .png, .jpeg" hidden />
-                </Box>
                 <TextField
+                    sx={{ marginTop: "15px" }}
+                    fullWidth
                     label="Название проекта"
                     name="project_name"
                     type="project_name"
                     variant="outlined" />
                 <TextField
+                    fullWidth
+                    multiline
+                    rows={5}
+                    sx={{ marginTop: "15px" }}
                     label="Описание проекта"
                     name="project_name"
                     type="project_name"
                     variant="outlined" />
 
+                <Box sx={{ marginTop: "15px", display: "flex", justifyContent: "center" }}>
+                    <Button onClick={() => fileInputRef.current.click()}>Сменить фотографию проекта</Button>
+                    <input onChange={handleChange} multiple={false} ref={fileInputRef} type='file' accept=".jpg, .png, .jpeg" hidden />
+                </Box>
             </CardContent>
         </Card>
     );
@@ -165,7 +201,7 @@ function ProjectMainSetting() {
                     Настройки классов
                 </Typography>
             </CardContent>
-            <DynamicRowsWithColor/>
+            <DynamicRowsWithColor />
         </Card>
     );
 }
