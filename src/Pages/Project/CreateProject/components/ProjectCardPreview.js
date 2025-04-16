@@ -3,7 +3,7 @@ import React from 'react';
 
 
 
-function ProjectCardPreview() {
+function ProjectCardPreview({prjctName, prjctDescription, prjctListClasses}) {
     return (
         <Card sx={{ width: "20vw", borderRadius: "12px", height: "45vh" }}>
             <CardMedia
@@ -15,15 +15,15 @@ function ProjectCardPreview() {
             />
             <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
-                    Название проекта
+                    {prjctName}
                 </Typography>
                 <Typography variant="body2" sx={{ color: 'text.secondary' }} textAlign="justify">
-                    Краткое описание проекта, оно не должно превышать определённого количества символов.
+                    {prjctDescription}
                 </Typography>
                 
                 <Typography variant="body2" sx={{ color: 'text.secondary', marginTop: "10px" }}>
                 <Divider/>
-                    глаза, губы, самолёты
+                    {prjctListClasses.map((item) => `${item}`).join(', ')}
                 </Typography>
             </CardContent>
         </Card>

@@ -9,6 +9,10 @@ import ProjectMainSetting from './components/ProjectMainSetting';
 
 
 export default function CreateProjectPage() {
+    const [prjctName, setPrjctName] = useState("Имя проекта");
+    const [prjctDescription, setPrjctDescription] = useState("Краткое описание проекта, оно не должно превышать определённого количества символов.");
+    const [prjctListClasses, setPrjctListClasses] = useState(["class1", "class2", "class3"]);
+    
     return (
         <Center>
             <Hat>
@@ -19,7 +23,11 @@ export default function CreateProjectPage() {
 
             <Grid container spacing={1}>
                 <Grid size={4.88}>
-                    <ProjectCardPreview />
+                    <ProjectCardPreview
+                        prjctName={prjctName}
+                        prjctDescription={prjctDescription}
+                        prjctListClasses={prjctListClasses}
+                    />
                 </Grid>
                 <Grid size={6}>
                     <ProjectCardPreviewSettings />
