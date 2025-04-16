@@ -28,7 +28,7 @@ export default function HomePage() {
                         </Typography>
                     </CardContent>
                     
-                    <Accordion>
+                    <Accordion elevation={0}>
                             <AccordionSummary
                                 expandIcon={<ArrowDownwardIcon />}
                                 aria-controls="panel1-content"

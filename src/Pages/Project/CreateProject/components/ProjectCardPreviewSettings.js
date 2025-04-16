@@ -2,13 +2,18 @@ import { Box, Button, Card, CardContent, TextField, Typography } from "@mui/mate
 import settings from "../../../../settings.json";
 import React, { useRef, useState } from 'react';
 import axios from "axios";
+import { useNavigate } from "react-router";
 
 
 
 function ProjectCardPreviewSettings() {
     const fileInputRef = useRef();
+    const navigate = useNavigate();
     const [isLoading, setLoading] = useState(true);
 
+    const handleCreateProjectButtonClicked = () => {
+        navigate("/project");
+    };
 
     const handleChange = async (event) => {
         try {
@@ -72,9 +77,11 @@ function ProjectCardPreviewSettings() {
                     variant="outlined" />
 
                 <Box sx={{ marginTop: "15px", display: "flex", justifyContent: "center" }}>
-                    <Button onClick={() => fileInputRef.current.click()}>Сменить фотографию проекта</Button>
+                    <Button variant="contained" onClick={() => fileInputRef.current.click()}>Сменить фотографию проекта</Button>
+                    <Button variant="contained" onClick={() => handleCreateProjectButtonClicked()} sx={{marginLeft: "15px"}}>Создать</Button>
                     <input onChange={handleChange} multiple={false} ref={fileInputRef} type='file' accept=".jpg, .png, .jpeg" hidden />
                 </Box>
+                
             </CardContent>
         </Card>
     );

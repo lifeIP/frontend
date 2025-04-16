@@ -17,6 +17,7 @@ import RegistrationPage from "./Pages/Auth/Registration/RegistrationPage";
 import WorkingPage from "./Pages/Project/WorkingField/WorkingPage"
 import CreateProjectPage from "./Pages/Project/CreateProject/CreateProjectPage";
 import UploadImagesPage from "./Pages/Project/UploadImages/UploadImagesPage";
+import ProjectPage from "./Pages/Project/ProjectPage/ProjectPage";
 
 
 const lightTheme = createTheme({
@@ -88,24 +89,73 @@ function App() {
       <BrowserRouter>
         <RenderHeader />
         <Routes>
-          <Route path="/" element={
+
+
+          {/* +++++++++++++++++ */}
+          {/* +++++++++++++++++ */}
+          {/* Работа с проектом */}
+          <>
+            <Route path="/create-project" element={
+              <div>
+                <CreateProjectPage />
+              </div>}
+            />
+            <Route path="/project" element={
+              <div>
+                <ProjectPage />
+              </div>}
+            />
+            <Route path="/working-field" element={
+              <div>
+                <WorkingPage />
+              </div>}
+            />
+            <Route path="/upload-images" element={
+              <div>
+                <UploadImagesPage />
+              </div>}
+            />
+          </>
+          {/* Работа с проектом */}
+          {/* ----------------- */}
+          {/* ----------------- */}
+
+
+
+          {/* ++++++++++++++++++++++ */}
+          {/* ++++++++++++++++++++++ */}
+          {/* Работа с пользователем */}
+          <>
+            <Route path="/login" element={
+              <div>
+                <LoginPage />
+              </div>}
+            />
+            <Route path="/registration" element={
+              <div>
+                <RegistrationPage />
+              </div>
+            } />
+            <Route path="/profile" element={
+              <div>
+                <ProfilePage />
+              </div>}
+            />
+            <Route path="/" element={
+              <div>
+                <HomePage />
+              </div>}
+            />
+          </>
+          {/* Работа с пользователем */}
+          {/* ---------------------- */}
+          {/* ---------------------- */}
+
+
+
+          <Route path="/about" element={
             <div>
-              <HomePage />
-            </div>}
-          />
-          <Route path="/upload-images" element={
-            <div>
-              <UploadImagesPage/>
-            </div>}
-          />
-          <Route path="/create-project" element={
-            <div>
-              <CreateProjectPage/>
-            </div>}
-          />
-          <Route path="/working-field" element={
-            <div>
-              <WorkingPage/>
+              <AboutPage />
             </div>}
           />
           <Route path="/welcome" element={
@@ -113,27 +163,7 @@ function App() {
               <WelcomePage />
             </div>}
           />
-          <Route path="/login" element={
-            <div>
-              <LoginPage />
-            </div>}
-          />
-          <Route path="/registration" element={
-            <div>
-              <RegistrationPage />
-            </div>
-          } />
-          <Route path="/about" element={
-            <div>
-              <AboutPage />
-            </div>}
-          />
-          <Route path="/profile" element={
-            <div>
-              <ProfilePage />
-            </div>}
-          />
-
+  
         </Routes>
       </BrowserRouter>
       <CssBaseline />
