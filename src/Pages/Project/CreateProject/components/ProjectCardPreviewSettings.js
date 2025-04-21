@@ -6,11 +6,12 @@ import { useNavigate } from "react-router";
 
 
 
-function ProjectCardPreviewSettings({ setImage, setPrjctName, setPrjctDescription }) {
+function ProjectCardPreviewSettings({ setImage, setPrjctName, setPrjctDescription, createProject }) {
     const fileInputRef = useRef();
     const navigate = useNavigate();
 
     const handleCreateProjectButtonClicked = () => {
+        createProject();
         navigate("/project");
     };
 
