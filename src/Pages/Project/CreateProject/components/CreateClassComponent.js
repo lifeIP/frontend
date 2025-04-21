@@ -5,12 +5,11 @@ import { Box, Card, CardContent, Fab, TextField, Typography } from '@mui/materia
 
 
 
-const CreateClassComponent = () => {
-    const [rows, setRows] = useState([]);
+function CreateClassComponent({rows, setRows}){
 
     // Добавляем новую пустую строку
     const addNewRow = () => {
-        setRows([...rows, { id: Date.now(), label: '', color: '#000000' }]);
+        setRows([{ id: Date.now(), label: '', color: '#000000' }, ...rows]);
     };
 
     // Обработчик изменения цвета строки
@@ -47,10 +46,9 @@ const CreateClassComponent = () => {
             </Box>
             <CardContent>
                 <Box mt={2}>
-                    {rows.length > 0 && rows.map(row => (
+                    {rows?.length > 0 && rows.map(row => (
                         <CardContent>
                             <Box key={row.id}>
-
                                 <TextField
                                     sx={{ marginBottom: "15px", width: "23%", marginRight: "2%" }}
                                     value={row.label}
@@ -68,7 +66,7 @@ const CreateClassComponent = () => {
                                     color={row.color}
                                     value={row.color}
                                     placeholder="Цвет"
-                                    onChange={event => changeColor(row.id, event.target.value)}
+                                    onChangeComplete={event => changeColor(row.id, event.target.value)}
                                 />
                                 <Box sx={{ display: "flex", justifyContent: "center" }}>
                                     <HuePicker

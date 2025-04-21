@@ -11,8 +11,9 @@ import ProjectMainSetting from './components/ProjectMainSetting';
 export default function CreateProjectPage() {
     const [prjctName, setPrjctName] = useState("Имя проекта");
     const [prjctDescription, setPrjctDescription] = useState("Краткое описание проекта, оно не должно превышать определённого количества символов.");
-    const [prjctListClasses, setPrjctListClasses] = useState(["class1", "class2", "class3"]);
     const [isImage, setImage] = useState();
+    const [rows, setRows] = useState([]);
+
 
     return (
         <Center>
@@ -28,7 +29,8 @@ export default function CreateProjectPage() {
                         isImage={isImage}
                         prjctName={prjctName}
                         prjctDescription={prjctDescription}
-                        prjctListClasses={prjctListClasses}
+                        // prjctListClasses={prjctListClasses}
+                        rows={rows}
                     />
                 </Grid>
                 <Grid size={6}>
@@ -40,7 +42,7 @@ export default function CreateProjectPage() {
                 </Grid>
             </Grid>
             <Box sx={{ display: "flex", justifyContent: "center", marginTop: '1.85vh', marginBottom: '1.85vh' }}>
-                <ProjectMainSetting />
+                <ProjectMainSetting rows={rows} setRows={setRows}/>
             </Box>
         </Center>
     );

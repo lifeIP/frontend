@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 
 
-function ProjectCardPreview({isImage, prjctName, prjctDescription, prjctListClasses}) {
+function ProjectCardPreview({isImage, prjctName, prjctDescription, rows}) {
     const [image, setImage] = useState("https://kuzov73.ru/image/cache/no_image-1000x1000.jpg");
     useEffect(()=>{
         if(isImage !== undefined){
@@ -48,9 +48,19 @@ function ProjectCardPreview({isImage, prjctName, prjctDescription, prjctListClas
                     {prjctDescription}
                 </Typography>
                 
-                <Typography overflow={"hidden"} variant="body2" sx={{ color: 'text.secondary', marginTop: "10px" }}>
+                <Typography 
+                sx={{
+                    color: 'text.secondary',
+                    display: '-webkit-box',
+                    overflow: 'hidden',
+                    WebkitBoxOrient: 'vertical',
+                    WebkitLineClamp: 1,
+                    color: 'text.secondary', 
+                    marginTop: "10px"
+                }}
+                variant="body2">
                 <Divider/>
-                    {prjctListClasses.map((item) => `${item}`).join(', ')}
+                    {rows.map((item) => `${item.label}`).join(', ')}
                 </Typography>
             </CardContent>
         </Card>

@@ -4,7 +4,8 @@ import CreateClassComponent from "./CreateClassComponent"
 
 
 
-function ProjectMainSetting() {
+function ProjectMainSetting({rows, setRows}) {
+
     return (
         <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px" }}>
             <CardContent>
@@ -12,7 +13,7 @@ function ProjectMainSetting() {
                     Настройки классов
                 </Typography>
             </CardContent>
-            <CreateClassComponent />
+            <CreateClassComponent rows={rows} setRows={setRows} />
         </Card>
     );
 }
