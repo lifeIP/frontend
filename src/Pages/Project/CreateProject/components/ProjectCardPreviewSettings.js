@@ -6,52 +6,29 @@ import { useNavigate } from "react-router";
 
 
 
-function ProjectCardPreviewSettings() {
+function ProjectCardPreviewSettings({ setImage, setPrjctName, setPrjctDescription }) {
     const fileInputRef = useRef();
     const navigate = useNavigate();
-    const [isLoading, setLoading] = useState(true);
 
     const handleCreateProjectButtonClicked = () => {
         navigate("/project");
     };
 
     const handleChange = async (event) => {
-        try {
-            const formData = new FormData(); // Создаем объект FormData для отправки файла
-            formData.append(
-                "file",
-                event.target.files[0],
-                event.target.files[0].name
-            );
+        const file = event.target.files[0];
 
-            // await sendImageOnServer('/upload-image-on-profile/', formData); // Отправка файла на сервер
+        if (!file) return;
 
-            setLoading(true);
-        } catch (error) {
-            console.error(error);
-            alert('Произошла ошибка при загрузке фото');
-        }
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+
+        reader.onloadend = () => {
+            console.log("DONE", reader.readyState); // readyState will be 2
+            setImage(reader.result);
+        };
+        
+        
     };
-    const sendImageOnServer = async (url, formData) => {
-        try {
-            axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
-            const res = await axios.post(`${settings.server.addr}${url}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-
-            if (res.status === 200 || res.status === 201) {
-                console.log('Файл успешно отправлен!');
-            } else {
-                throw new Error('Ошибка при отправке файла');
-            }
-        } catch (err) {
-            console.error(err);
-            throw err;
-        }
-    };
-
     return (
         <Card sx={{ borderRadius: "12px", width: "30vw", height: "45vh" }}>
             <CardContent>
@@ -65,7 +42,11 @@ function ProjectCardPreviewSettings() {
                     label="Название проекта"
                     name="project_name"
                     type="project_name"
-                    variant="outlined" />
+                    variant="outlined" 
+                    onChange={(event)=>{
+                        setPrjctName(event.target.value);
+                    }}
+                    />
                 <TextField
                     fullWidth
                     multiline
@@ -74,14 +55,18 @@ function ProjectCardPreviewSettings() {
                     label="Описание проекта"
                     name="project_name"
                     type="project_name"
-                    variant="outlined" />
+                    variant="outlined" 
+                    onChange={(event)=>{
+                        setPrjctDescription(event.target.value);
+                    }}
+                    />
 
                 <Box sx={{ marginTop: "15px", display: "flex", justifyContent: "center" }}>
                     <Button variant="contained" onClick={() => fileInputRef.current.click()}>Сменить фотографию проекта</Button>
-                    <Button variant="contained" onClick={() => handleCreateProjectButtonClicked()} sx={{marginLeft: "15px"}}>Создать</Button>
+                    <Button variant="contained" onClick={() => handleCreateProjectButtonClicked()} sx={{ marginLeft: "15px" }}>Создать</Button>
                     <input onChange={handleChange} multiple={false} ref={fileInputRef} type='file' accept=".jpg, .png, .jpeg" hidden />
                 </Box>
-                
+
             </CardContent>
         </Card>
     );

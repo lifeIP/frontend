@@ -1,27 +1,54 @@
 import { Card, CardContent, CardMedia, Divider, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 
 
-function ProjectCardPreview({prjctName, prjctDescription, prjctListClasses}) {
+function ProjectCardPreview({isImage, prjctName, prjctDescription, prjctListClasses}) {
+    const [image, setImage] = useState("https://kuzov73.ru/image/cache/no_image-1000x1000.jpg");
+    useEffect(()=>{
+        if(isImage !== undefined){
+            setImage(isImage);
+            
+            console.log(isImage);
+        }
+    }, [isImage])
+
+    
     return (
         <Card sx={{ width: "20vw", borderRadius: "12px", height: "45vh" }}>
             <CardMedia
                 sx={{ height: "25vh" }}
                 component="img"
                 height="250px"
-                image="https://steamuserimages-a.akamaihd.net/ugc/781852198000334383/FB420C9BB97252C586F11D0BAA9FE46EEAB4F720/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false"
+                src={image}
                 alt="green iguana"
             />
             <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
+                <Typography 
+                sx={{
+                    display: '-webkit-box',
+                    overflow: 'hidden',
+                    WebkitBoxOrient: 'vertical',
+                    WebkitLineClamp: 1,
+                }}
+                gutterBottom variant="h5" component="div" >
                     {prjctName}
                 </Typography>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }} textAlign="justify">
+                <Typography 
+                sx={{
+                    color: 'text.secondary',
+                    display: '-webkit-box',
+                    overflow: 'hidden',
+                    WebkitBoxOrient: 'vertical',
+                    WebkitLineClamp: 3,
+                }}
+                overflow={"hidden"}
+                variant="body2" 
+                textAlign="justify">
                     {prjctDescription}
                 </Typography>
                 
-                <Typography variant="body2" sx={{ color: 'text.secondary', marginTop: "10px" }}>
+                <Typography overflow={"hidden"} variant="body2" sx={{ color: 'text.secondary', marginTop: "10px" }}>
                 <Divider/>
                     {prjctListClasses.map((item) => `${item}`).join(', ')}
                 </Typography>
