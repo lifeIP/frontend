@@ -6,7 +6,7 @@ import { useNavigate } from "react-router";
 
 
 
-function ProjectCardPreviewSettings({ setImage, setPrjctName, setPrjctDescription, createProject }) {
+function ProjectCardPreviewSettings({ setImageEvent, setImage, setPrjctName, setPrjctDescription, createProject }) {
     const fileInputRef = useRef();
     const navigate = useNavigate();
 
@@ -17,6 +17,7 @@ function ProjectCardPreviewSettings({ setImage, setPrjctName, setPrjctDescriptio
 
     const handleChange = async (event) => {
         const file = event.target.files[0];
+        setImageEvent(event.target.files[0]);
 
         if (!file) return;
 
@@ -24,7 +25,7 @@ function ProjectCardPreviewSettings({ setImage, setPrjctName, setPrjctDescriptio
         reader.readAsDataURL(file);
 
         reader.onloadend = () => {
-            console.log("DONE", reader.readyState); // readyState will be 2
+            // console.log("DONE", reader.readyState); // readyState will be 2
             setImage(reader.result);
         };
         
