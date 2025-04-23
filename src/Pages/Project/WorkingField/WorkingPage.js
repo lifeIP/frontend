@@ -7,7 +7,8 @@ import {
 
 import React, { 
     memo, 
-    useEffect
+    useEffect,
+    useState
 } from 'react';
 
 import Card from '@mui/material/Card';
@@ -16,7 +17,11 @@ import Center from '../../../components/Center/Center'
 import Hat from '../../../components/Hat/Hat';
 
 export default function WorkingField() {
-    useEffect(() => { localStorage.setItem('rect_list', JSON.stringify([])); }, [])
+    const [projectId, setProjectId] = useState(0);
+    useEffect(() => { 
+        localStorage.setItem('rect_list', JSON.stringify([])); 
+        setProjectId(localStorage.getItem("last_project_id"));
+    }, [])
     return (
         <Center>
             <Hat>
@@ -26,7 +31,7 @@ export default function WorkingField() {
             </Hat>
 
             <Box>
-                <SmartMarkupComponent project_id={0}/>
+                <SmartMarkupComponent project_id={1}/>
             </Box>
 
             <Box sx={{ display: "flex", justifyContent: "center", marginTop: '1.85vh' }}>

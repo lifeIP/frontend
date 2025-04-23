@@ -68,6 +68,7 @@ export default function CreateProjectPage() {
 
             if (res.status === 200 || res.status === 201) {
                 sendProjectImage(res.data.id);
+                localStorage.setItem("last_project_id", res.data.id);
                 console.log('Проект успешно создан!');
 
             } else {
