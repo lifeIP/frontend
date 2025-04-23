@@ -29,6 +29,28 @@ export default function SmartMarkup({ project_id }) {
     const mainRef = useRef(null);
     const [inBoundingBox, setInBoundingBox] = useState(true);
 
+    function useKey(key, cb){
+        const callback = useRef(cb);
+    
+        useEffect(() => {
+            callback.current = cb;
+        })
+    
+    
+        useEffect(() => {
+            function handle(event){
+                if(event.code === key){
+                    callback.current(event);
+                } else if (key === 's' && event.key === 's') {
+                    callback.current(event);
+                }
+            }
+    
+            document.addEventListener('keydown',handle);
+            return () => document.removeEventListener("keydown",handle)
+        },[key])
+    }
+
     const handleMouseMove = (event) => {
         if (!mainRef.current) return;
 
@@ -44,8 +66,10 @@ export default function SmartMarkup({ project_id }) {
             setInBoundingBox(false);
         }
     };
+    useKey('s', () => console.log('S fired!'));
 
     useEffect(() => {
+        
         localStorage.setItem('rect_list', JSON.stringify([]));
         document.addEventListener('mousemove', handleMouseMove);
         return () => {
