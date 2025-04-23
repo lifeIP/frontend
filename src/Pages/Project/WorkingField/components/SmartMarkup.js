@@ -29,26 +29,26 @@ export default function SmartMarkup({ project_id }) {
     const mainRef = useRef(null);
     const [inBoundingBox, setInBoundingBox] = useState(true);
 
-    function useKey(key, cb){
+    function useKey(key, cb) {
         const callback = useRef(cb);
-    
+
         useEffect(() => {
             callback.current = cb;
         })
-    
-    
+
+
         useEffect(() => {
-            function handle(event){
-                if(event.code === key){
+            function handle(event) {
+                if (event.code === key) {
                     callback.current(event);
                 } else if (key === 's' && event.key === 's') {
                     callback.current(event);
                 }
             }
-    
-            document.addEventListener('keydown',handle);
-            return () => document.removeEventListener("keydown",handle)
-        },[key])
+
+            document.addEventListener('keydown', handle);
+            return () => document.removeEventListener("keydown", handle)
+        }, [key])
     }
 
     const handleMouseMove = (event) => {
@@ -69,7 +69,7 @@ export default function SmartMarkup({ project_id }) {
     useKey('s', () => console.log('S fired!'));
 
     useEffect(() => {
-        
+
         localStorage.setItem('rect_list', JSON.stringify([]));
         document.addEventListener('mousemove', handleMouseMove);
         return () => {
@@ -102,14 +102,18 @@ export default function SmartMarkup({ project_id }) {
     const [currentScale, setCurrentScale] = useState(1);
     const [selectedClass, setSelectedClass] = useState(0);
     const [canvasSize, setCanvasSize] = useState({ width: 2000, height: 2000 });
+    const [isSaved, setSaved] = useState(false);
 
-    const CanvasOverImageComponent = memo(({ currentClass, currentScale, inBoundingBox, stateEditing, canvasSize}) => {
+    const CanvasOverImageComponent = memo(({ currentClass, currentScale, inBoundingBox, stateEditing, canvasSize, isSaved, setSaved }) => {
         return <CanvasOverImage
             currentClass={currentClass}
             currentScale={currentScale}
             inBoundingBox={inBoundingBox}
             stateEditing={stateEditing}
-            canvasSize={canvasSize} />
+            canvasSize={canvasSize}
+            setSaved={setSaved}
+            isSaved={isSaved}
+        />
     });
     return (
         <Card sx={{ width: "51.05vw" }} ref={mainRef}>
@@ -123,14 +127,16 @@ export default function SmartMarkup({ project_id }) {
                     <TransformComponent>
                         <Box sx={{ position: 'relative', width: '100%', height: 'auto' }}>
                             <Card sx={{ width: "51.05vw" }}>
-                                <ImageViewer setCanvasSize={setCanvasSize}/>
+                                <ImageViewer setCanvasSize={setCanvasSize} />
                                 <CanvasOverImageComponent
                                     currentClass={data_markup_classes.at(selectedClass)}
                                     currentScale={currentScale}
                                     inBoundingBox={inBoundingBox}
                                     canvasSize={canvasSize}
-                                    stateEditing={stateEditing} />
-                                    
+                                    stateEditing={stateEditing}
+                                    setSaved={setSaved}
+                                    isSaved={isSaved} />
+
                             </Card>
                         </Box>
                     </TransformComponent>

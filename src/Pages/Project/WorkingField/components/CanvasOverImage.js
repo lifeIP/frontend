@@ -6,8 +6,7 @@ import React, {
 } from 'react';
 
 
-const CanvasOverImage = ({ currentClass, currentScale, inBoundingBox, stateEditing, canvasSize }) => {
-
+const CanvasOverImage = ({ currentClass, currentScale, inBoundingBox, stateEditing, canvasSize, setSaved, isSaved }) => {
     const canvasRef = useRef(null);
 
     let mouse_pos_x = -1;
@@ -93,6 +92,7 @@ const CanvasOverImage = ({ currentClass, currentScale, inBoundingBox, stateEditi
             leftButtonPressed = false;
             console.log('Левая кнопка отпущена');
 
+            if (Math.abs(rect_shape_w) < 15 && Math.abs(rect_shape_h) < 10) return;
             rect_class_c = currentClass.class_color;
             rect_list.push({
                 x: rect_pos_x,
@@ -102,9 +102,20 @@ const CanvasOverImage = ({ currentClass, currentScale, inBoundingBox, stateEditi
                 c: currentClass
             })
             localStorage.setItem('rect_list', JSON.stringify(rect_list));
+            setSaved(false);
         }
     };
 
+
+    function save_mask_on_server() {
+        let data = localStorage.getItem('rect_list');
+        console.log(data);
+    }
+    useEffect(()=>{
+        if(isSaved === true) return;
+        save_mask_on_server();
+        setSaved(true);
+    }, [isSaved]);
 
 
 
@@ -132,24 +143,24 @@ const CanvasOverImage = ({ currentClass, currentScale, inBoundingBox, stateEditi
                 isLoading ? (
                     <Skeleton animation="wave" variant="rectangular" sx={{ height: "15vh" }} />
                 ) : ( */}
-                    <Box>
-                        <Box>
-                            <canvas
-                                ref={canvasRef}
-                                width={canvasSize.width}
-                                height={canvasSize.height}
-                                style={{
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: 0,
-                                    width: '100%',
-                                    height: '100%',
-                                    zIndex: 15,
-                                }}
-                            />
-                        </Box>
-                    </Box>
-                {/* )
+            <Box>
+                <Box>
+                    <canvas
+                        ref={canvasRef}
+                        width={canvasSize.width}
+                        height={canvasSize.height}
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            zIndex: 15,
+                        }}
+                    />
+                </Box>
+            </Box>
+            {/* )
             } */}
 
             {/* <p>x: {mousePosition.x}, y: {mousePosition.y}</p>
