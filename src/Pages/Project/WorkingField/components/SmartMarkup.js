@@ -96,7 +96,7 @@ export default function SmartMarkup({ project_id }) {
                 console.log(err);
             })
 
-    }, [])
+    }, [project_id])
 
     const [stateEditing, setStateEditing] = useState(true);
     const [currentScale, setCurrentScale] = useState(1);

@@ -31,7 +31,7 @@ export default function WorkingField() {
             </Hat>
 
             <Box>
-                <SmartMarkupComponent project_id={1}/>
+                <SmartMarkupComponent project_id={projectId}/>
             </Box>
 
             <Box sx={{ display: "flex", justifyContent: "center", marginTop: '1.85vh' }}>
