@@ -5,8 +5,16 @@ import Hat from '../../../components/Hat/Hat';
 import DragDropFileUpload from './components/DragDropFileUpload'
 
 export default function UploadImagesPage() {
-    const handleFileUpload = (file) => {
-        console.log(file);
+    const handleFileUpload = (files) => {
+        // console.log(files);
+        if(files === undefined) return;
+        if(files.length === 0) return;
+        Array.from(files).map(element => {
+            let file_type = element.type;
+            if (file_type === "image/jpg" || file_type === "image/jpeg" || file_type === "image/png") {
+                console.log("Доступно");
+            }
+        });
     };
     return (
         <Center>
@@ -15,8 +23,8 @@ export default function UploadImagesPage() {
                     Загрузка фотографий
                 </Typography>
             </Hat>
-                <DragDropFileUpload onFileUpload={handleFileUpload} />
-                
+            <DragDropFileUpload onFileUpload={handleFileUpload} />
+
         </Center>
     );
 }

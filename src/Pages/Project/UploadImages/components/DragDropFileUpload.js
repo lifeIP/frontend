@@ -20,7 +20,7 @@ function DragDropFileUpload({ onFileUpload }) {
       event.preventDefault();
       setDragOver(false);
       if (event.dataTransfer.files && event.dataTransfer.files[0]) {
-        onFileUpload(event.dataTransfer.files[0]);
+        onFileUpload(event.dataTransfer.files);
       }
     },
     [onFileUpload]
@@ -29,7 +29,7 @@ function DragDropFileUpload({ onFileUpload }) {
   const handleChange = useCallback(
     (event) => {
       if (event.target.files && event.target.files[0]) {
-        onFileUpload(event.target.files[0]);
+        onFileUpload(event.target.files);
       }
     },
     [onFileUpload]
@@ -49,7 +49,7 @@ function DragDropFileUpload({ onFileUpload }) {
       }}
     >
       <input
-        accept="image/*"
+        accept=".png, .jpg, .jpeg"
         style={{ display: 'none' }}
         id="raised-button-file"
         multiple
