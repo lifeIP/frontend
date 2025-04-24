@@ -49,7 +49,7 @@ export default function ProjectPage() {
                 </CardContent>
                 <CardContent>
                     <Box sx={{ display: "flex", justifyContent: "center" }}>
-                        <Fab size="medium" aria-label="добавить класс" onClick={() => { navigate("/upload-images") }}>
+                        <Fab size="medium" aria-label="добавить проект" onClick={() => { navigate("/upload-images") }}>
                             <AddIcon />
                         </Fab>
                     </Box>
