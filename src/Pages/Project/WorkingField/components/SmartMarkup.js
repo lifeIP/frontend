@@ -43,6 +43,10 @@ export default function SmartMarkup({ project_id }) {
                     callback.current(event);
                 } else if (key === 's' && event.key === 's') {
                     callback.current(event);
+                } else if (key === 'a' && event.key === 'a') {
+                    callback.current(event);
+                } else if (key === 'd' && event.key === 'd') {
+                    callback.current(event);
                 }
             }
 
@@ -66,7 +70,40 @@ export default function SmartMarkup({ project_id }) {
             setInBoundingBox(false);
         }
     };
-    useKey('s', () => console.log('S fired!'));
+
+    async function saveMask(){
+        console.log('S fired!');
+        
+        // let url = "/set_mask_on_image/";
+        // let data = []
+        // let rawdata = localStorage.getItem('rect_list');        
+        // rawdata.map((item)=>{
+        //     data.push({
+        //         "class_id": item.c.id,
+        //     });
+        // })
+        // try {
+        //     axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+        //     const res = await axios.post(`${settings.server.addr}${url}`, data);
+
+        //     if (res.status === 200 || res.status === 201) {
+        //         // sendProjectImage(res.data.id);
+        //         // localStorage.setItem("last_project_id", res.data.id);
+        //         // console.log('Проект успешно создан!');
+
+        //     } else {
+        //         throw new Error('Ошибка при отправке даннх');
+        //     }
+        // } catch (err) {
+        //     console.error(data);
+        //     console.error(err);
+        //     throw err;
+        // }
+    }
+
+    useKey('s', () => saveMask());
+    useKey('a', () => console.log('A fired!'));
+    useKey('d', () => console.log('D fired!'));
 
     useEffect(() => {
 

@@ -25,28 +25,45 @@ const CanvasOverImage = ({ currentClass, currentScale, inBoundingBox, stateEditi
             const context = canvasRef.current.getContext('2d');
 
             context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-            context.lineWidth = 3;
+            context.lineWidth = 30 - (3*currentScale);
 
             if (rect_list.length === 0) {
                 rect_list = JSON.parse(localStorage.getItem('rect_list'))
             }
             rect_list.map((item, index) => {
                 const path1 = new Path2D();
-                // path1.strokeStyle = item.c;
-                context.strokeStyle = item.c.class_color;
-                path1.rect(
-                    item.x, item.y,
-                    item.w, item.h
-                );
+                context.strokeStyle = item.class_color;
+                item.points.map((point)=>{
+                    if(point.id === 0) path1.moveTo(point.x, point.y);
+                    path1.lineTo(point.x, point.y);
+                    path1.moveTo(point.x, point.y);
+                    
+                    context.strokeStyle = "#000000";
+                    context.fillRect(point.x-8, point.y-8, 16, 16);
+                    context.strokeStyle = item.class_color;
+                });
+
+                path1.moveTo(item.points[0].x, item.points[0].y);
+                path1.lineTo(item.points[item.points.length-1].x, item.points[item.points.length-1].y);
+
                 path1.closePath();
                 context.stroke(path1);
             })
 
+
+
             const path1 = new Path2D();
             context.strokeStyle = currentClass.class_color;
             path1.rect(rect_pos_x, rect_pos_y, rect_shape_w, rect_shape_h)
-            path1.closePath();    //  закрываем путь
+            path1.closePath();
             context.stroke(path1);
+
+            context.strokeStyle = "#000000";
+            context.fillRect(rect_pos_x-8, rect_pos_y-8, 16, 16);
+            context.fillRect(rect_pos_x + rect_shape_w-8, rect_pos_y + rect_shape_h-8, 16, 16);
+            context.fillRect(rect_pos_x-8, rect_pos_y + rect_shape_h-8, 16, 16);
+            context.fillRect(rect_pos_x + rect_shape_w-8, rect_pos_y-8, 16, 16);
+            context.strokeStyle = currentClass.class_color;
         }
     };
 
@@ -71,6 +88,8 @@ const CanvasOverImage = ({ currentClass, currentScale, inBoundingBox, stateEditi
 
         let x_pos = relativeX / currentScale;
         let y_pos = relativeY / currentScale;
+        x_pos *= 10;
+        y_pos *= 10;
 
         mouse_pos_x = x_pos;
         mouse_pos_y = y_pos;
@@ -92,14 +111,34 @@ const CanvasOverImage = ({ currentClass, currentScale, inBoundingBox, stateEditi
             leftButtonPressed = false;
             console.log('Левая кнопка отпущена');
 
-            if (Math.abs(rect_shape_w) < 15 && Math.abs(rect_shape_h) < 10) return;
+            if (Math.abs(rect_shape_w) < 10 && Math.abs(rect_shape_h) < 10) return;
             rect_class_c = currentClass.class_color;
             rect_list.push({
-                x: rect_pos_x,
-                y: rect_pos_y,
-                w: rect_shape_w,
-                h: rect_shape_h,
-                c: currentClass
+                class_id: currentClass.id,
+                class_color: currentClass.class_color,
+                class_name: currentClass.class_name,
+                points: [
+                    {
+                        id: 0,
+                        x: rect_pos_x,
+                        y: rect_pos_y,
+                    },
+                    {
+                        id: 1,
+                        x: rect_pos_x + rect_shape_w,
+                        y: rect_pos_y,
+                    },
+                    {
+                        id: 2,
+                        x: rect_pos_x + rect_shape_w,
+                        y: rect_pos_y + rect_shape_h,
+                    },
+                    {
+                        id: 3,
+                        x: rect_pos_x,
+                        y: rect_pos_y + rect_shape_h,
+                    }
+                ]
             })
             localStorage.setItem('rect_list', JSON.stringify(rect_list));
             setSaved(false);
@@ -111,8 +150,8 @@ const CanvasOverImage = ({ currentClass, currentScale, inBoundingBox, stateEditi
         let data = localStorage.getItem('rect_list');
         console.log(data);
     }
-    useEffect(()=>{
-        if(isSaved === true) return;
+    useEffect(() => {
+        if (isSaved === true) return;
         save_mask_on_server();
         setSaved(true);
     }, [isSaved]);
