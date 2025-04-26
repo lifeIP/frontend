@@ -6,11 +6,15 @@ import React, {
     useRef,
     useState
 } from 'react';
+import { useNavigate } from "react-router";
 
 
 
 
 const ImageViewer = ({ image_id }) => {
+    const navigate = useNavigate();
+
+
     const canvasRef = useRef(null);
     const [canvasSize, setCanvasSize] = useState({ width: 2000, height: 2000 });
 
@@ -36,7 +40,6 @@ const ImageViewer = ({ image_id }) => {
 
 
     useEffect(() => {
-        // if(isLoading!=false){
 
         axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
         axios.get(`${settings.server.addr}/get-image-by-id/${image_id}?t=${Date.now()}`, {
@@ -50,7 +53,6 @@ const ImageViewer = ({ image_id }) => {
                     )
                 )
                 setImage(`data:image/jpeg;charset=utf-8;base64,${base64}`);
-                // setLoading(false);
             })
             .catch(err => {
                 console.log(err);
@@ -66,7 +68,12 @@ const ImageViewer = ({ image_id }) => {
         <Box position="relative">
 
             <Card>
-                <CardActionArea>
+                <CardActionArea
+                    onClick={()=>{
+                        localStorage.setItem("working-field-image-id", image_id);
+                        navigate("/working-field");
+                    }}
+                >
                     <canvas
                         ref={canvasRef}
                         width={canvasSize.width}

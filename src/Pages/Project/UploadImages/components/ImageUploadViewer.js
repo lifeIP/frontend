@@ -13,6 +13,7 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 
 
 const ImageUploadViewer = ({ file, startUpload, disabled }) => {
+    
     const [imageStatus, setImageStatus] = useState(true);
     const imageRef = useRef(null);
     const [image, setImage] = useState("");
@@ -29,8 +30,8 @@ const ImageUploadViewer = ({ file, startUpload, disabled }) => {
 
     useEffect(() => {
         if (!startUpload) return;
-        if(!imageStatus) return;
-        
+        if (!imageStatus) return;
+
         sendImage(localStorage.getItem("last_project_id"));
         console.log("upload start");
         console.log(file);
@@ -75,9 +76,11 @@ const ImageUploadViewer = ({ file, startUpload, disabled }) => {
     return (
         <Box position="relative">
             <Card>
-                <CardActionArea disabled={disabled} onClick={()=>{
-                    setImageStatus(!imageStatus);
-                }}>
+                <CardActionArea
+                    disabled={disabled}
+                    onClick={() => {
+                        setImageStatus(!imageStatus);
+                    }}>
                     <Box sx={{
                         position: 'absolute',
                         top: 0,
@@ -86,8 +89,8 @@ const ImageUploadViewer = ({ file, startUpload, disabled }) => {
                         height: '100%',
                         zIndex: 15,
                     }}>
-                        {imageStatus?<CheckBoxIcon fontSize="large"/>:<CheckBoxOutlineBlankIcon fontSize="large"/>}
-                        
+                        {imageStatus ? <CheckBoxIcon fontSize="large" /> : <CheckBoxOutlineBlankIcon fontSize="large" />}
+
                     </Box>
                     <CardMedia
                         key={image}

@@ -12,14 +12,11 @@ import React, {
 
 const ImageViewer = ({ setCanvasSize }) => {
     const imageRef = useRef(null);
-    // const [isLoading, setLoading] = useState(true);
     const [image, setImage] = useState();
 
     useEffect(() => {
-        // if(isLoading!=false){
-
         axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
-        axios.get(`${settings.server.addr}/get-image-by-id/${1}?t=${Date.now()}`, {
+        axios.get(`${settings.server.addr}/get-image-by-id/${localStorage.getItem("working-field-image-id")}?t=${Date.now()}`, {
             responseType: "arraybuffer"
         })
             .then(res => {
@@ -30,12 +27,10 @@ const ImageViewer = ({ setCanvasSize }) => {
                     )
                 )
                 setImage(`data:image/jpeg;charset=utf-8;base64,${base64}`);
-                // setLoading(false);
             })
             .catch(err => {
                 console.log(err);
             })
-        // }
     }, []);
 
     return (
