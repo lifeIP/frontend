@@ -89,8 +89,8 @@ export default function CreateProjectPage() {
                 </Typography>
             </Hat>
 
-            <Grid container spacing={1}>
-                <Grid size={4.88}>
+            <Grid container spacing="1.85vh" sx={{maxWidth: "51.05vw"}}>
+                <Grid >
                     <ProjectCardPreview
                         isImage={isImage}
                         prjctName={prjctName}
@@ -98,7 +98,7 @@ export default function CreateProjectPage() {
                         rows={rows}
                     />
                 </Grid>
-                <Grid size={6}>
+                <Grid >
                     <ProjectCardPreviewSettings
                         setImageEvent={setImageEvent}
                         createProject={createProject}

@@ -15,7 +15,7 @@ function ProjectCardPreview({ isImage, prjctName, prjctDescription, rows }) {
 
 
     return (
-        <Card sx={{ width: "20vw", borderRadius: "12px", height: "45vh" }}>
+        <Card sx={{ width: "25vw", borderRadius: "12px", height: "45vh" }}>
             <CardMedia
                 sx={{ height: "25vh" }}
                 component="img"

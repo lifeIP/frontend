@@ -29,18 +29,17 @@ export default function ProfilePage() {
                 </Typography>
             </Hat>
 
-            <Grid container spacing={1}>
-                <Grid size={4.88}>
+            <Grid container spacing="1.05vw" maxWidth="51.05vw">
+                <Grid>
                     <Profile />
                 </Grid>
-                <Grid size={6}>
+                <Grid>
                     <Statistics />
                 </Grid>
             </Grid>
 
-            
-                <ProjectsListPage/>
-            
+            <ProjectsListPage />
+
         </Center>
     );
 }

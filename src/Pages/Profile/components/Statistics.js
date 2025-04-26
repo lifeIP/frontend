@@ -1,19 +1,31 @@
-import { 
-    Card, 
-    CardContent, 
-    Skeleton, 
-    Typography 
+import {
+    Box,
+    Card,
+    CardContent,
+    Skeleton,
+    Typography
 } from '@mui/material';
 
-import React, { 
-    useState 
+import React, {
+    useState
 } from 'react';
 
-import { PieChart } from '@mui/x-charts';
+import { PieChart } from '@mui/x-charts/PieChart';
+
 
 
 export default function Statistics() {
-    const [is_load, setLoad] = useState(false)  
+    const [is_load, setLoad] = useState(true)
+    const series = [
+        {
+            data: [
+                { id: 0, value: 10, label: (location) => { if (location == "tooltip") return "some1" } },
+                { id: 1, value: 15, label: (location) => { if (location == "tooltip") return "some2" } },
+                { id: 2, value: 20, label: (location) => { if (location == "tooltip") return "some3" } },
+            ],
+        },
+    ];
+
     return (
         <Card sx={{ borderRadius: "12px", width: "30vw", height: "45vh" }}>
             <CardContent>
@@ -25,21 +37,21 @@ export default function Statistics() {
                 {!is_load ? (
                     <Skeleton sx={{ height: 235 }} animation="wave" variant="rectangular" />
                 ) : (
-                    <PieChart
-                        series={[
-                            {
-                                data: [
-                                    { id: 0, value: 10, label: 'M124' },
-                                    { id: 1, value: 15, label: 'series B' },
-                                    { id: 2, value: 20, label: 'series C' },
-                                ],
-                            },
-                        ]}
-                        width={400}
-                        height={235}
-                    />
+                    <Box sx={{display:"flex", justifyContent: "center", width: "30vw"}}>
+                        <PieChart
+                            sx={{marginLeft: 7}}
+                            height={225}
+                            series={series}
+                        />
+                    </Box>
                 )}
             </CardContent>
         </Card>
     );
 }
+
+// const pieParams = {
+//     height: 225,
+//     margin: { right: 5 },
+//     hideLegend: true,
+// };

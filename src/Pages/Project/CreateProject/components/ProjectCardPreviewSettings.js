@@ -32,7 +32,7 @@ function ProjectCardPreviewSettings({ setImageEvent, setImage, setPrjctName, set
         
     };
     return (
-        <Card sx={{ borderRadius: "12px", width: "30vw", height: "45vh" }}>
+        <Card sx={{ borderRadius: "12px", width: "25vw", height: "45vh" }}>
             <CardContent>
                 <Typography gutterBottom variant="h4" component="div" textAlign="center">
                     Внешний вид
@@ -64,7 +64,7 @@ function ProjectCardPreviewSettings({ setImageEvent, setImage, setPrjctName, set
                     />
 
                 <Box sx={{ marginTop: "15px", display: "flex", justifyContent: "center" }}>
-                    <Button variant="contained" onClick={() => fileInputRef.current.click()}>Сменить фотографию проекта</Button>
+                    <Button variant="contained" onClick={() => fileInputRef.current.click()}>Фото проекта</Button>
                     <Button variant="contained" onClick={() => handleCreateProjectButtonClicked()} sx={{ marginLeft: "15px" }}>Создать</Button>
                     <input onChange={handleChange} multiple={false} ref={fileInputRef} type='file' accept=".jpg, .png, .jpeg" hidden />
                 </Box>

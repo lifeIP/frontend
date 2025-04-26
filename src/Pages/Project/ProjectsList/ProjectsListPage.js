@@ -1,9 +1,10 @@
-import { Box, Card, CardContent, Fab, Typography } from '@mui/material';
+import { Box, Card, CardContent, Fab, Grid, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import AddIcon from '@mui/icons-material/Add';
 import axios from 'axios';
 import settings from "../../../settings.json"
+import ProjectViewComponent from './components/ProjectViewComponent';
 
 
 export default function ProjectsListPage() {
@@ -53,9 +54,16 @@ export default function ProjectsListPage() {
                     </CardContent>
                 </Card>
             </Box>
-            {listProjects.map((item)=>(
-                <Typography>{item}</Typography>
-            ))}
+            <Box sx={{maxWidth: "51.05vw"}}>
+            <Grid container spacing="1.85vh">
+                {listProjects.map((item, index) => (
+                    <Grid size={6}>
+                        <ProjectViewComponent />
+                    </Grid>
+                ))}
+            </Grid>
+            </Box>
+
         </>
     );
 }
