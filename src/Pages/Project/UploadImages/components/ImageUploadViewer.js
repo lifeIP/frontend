@@ -1,4 +1,4 @@
-import { Box, Card, CardMedia } from "@mui/material";
+import { Box, Card, CardActionArea, CardMedia } from "@mui/material";
 import settings from "../../../../settings.json"
 import axios from 'axios';
 import React, {
@@ -7,13 +7,16 @@ import React, {
     useState
 } from 'react';
 
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 
 
-
-const ImageUploadViewer = ({file, startUpload}) => {
+const ImageUploadViewer = ({ file, startUpload, disabled }) => {
+    const [imageStatus, setImageStatus] = useState(true);
     const imageRef = useRef(null);
     const [image, setImage] = useState("");
-    
+
     useEffect(() => {
         if (!file) return;
         const reader = new FileReader();
@@ -24,8 +27,8 @@ const ImageUploadViewer = ({file, startUpload}) => {
         };
     }, []);
 
-    useEffect(()=>{
-        if(!startUpload)return;
+    useEffect(() => {
+        if (!startUpload) return;
         sendImage(localStorage.getItem("last_project_id"));
         console.log("upload start");
         console.log(file);
@@ -68,23 +71,37 @@ const ImageUploadViewer = ({file, startUpload}) => {
     };
 
     return (
-        <Box>
+        <Box position="relative">
             <Card>
-                <CardMedia
-                    key={image}
-                    ref={imageRef}
-                    component="img"
-                    src={image}
-                    alt="Фотография"
-                    sx={{
-                        width: '100%',   // Ширина фотографии — 100% ширины контейнера
-                        height: 'auto',  // Высота автоматически адаптируется под ширину
-                        objectFit: 'contain',  // Подгоняем картинку без искажений
-                        display: 'block',
-                        margin: '0 auto'  // Центрируем изображение горизонтально
-                    }}
-                />
-
+                <CardActionArea disabled={disabled} onClick={()=>{
+                    setImageStatus(!imageStatus);
+                }}>
+                    <Box sx={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        zIndex: 15,
+                    }}>
+                        {imageStatus?<CheckBoxIcon fontSize="large"/>:<CheckBoxOutlineBlankIcon fontSize="large"/>}
+                        
+                    </Box>
+                    <CardMedia
+                        key={image}
+                        ref={imageRef}
+                        component="img"
+                        src={image}
+                        alt="Фотография"
+                        sx={{
+                            width: '100%',   // Ширина фотографии — 100% ширины контейнера
+                            height: 'auto',  // Высота автоматически адаптируется под ширину
+                            objectFit: 'contain',  // Подгоняем картинку без искажений
+                            display: 'block',
+                            margin: '0 auto'  // Центрируем изображение горизонтально
+                        }}
+                    />
+                </CardActionArea>
             </Card>
         </Box>
     );

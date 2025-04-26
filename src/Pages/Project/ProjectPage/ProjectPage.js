@@ -6,6 +6,8 @@ import ProjectCardPreview from '../CreateProject/components/ProjectCardPreview';
 import ImageViewer from './components/ImageViewer'
 import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from 'react-router';
+import axios from 'axios';
+import settings from "../../../settings.json"
 
 
 export default function ProjectPage() {
@@ -18,8 +20,30 @@ export default function ProjectPage() {
     const [rows, setRows] = useState([]);
 
 
+    const [listImages, setListImages] = useState([]);
+
+    async function getListOfImages(project_id) {
+        let url = "/get_projects_images_list/" + project_id;
+
+        try {
+            axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+            const res = await axios.get(`${settings.server.addr}${url}`);
+
+            if (res.status === 200 || res.status === 201) {
+                setListImages(res.data.ids);
+                console.log(res.data.ids);
+            } else {
+                throw new Error('Ошибка при отправке данных');
+            }
+        } catch (err) {
+            console.error(err);
+            throw err;
+        }
+    }
+
     useEffect(() => {
         setProjectId(localStorage.getItem("last_project_id"));
+        getListOfImages(localStorage.getItem("last_project_id"));
     }, []);
 
     return (
@@ -59,72 +83,11 @@ export default function ProjectPage() {
 
             <Box sx={{ width: "51.05vw" }}>
                 <Grid container spacing={1} sx={{ marginTop: '1vh' }}>
-                    <Grid size={3}>
-                        <ImageViewer setCanvasSize={() => { }} />
+                    {listImages.map((id)=>(
+                        <Grid size={3}>
+                        <ImageViewer image_id={id} setCanvasSize={() => { }} />
                     </Grid>
-                    <Grid size={3}>
-                        <ImageViewer setCanvasSize={() => { }} />
-
-                    </Grid>
-                    <Grid size={3}>
-                        <ImageViewer setCanvasSize={() => { }} />
-
-                    </Grid>
-                    <Grid size={3}>
-                        <ImageViewer setCanvasSize={() => { }} />
-
-                    </Grid>
-                </Grid>
-                <Grid container spacing={1} sx={{ marginTop: '1vh' }}>
-                    <Grid size={3}>
-                        <ImageViewer setCanvasSize={() => { }} />
-                    </Grid>
-                    <Grid size={3}>
-                        <ImageViewer setCanvasSize={() => { }} />
-
-                    </Grid>
-                    <Grid size={3}>
-                        <ImageViewer setCanvasSize={() => { }} />
-
-                    </Grid>
-                    <Grid size={3}>
-                        <ImageViewer setCanvasSize={() => { }} />
-
-                    </Grid>
-                </Grid>
-                <Grid container spacing={1} sx={{ marginTop: '1vh' }}>
-                    <Grid size={3}>
-                        <ImageViewer setCanvasSize={() => { }} />
-                    </Grid>
-                    <Grid size={3}>
-                        <ImageViewer setCanvasSize={() => { }} />
-
-                    </Grid>
-                    <Grid size={3}>
-                        <ImageViewer setCanvasSize={() => { }} />
-
-                    </Grid>
-                    <Grid size={3}>
-                        <ImageViewer setCanvasSize={() => { }} />
-
-                    </Grid>
-                </Grid>
-                <Grid container spacing={1} sx={{ marginTop: '1vh' }}>
-                    <Grid size={3}>
-                        <ImageViewer setCanvasSize={() => { }} />
-                    </Grid>
-                    <Grid size={3}>
-                        <ImageViewer setCanvasSize={() => { }} />
-
-                    </Grid>
-                    <Grid size={3}>
-                        <ImageViewer setCanvasSize={() => { }} />
-
-                    </Grid>
-                    <Grid size={3}>
-                        <ImageViewer setCanvasSize={() => { }} />
-
-                    </Grid>
+                    ))}
                 </Grid>
             </Box>
         </Center>

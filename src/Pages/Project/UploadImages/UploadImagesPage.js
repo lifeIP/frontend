@@ -53,7 +53,7 @@ export default function UploadImagesPage() {
                 <Grid container spacing={1}>
                     {files.map((item) => (
                         <Grid size={3}>
-                            <ImageUploadViewer file={item} startUpload={startUpload} />
+                            <ImageUploadViewer disabled={buttonDisabled} file={item} startUpload={startUpload} />
                         </Grid>
                     ))}
                 </Grid>

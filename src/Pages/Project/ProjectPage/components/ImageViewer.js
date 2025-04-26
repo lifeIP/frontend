@@ -10,7 +10,7 @@ import React, {
 
 
 
-const ImageViewer = () => {
+const ImageViewer = ({image_id}) => {
     const canvasRef = useRef(null);
     const [canvasSize, setCanvasSize] = useState({ width: 2000, height: 2000 });
 
@@ -39,7 +39,7 @@ const ImageViewer = () => {
         // if(isLoading!=false){
 
         axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
-        axios.get(`${settings.server.addr}/get-image-by-id/${1}?t=${Date.now()}`, {
+        axios.get(`${settings.server.addr}/get-image-by-id/${image_id}?t=${Date.now()}`, {
             responseType: "arraybuffer"
         })
             .then(res => {
