@@ -2,21 +2,24 @@ import { useCallback, useState } from 'react';
 import { Box, Paper, Typography, IconButton } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-function DragDropFileUpload({ onFileUpload }) {
+function DragDropFileUpload({ disabled, onFileUpload }) {
   const [dragOver, setDragOver] = useState(false);
 
   const handleDragOver = useCallback((event) => {
+    if (disabled) return;
     event.preventDefault();
     setDragOver(true);
   }, []);
 
   const handleDragLeave = useCallback((event) => {
+    if (disabled) return;
     event.preventDefault();
     setDragOver(false);
   }, []);
 
   const handleDrop = useCallback(
     (event) => {
+      if (disabled) return;
       event.preventDefault();
       setDragOver(false);
       if (event.dataTransfer.files && event.dataTransfer.files[0]) {
@@ -28,6 +31,7 @@ function DragDropFileUpload({ onFileUpload }) {
 
   const handleChange = useCallback(
     (event) => {
+      if (disabled) return;
       if (event.target.files && event.target.files[0]) {
         onFileUpload(event.target.files);
       }
@@ -36,7 +40,7 @@ function DragDropFileUpload({ onFileUpload }) {
   );
 
   return (
-    <Paper
+    <Paper 
       variant="outlined"
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
@@ -49,6 +53,7 @@ function DragDropFileUpload({ onFileUpload }) {
       }}
     >
       <input
+        disabled={disabled}
         accept=".png, .jpg, .jpeg"
         style={{ display: 'none' }}
         id="raised-button-file"
@@ -63,7 +68,7 @@ function DragDropFileUpload({ onFileUpload }) {
                 paddingBottom: "20px",
             }}
         >
-          <IconButton color="primary" aria-label="upload picture" component="span">
+          <IconButton disabled={disabled} color="primary" aria-label="upload picture" component="span">
             <CloudUploadIcon style={{ fontSize: 60 }} />
           </IconButton>
           <Typography>Перетащите файлы сюда или нажмите, чтобы выбрать файлы</Typography>

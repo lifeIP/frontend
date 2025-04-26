@@ -8,6 +8,7 @@ import ImageUploadViewer from './components/ImageUploadViewer';
 export default function UploadImagesPage() {
     const [files, setFiles] = useState([]);
     const [buttonDisabled, setButtonDisabled] = useState(true);
+    const [dragDropDisabled, setDragDropDisabled] = useState(false);
     const [startUpload, setStartUpload] = useState(false);
 
     useEffect(()=>{
@@ -27,6 +28,7 @@ export default function UploadImagesPage() {
             }
         });
         setFiles(all_files);
+        setDragDropDisabled(true);
     };
     return (
         <Center>
@@ -35,7 +37,7 @@ export default function UploadImagesPage() {
                     Загрузка фотографий
                 </Typography>
             </Hat>
-            <DragDropFileUpload onFileUpload={handleFileUpload} />
+            <DragDropFileUpload disabled={dragDropDisabled} onFileUpload={handleFileUpload} />
             <Button
                 disabled={buttonDisabled}
                 variant='contained'
@@ -43,6 +45,7 @@ export default function UploadImagesPage() {
                 sx={{ marginTop: "1.75vh" }}
                 onClick={()=>{
                     setStartUpload(true);
+                    setButtonDisabled(true);
                 }}
             >Отправить</Button>
 
