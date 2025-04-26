@@ -111,7 +111,7 @@ const CanvasOverImage = ({ currentClass, currentScale, inBoundingBox, stateEditi
             leftButtonPressed = false;
             console.log('Левая кнопка отпущена');
 
-            if (Math.abs(rect_shape_w) < 10 && Math.abs(rect_shape_h) < 10) return;
+            if (Math.abs(rect_shape_w) < 80 && Math.abs(rect_shape_h) < 80) return;
             rect_class_c = currentClass.class_color;
             rect_list.push({
                 class_id: currentClass.id,
