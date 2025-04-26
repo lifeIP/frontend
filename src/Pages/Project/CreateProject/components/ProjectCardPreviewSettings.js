@@ -28,8 +28,6 @@ function ProjectCardPreviewSettings({ setImageEvent, setImage, setPrjctName, set
             // console.log("DONE", reader.readyState); // readyState will be 2
             setImage(reader.result);
         };
-        
-        
     };
     return (
         <Card sx={{ borderRadius: "12px", width: "25vw", height: "45vh" }}>
