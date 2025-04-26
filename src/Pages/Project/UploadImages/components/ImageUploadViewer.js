@@ -29,6 +29,8 @@ const ImageUploadViewer = ({ file, startUpload, disabled }) => {
 
     useEffect(() => {
         if (!startUpload) return;
+        if(!imageStatus) return;
+        
         sendImage(localStorage.getItem("last_project_id"));
         console.log("upload start");
         console.log(file);

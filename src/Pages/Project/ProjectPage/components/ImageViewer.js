@@ -1,4 +1,4 @@
-import { Box, Card, CardMedia } from "@mui/material";
+import { Box, Card, CardActionArea, CardMedia } from "@mui/material";
 import settings from "../../../../settings.json"
 import axios from 'axios';
 import React, {
@@ -10,7 +10,7 @@ import React, {
 
 
 
-const ImageViewer = ({image_id}) => {
+const ImageViewer = ({ image_id }) => {
     const canvasRef = useRef(null);
     const [canvasSize, setCanvasSize] = useState({ width: 2000, height: 2000 });
 
@@ -57,48 +57,50 @@ const ImageViewer = ({image_id}) => {
             })
     }, []);
 
-    useEffect(()=>{
+    useEffect(() => {
         drawCanvas();
     }, [canvasSize]);
 
 
     return (
         <Box position="relative">
-            <canvas
-                ref={canvasRef}
-                width={canvasSize.width}
-                height={canvasSize.height}
-                style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                    zIndex: 15,
-                }}
-            />
-            <Card>
-                <CardMedia
-                    key={image}
-                    ref={imageRef}
-                    component="img"
-                    onLoad={() => {
-                        setCanvasSize({
-                            width: imageRef.current.width,
-                            height: imageRef.current.height
-                        });
-                    }}
-                    src={image}
-                    alt="Фотография"
-                    sx={{
-                        width: '100%',   // Ширина фотографии — 100% ширины контейнера
-                        height: '100%',  // Высота автоматически адаптируется под ширину
-                        objectFit: 'contain',  // Подгоняем картинку без искажений
-                        display: 'block',
-                        margin: '0 auto'  // Центрируем изображение горизонтально
-                    }}
-                />
 
+            <Card>
+                <CardActionArea>
+                    <canvas
+                        ref={canvasRef}
+                        width={canvasSize.width}
+                        height={canvasSize.height}
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            zIndex: 15,
+                        }}
+                    />
+                    <CardMedia
+                        key={image}
+                        ref={imageRef}
+                        component="img"
+                        onLoad={() => {
+                            setCanvasSize({
+                                width: imageRef.current.width,
+                                height: imageRef.current.height
+                            });
+                        }}
+                        src={image}
+                        alt="Фотография"
+                        sx={{
+                            width: '100%',   // Ширина фотографии — 100% ширины контейнера
+                            height: '100%',  // Высота автоматически адаптируется под ширину
+                            objectFit: 'contain',  // Подгоняем картинку без искажений
+                            display: 'block',
+                            margin: '0 auto'  // Центрируем изображение горизонтально
+                        }}
+                    />
+                </CardActionArea>
             </Card>
         </Box>
     );

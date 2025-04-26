@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router';
 import ProjectsListPage from '../Project/ProjectsList/ProjectsListPage';
 
 export default function ProfilePage() {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     return (
         <Center>
