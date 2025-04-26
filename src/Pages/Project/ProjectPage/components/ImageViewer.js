@@ -28,7 +28,7 @@ const ImageViewer = () => {
 
             const path1 = new Path2D();
             context.strokeStyle = "#FF0000";
-            path1.rect(20, 20, 100, 80)
+            path1.rect(20, 20, 100, 100)
             path1.closePath();    //  закрываем путь
             context.stroke(path1);
         }
@@ -55,9 +55,12 @@ const ImageViewer = () => {
             .catch(err => {
                 console.log(err);
             })
-        // }
-        drawCanvas();
     }, []);
+
+    useEffect(()=>{
+        drawCanvas();
+    }, [canvasSize]);
+
 
     return (
         <Box position="relative">
