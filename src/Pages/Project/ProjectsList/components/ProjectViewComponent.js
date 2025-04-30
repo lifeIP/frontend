@@ -52,6 +52,29 @@ export default function ProjectViewComponent({project_id}) {
             getInfoOfProjects();
     }, [])
 
+    useEffect(() => {
+       
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+        axios.get(`${settings.server.addr}/get-projects-photo-preview-by-id/${project_id}?t=${Date.now()}`, {
+            responseType: "arraybuffer"
+        })
+            .then(res => {
+                const base64 = btoa(
+                    new Uint8Array(res.data).reduce(
+                        (data, byte) => data + String.fromCharCode(byte),
+                        ''
+                    )
+                )
+                setImage(`data:image/jpeg;charset=utf-8;base64,${base64}`);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        }
+    , []);
+
+
+
     return (
         
         <ProjectCardPreview

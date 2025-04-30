@@ -22,6 +22,78 @@ export default function ProjectPage() {
 
     const [listImages, setListImages] = useState([]);
 
+
+    async function getInfoOfProjects() {
+        let url = "/get-projects-info-by-id/" + projectId;
+
+        try {
+            axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+            const res = await axios.get(`${settings.server.addr}${url}`);
+
+            if (res.status === 200 || res.status === 201) {
+                // setListProjects(res.data);
+                console.log(res.data);
+                setPrjctName(res.data.name);
+                setPrjctDescription(res.data.description);
+            } else {
+                throw new Error('Ошибка при отправке даннх');
+            }
+        } catch (err) {
+            console.error(err);
+            throw err;
+        }
+    }
+
+    async function getListOfClassesInProject() {
+        let url = "/get_list_of_classes_in_project/" + projectId;
+
+        try {
+            axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+            const res = await axios.get(`${settings.server.addr}${url}`);
+
+            if (res.status === 200 || res.status === 201) {
+                let list_of_class_name = []
+
+                res.data.map((item) => {
+                    list_of_class_name.push({ label: item.class_name });
+                })
+                setRows(list_of_class_name);
+            } else {
+                throw new Error('Ошибка при отправке даннх');
+            }
+        } catch (err) {
+            console.error(err);
+            throw err;
+        }
+    };
+
+    async function getProjectsPhotoPreviewById() {
+
+        let url = `/get-projects-photo-preview-by-id/${projectId}?t=${Date.now()}`;
+
+        try {
+            axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+            const res = await axios.get(`${settings.server.addr}${url}`, {
+                responseType: "arraybuffer"
+            });
+
+            if (res.status === 200 || res.status === 201) {
+                const base64 = btoa(
+                    new Uint8Array(res.data).reduce(
+                        (data, byte) => data + String.fromCharCode(byte),
+                        ''
+                    )
+                )
+                setImage(`data:image/jpeg;charset=utf-8;base64,${base64}`);
+            } else {
+                throw new Error('Ошибка при отправке даннх');
+            }
+        } catch (err) {
+            console.error(err);
+            throw err;
+        }
+    };
+
     async function getListOfImages(project_id) {
         let url = "/get_projects_images_list/" + project_id;
 
@@ -46,6 +118,13 @@ export default function ProjectPage() {
         getListOfImages(localStorage.getItem("last_project_id"));
     }, []);
 
+    useEffect(()=>{
+        if (projectId!=0){
+            getInfoOfProjects();
+            getListOfClassesInProject();
+            getProjectsPhotoPreviewById();
+        }
+    }, [projectId])
     return (
         <Center>
             <Hat>
@@ -83,10 +162,10 @@ export default function ProjectPage() {
 
             <Box sx={{ width: "51.05vw" }}>
                 <Grid container spacing={1} sx={{ marginTop: '1vh' }}>
-                    {listImages.map((id)=>(
+                    {listImages.map((id) => (
                         <Grid size={3}>
-                        <ImageViewer image_id={id} setCanvasSize={() => { }} />
-                    </Grid>
+                            <ImageViewer image_id={id} setCanvasSize={() => { }} />
+                        </Grid>
                     ))}
                 </Grid>
             </Box>
