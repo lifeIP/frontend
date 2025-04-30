@@ -25,7 +25,7 @@ const CanvasOverImage = ({ currentClass, currentScale, inBoundingBox, stateEditi
             const context = canvasRef.current.getContext('2d');
 
             context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-            context.lineWidth = 30 - (3*currentScale);
+            context.lineWidth = 3;
 
             if (rect_list.length === 0) {
                 rect_list = JSON.parse(localStorage.getItem('rect_list'))
@@ -39,7 +39,7 @@ const CanvasOverImage = ({ currentClass, currentScale, inBoundingBox, stateEditi
                     path1.moveTo(point.x, point.y);
                     
                     context.strokeStyle = "#000000";
-                    context.fillRect(point.x-8, point.y-8, 16, 16);
+                    context.fillRect(point.x-3, point.y-3, 6, 6);
                     context.strokeStyle = item.class_color;
                 });
 
@@ -59,10 +59,10 @@ const CanvasOverImage = ({ currentClass, currentScale, inBoundingBox, stateEditi
             context.stroke(path1);
 
             context.strokeStyle = "#000000";
-            context.fillRect(rect_pos_x-8, rect_pos_y-8, 16, 16);
-            context.fillRect(rect_pos_x + rect_shape_w-8, rect_pos_y + rect_shape_h-8, 16, 16);
-            context.fillRect(rect_pos_x-8, rect_pos_y + rect_shape_h-8, 16, 16);
-            context.fillRect(rect_pos_x + rect_shape_w-8, rect_pos_y-8, 16, 16);
+            context.fillRect(rect_pos_x-3, rect_pos_y-3, 6, 6);
+            context.fillRect(rect_pos_x + rect_shape_w-3, rect_pos_y + rect_shape_h-3, 6, 6);
+            context.fillRect(rect_pos_x-3, rect_pos_y + rect_shape_h-3, 6, 6);
+            context.fillRect(rect_pos_x + rect_shape_w-3, rect_pos_y-3, 6, 6);
             context.strokeStyle = currentClass.class_color;
         }
     };
@@ -88,8 +88,6 @@ const CanvasOverImage = ({ currentClass, currentScale, inBoundingBox, stateEditi
 
         let x_pos = relativeX / currentScale;
         let y_pos = relativeY / currentScale;
-        x_pos *= 10;
-        y_pos *= 10;
 
         mouse_pos_x = x_pos;
         mouse_pos_y = y_pos;
@@ -111,7 +109,7 @@ const CanvasOverImage = ({ currentClass, currentScale, inBoundingBox, stateEditi
             leftButtonPressed = false;
             console.log('Левая кнопка отпущена');
 
-            if (Math.abs(rect_shape_w) < 80 && Math.abs(rect_shape_h) < 80) return;
+            if (Math.abs(rect_shape_w) < 8 && Math.abs(rect_shape_h) < 8) return;
             rect_class_c = currentClass.class_color;
             rect_list.push({
                 class_id: currentClass.id,
@@ -148,7 +146,7 @@ const CanvasOverImage = ({ currentClass, currentScale, inBoundingBox, stateEditi
 
     function save_mask_on_server() {
         let data = localStorage.getItem('rect_list');
-        console.log(data);
+        // console.log(data);
     }
     useEffect(() => {
         if (isSaved === true) return;

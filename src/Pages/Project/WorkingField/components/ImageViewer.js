@@ -40,8 +40,8 @@ const ImageViewer = ({ setCanvasSize }) => {
             component="img"
             onLoad={() => {
                 setCanvasSize({
-                    width: imageRef.current.width * 10,
-                    height: imageRef.current.height * 10
+                    width: imageRef.current.width,
+                    height: imageRef.current.height
                 });
             }}
             src={image}

@@ -74,31 +74,29 @@ export default function SmartMarkup({ project_id }) {
     async function saveMask(){
         console.log('S fired!');
         
-        // let url = "/set_mask_on_image/";
-        // let data = []
-        // let rawdata = localStorage.getItem('rect_list');        
-        // rawdata.map((item)=>{
-        //     data.push({
-        //         "class_id": item.c.id,
-        //     });
-        // })
-        // try {
-        //     axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
-        //     const res = await axios.post(`${settings.server.addr}${url}`, data);
+        let url = "/set_mask_on_image/" + localStorage.getItem("working-field-image-id");
+        let data = {forms: JSON.parse(localStorage.getItem('rect_list'))
+        }
+        // console.log(data);
+        
+        try {
+            axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+            const res = await axios.post(`${settings.server.addr}${url}`, data);
 
-        //     if (res.status === 200 || res.status === 201) {
-        //         // sendProjectImage(res.data.id);
-        //         // localStorage.setItem("last_project_id", res.data.id);
-        //         // console.log('Проект успешно создан!');
+            if (res.status === 200 || res.status === 201) {
+                // console.log(res.data);
+                // sendProjectImage(res.data.id);
+                // localStorage.setItem("last_project_id", res.data.id);
+                // console.log('Проект успешно создан!');
 
-        //     } else {
-        //         throw new Error('Ошибка при отправке даннх');
-        //     }
-        // } catch (err) {
-        //     console.error(data);
-        //     console.error(err);
-        //     throw err;
-        // }
+            } else {
+                throw new Error('Ошибка при отправке даннх');
+            }
+        } catch (err) {
+            console.error(data);
+            console.error(err);
+            throw err;
+        }
     }
 
     useKey('s', () => saveMask());
@@ -127,10 +125,10 @@ export default function SmartMarkup({ project_id }) {
         axios.get(settings.server.addr + "/get_list_of_classes_in_project/" + project_id)
             .then(res => {
                 setDataMarkupClasses(res.data);
-                console.log(res.data);
+                // console.log(res.data);
             })
             .catch(err => {
-                console.log(err);
+                // console.log(err);
             })
 
     }, [project_id])

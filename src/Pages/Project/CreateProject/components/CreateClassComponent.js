@@ -9,7 +9,7 @@ function CreateClassComponent({rows, setRows}){
 
     // Добавляем новую пустую строку
     const addNewRow = () => {
-        setRows([{ id: Date.now(), label: '', color: '#000000' }, ...rows]);
+        setRows([{ id: Date.now(), label: '', color: '#000000', description:'' }, ...rows]);
     };
 
     // Обработчик изменения цвета строки

@@ -7,10 +7,13 @@ import ProjectCardPreview from "./components/ProjectCardPreview";
 import ProjectCardPreviewSettings from "./components/ProjectCardPreviewSettings";
 import ProjectMainSetting from './components/ProjectMainSetting';
 import axios from "axios";
+import { useNavigate } from "react-router";
 
 
 // TODO: Надо добавить валидацию
 export default function CreateProjectPage() {
+    const navigate = useNavigate();
+    
     const [prjctName, setPrjctName] = useState("Имя проекта");
     const [prjctDescription, setPrjctDescription] = useState("Краткое описание проекта, оно не должно превышать определённого количества символов.");
     const [isImage, setImage] = useState();
@@ -58,8 +61,8 @@ export default function CreateProjectPage() {
     async function createProject() {
         let url = "/create-project/";
         let data = {
-            name: prjctName,
-            description: prjctDescription,
+            name: prjctName?prjctName:"",
+            description: prjctDescription?prjctDescription:"",
             classes: [...rows],
         }
         try {
@@ -69,6 +72,7 @@ export default function CreateProjectPage() {
             if (res.status === 200 || res.status === 201) {
                 sendProjectImage(res.data.id);
                 localStorage.setItem("last_project_id", res.data.id);
+                navigate("/project");
                 console.log('Проект успешно создан!');
 
             } else {

@@ -8,11 +8,10 @@ import { useNavigate } from "react-router";
 
 function ProjectCardPreviewSettings({ setImageEvent, setImage, setPrjctName, setPrjctDescription, createProject }) {
     const fileInputRef = useRef();
-    const navigate = useNavigate();
+    
 
     const handleCreateProjectButtonClicked = () => {
         createProject();
-        navigate("/project");
     };
 
     const handleChange = async (event) => {
