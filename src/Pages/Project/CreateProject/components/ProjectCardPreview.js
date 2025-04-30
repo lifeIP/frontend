@@ -1,9 +1,9 @@
-import { Card, CardContent, CardMedia, Divider, Typography } from '@mui/material';
+import { Card, CardActionArea, CardContent, CardMedia, Divider, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
 
 
-function ProjectCardPreview({ isImage, prjctName, prjctDescription, rows }) {
+function ProjectCardPreview({ isImage, prjctName, prjctDescription, rows, actionAreaDisabled=true, onClick=()=>{} }) {
     const [image, setImage] = useState("https://kuzov73.ru/image/cache/no_image-1000x1000.jpg");
     useEffect(() => {
         if (isImage !== undefined) {
@@ -16,6 +16,7 @@ function ProjectCardPreview({ isImage, prjctName, prjctDescription, rows }) {
 
     return (
         <Card sx={{ width: "25vw", borderRadius: "12px", height: "45vh" }}>
+            <CardActionArea sx={{ width: "25vw", height: "45vh" }} disabled={actionAreaDisabled} onClick={()=>{onClick()}}>
             <CardMedia
                 sx={{ height: "25vh" }}
                 component="img"
@@ -65,6 +66,7 @@ function ProjectCardPreview({ isImage, prjctName, prjctDescription, rows }) {
                     {rows.map((item) => `${item.label}`).join(', ')}
                 </Typography>
             </CardContent>
+            </CardActionArea>
         </Card>
     );
 }

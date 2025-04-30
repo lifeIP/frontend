@@ -58,7 +58,7 @@ export default function ProjectsListPage() {
             <Grid container spacing="1.85vh">
                 {listProjects.map((item, index) => (
                     <Grid size={6}>
-                        <ProjectViewComponent />
+                        <ProjectViewComponent project_id={item}/>
                     </Grid>
                 ))}
             </Grid>
