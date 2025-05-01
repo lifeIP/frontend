@@ -1,12 +1,13 @@
 import { Box } from '@mui/material';
+import axios from 'axios';
 import React, {
     useEffect,
     useRef,
     useState
 } from 'react';
+import settings from "../../../../settings.json"
 
-
-const CanvasOverImage = ({ currentClass, currentScale, inBoundingBox, stateEditing, canvasSize, setSaved, isSaved }) => {
+const CanvasOverImage = ({ data_markup_classes, currentClass, currentScale, inBoundingBox, stateEditing, canvasSize, setSaved, isSaved }) => {
     const canvasRef = useRef(null);
 
     let mouse_pos_x = -1;
@@ -33,18 +34,18 @@ const CanvasOverImage = ({ currentClass, currentScale, inBoundingBox, stateEditi
             rect_list.map((item, index) => {
                 const path1 = new Path2D();
                 context.strokeStyle = item.class_color;
-                item.points.map((point)=>{
-                    if(point.id === 0) path1.moveTo(point.x, point.y);
+                item.points.map((point) => {
+                    if (point.id === 0) path1.moveTo(point.x, point.y);
                     path1.lineTo(point.x, point.y);
                     path1.moveTo(point.x, point.y);
-                    
+
                     context.strokeStyle = "#000000";
-                    context.fillRect(point.x-3, point.y-3, 6, 6);
+                    context.fillRect(point.x - 3, point.y - 3, 6, 6);
                     context.strokeStyle = item.class_color;
                 });
 
                 path1.moveTo(item.points[0].x, item.points[0].y);
-                path1.lineTo(item.points[item.points.length-1].x, item.points[item.points.length-1].y);
+                path1.lineTo(item.points[item.points.length - 1].x, item.points[item.points.length - 1].y);
 
                 path1.closePath();
                 context.stroke(path1);
@@ -59,10 +60,10 @@ const CanvasOverImage = ({ currentClass, currentScale, inBoundingBox, stateEditi
             context.stroke(path1);
 
             context.strokeStyle = "#000000";
-            context.fillRect(rect_pos_x-3, rect_pos_y-3, 6, 6);
-            context.fillRect(rect_pos_x + rect_shape_w-3, rect_pos_y + rect_shape_h-3, 6, 6);
-            context.fillRect(rect_pos_x-3, rect_pos_y + rect_shape_h-3, 6, 6);
-            context.fillRect(rect_pos_x + rect_shape_w-3, rect_pos_y-3, 6, 6);
+            context.fillRect(rect_pos_x - 3, rect_pos_y - 3, 6, 6);
+            context.fillRect(rect_pos_x + rect_shape_w - 3, rect_pos_y + rect_shape_h - 3, 6, 6);
+            context.fillRect(rect_pos_x - 3, rect_pos_y + rect_shape_h - 3, 6, 6);
+            context.fillRect(rect_pos_x + rect_shape_w - 3, rect_pos_y - 3, 6, 6);
             context.strokeStyle = currentClass.class_color;
         }
     };
@@ -173,6 +174,37 @@ const CanvasOverImage = ({ currentClass, currentScale, inBoundingBox, stateEditi
     }, [canvasSize]);
 
 
+    const findByClassId = (arr, targetClassId) => {
+        // Поиск первого совпадающего элемента по полю class_id
+        const foundItem = arr.find(item => item.id === targetClassId);
+        return foundItem || null; // вернем найденный элемент или null, если ничего не найдено
+    };
+
+    useEffect(() => {
+        if(rect_list.length != 0) return
+        if(data_markup_classes[0].id === -1) return
+        if(localStorage.getItem("now_is_last_list") === true) return
+
+        // console.log(data_markup_classes);
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+        axios.get(`${settings.server.addr}/get_mask_on_image/${localStorage.getItem("working-field-image-id")}`)
+            .then(res => {
+                if (res.data.forms.length === 0) localStorage.setItem("now_is_last_list", true)
+                res.data.forms.map((item) => {
+                    
+                    let finded_item = findByClassId(data_markup_classes, item.class_id);
+                    // console.log(finded_item);
+                    rect_list.push({
+                        ...finded_item,
+                        ...item
+                    })
+                })
+                localStorage.setItem('rect_list', JSON.stringify(rect_list));
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }, [data_markup_classes, canvasSize, currentScale]);
 
     return (
         <Box>

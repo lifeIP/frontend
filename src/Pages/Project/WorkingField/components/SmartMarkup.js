@@ -106,6 +106,7 @@ export default function SmartMarkup({ project_id }) {
     useEffect(() => {
 
         localStorage.setItem('rect_list', JSON.stringify([]));
+        localStorage.setItem("now_is_last_list", false);
         document.addEventListener('mousemove', handleMouseMove);
         return () => {
             document.removeEventListener('mousemove', handleMouseMove);
@@ -121,6 +122,7 @@ export default function SmartMarkup({ project_id }) {
     }]);
     // Загрузка информации о проекте
     useEffect(() => {
+        if(project_id === 0) return
         axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
         axios.get(settings.server.addr + "/get_list_of_classes_in_project/" + project_id)
             .then(res => {
@@ -139,8 +141,9 @@ export default function SmartMarkup({ project_id }) {
     const [canvasSize, setCanvasSize] = useState({ width: 2000, height: 2000 });
     const [isSaved, setSaved] = useState(false);
 
-    const CanvasOverImageComponent = memo(({ currentClass, currentScale, inBoundingBox, stateEditing, canvasSize, isSaved, setSaved }) => {
+    const CanvasOverImageComponent = memo(({ data_markup_classes, currentClass, currentScale, inBoundingBox, stateEditing, canvasSize, isSaved, setSaved }) => {
         return <CanvasOverImage
+        data_markup_classes={data_markup_classes}
             currentClass={currentClass}
             currentScale={currentScale}
             inBoundingBox={inBoundingBox}
@@ -164,6 +167,7 @@ export default function SmartMarkup({ project_id }) {
                             <Card sx={{ width: "51.05vw" }}>
                                 <ImageViewer setCanvasSize={setCanvasSize} />
                                 <CanvasOverImageComponent
+                                data_markup_classes={data_markup_classes}
                                     currentClass={data_markup_classes.at(selectedClass)}
                                     currentScale={currentScale}
                                     inBoundingBox={inBoundingBox}
