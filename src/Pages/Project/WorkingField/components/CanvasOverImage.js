@@ -47,8 +47,8 @@ const CanvasOverImage = ({ data_markup_classes, currentClass, currentScale, inBo
                 else{
                     multiplier_h = 1;
                 }
-                console.log(multiplier_w)
-                console.log(multiplier_h)
+                // console.log(multiplier_w)
+                // console.log(multiplier_h)
                 const path1 = new Path2D();
                 context.strokeStyle = item.class_color;
                 item.points.map((point) => {

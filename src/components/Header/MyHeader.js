@@ -196,6 +196,7 @@ export default function MyHeader({ selectedTheme, changeTheme}) {
             display="flex"
             justifyContent="space-between"
             alignItems="center"
+            boxShadow={1}
         >
             <Box
                 display="flex"

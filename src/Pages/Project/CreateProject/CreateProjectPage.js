@@ -93,8 +93,9 @@ export default function CreateProjectPage() {
                 </Typography>
             </Hat>
 
-            <Grid container spacing="1.85vh" sx={{maxWidth: "51.05vw"}}>
-                <Grid >
+            <Box sx={{maxWidth: "51.05vw"}}>            
+            <Grid container spacing={1} sx={{maxWidth: "51.05vw"}}>
+                <Grid size={6}>
                     <ProjectCardPreview
                         isImage={isImage}
                         prjctName={prjctName}
@@ -102,7 +103,7 @@ export default function CreateProjectPage() {
                         rows={rows}
                     />
                 </Grid>
-                <Grid >
+                <Grid size={6}>
                     <ProjectCardPreviewSettings
                         setImageEvent={setImageEvent}
                         createProject={createProject}
@@ -112,6 +113,7 @@ export default function CreateProjectPage() {
                     />
                 </Grid>
             </Grid>
+            </Box>
             <Box sx={{ display: "flex", justifyContent: "center", marginTop: '1.85vh', marginBottom: '1.85vh' }}>
                 <ProjectMainSetting rows={rows} setRows={setRows} />
             </Box>

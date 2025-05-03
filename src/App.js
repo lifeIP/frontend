@@ -18,6 +18,7 @@ import WorkingPage from "./Pages/Project/WorkingField/WorkingPage"
 import CreateProjectPage from "./Pages/Project/CreateProject/CreateProjectPage";
 import UploadImagesPage from "./Pages/Project/UploadImages/UploadImagesPage";
 import ProjectPage from "./Pages/Project/ProjectPage/ProjectPage";
+import { Box } from "@mui/material";
 
 
 const lightTheme = createTheme({
@@ -75,12 +76,13 @@ function App() {
 
   const [header] = useState(0);
   function RenderHeader() {
-    if (header) {
-      return <MyHeader selectedTheme={selectedTheme === lightTheme ? true : false} changeTheme={changeTheme} />
-    }
-    else {
-      return <MyHeader selectedTheme={selectedTheme === lightTheme ? true : false} changeTheme={changeTheme} />
-    }
+    
+      return (
+        <Box marginBottom="1.85vh">
+          <MyHeader selectedTheme={selectedTheme === lightTheme ? true : false} changeTheme={changeTheme} />
+        </Box>
+      );
+    
   }
 
 
@@ -163,7 +165,7 @@ function App() {
               <WelcomePage />
             </div>}
           />
-  
+
         </Routes>
       </BrowserRouter>
       <CssBaseline />

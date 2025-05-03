@@ -39,6 +39,7 @@ export default function SmartMarkup({ project_id }) {
 
         useEffect(() => {
             function handle(event) {
+                // console.log(event.code);
                 if (event.code === key) {
                     callback.current(event);
                 } else if (key === 's' && event.key === 's') {
@@ -46,6 +47,12 @@ export default function SmartMarkup({ project_id }) {
                 } else if (key === 'a' && event.key === 'a') {
                     callback.current(event);
                 } else if (key === 'd' && event.key === 'd') {
+                    callback.current(event);
+                }
+                else if (key === 'ShiftLeft' && event.key === 'ShiftLeft') {
+                    callback.current(event);
+                }
+                else if (key === 'ControlLeft' && event.key === 'ControlLeft') {
                     callback.current(event);
                 }
             }
@@ -105,7 +112,16 @@ export default function SmartMarkup({ project_id }) {
     useKey('s', () => saveMask());
     useKey('a', () => console.log('A fired!'));
     useKey('d', () => console.log('D fired!'));
-
+    useKey('ShiftLeft', () => {
+        setStateEditing(true);
+        console.log('shift fired!')
+    });
+    useKey('ControlLeft', () => {
+        setStateEditing(false);
+        console.log('control fired!')
+    });
+    
+    
     useEffect(() => {
 
         localStorage.setItem('rect_list', JSON.stringify([]));
