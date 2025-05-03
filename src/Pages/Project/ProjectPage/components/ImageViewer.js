@@ -59,9 +59,9 @@ const ImageViewer = ({ image_id }) => {
             })
     }, []);
 
-    useEffect(() => {
-        drawCanvas();
-    }, [canvasSize]);
+    // useEffect(() => {
+    //     // drawCanvas();
+    // }, [canvasSize]);
 
 
     return (
