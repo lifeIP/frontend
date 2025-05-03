@@ -160,6 +160,28 @@ export default function SmartMarkup({ project_id }) {
     const [canvasSize, setCanvasSize] = useState({ width: 2000, height: 2000 });
     const [isSaved, setSaved] = useState(false);
 
+    const [image, setImage] = useState();
+    const [imageId, setImageId] = useState(0);
+
+    useEffect(() => {
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+        axios.get(`${settings.server.addr}/get-image-by-id/${localStorage.getItem("working-field-image-id")}?t=${Date.now()}`, {
+            responseType: "arraybuffer"
+        })
+            .then(res => {
+                const base64 = btoa(
+                    new Uint8Array(res.data).reduce(
+                        (data, byte) => data + String.fromCharCode(byte),
+                        ''
+                    )
+                )
+                setImage(`data:image/jpeg;charset=utf-8;base64,${base64}`);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }, [imageId]);
+
     const CanvasOverImageComponent = memo(({ data_markup_classes, currentClass, currentScale, inBoundingBox, stateEditing, canvasSize, isSaved, setSaved }) => {
         return <CanvasOverImage
             data_markup_classes={data_markup_classes}
@@ -172,6 +194,17 @@ export default function SmartMarkup({ project_id }) {
             isSaved={isSaved}
         />
     });
+
+
+    function rightButtonClicked(){
+        const list_of_ids_images = JSON.parse(localStorage.getItem("list_of_ids_images"));
+        const working_field_image_id = JSON.parse(localStorage.getItem("working-field-image-id"));
+        const index_now = list_of_ids_images.ids.indexOf(working_field_image_id);
+        if(list_of_ids_images.ids.length > index_now){
+            localStorage.setItem("working-field-image-id", list_of_ids_images.ids[index_now+1])
+            setImageId(imageId+1);
+        }
+    }
     return (
         <Card sx={{ width: "51.05vw" }} ref={mainRef}>
             <Box sx={{ position: 'relative', width: '100%', height: 'auto' }}>
@@ -184,7 +217,7 @@ export default function SmartMarkup({ project_id }) {
                     <TransformComponent>
                         <Box sx={{ position: 'relative', width: '100%', height: 'auto' }}>
                             <Card sx={{ width: "51.05vw" }}>
-                                <ImageViewer setCanvasSize={setCanvasSize} />
+                                <ImageViewer setCanvasSize={setCanvasSize} image={image} />
                                 <CanvasOverImageComponent
                                     data_markup_classes={data_markup_classes}
                                     currentClass={data_markup_classes.at(selectedClass)}
@@ -207,6 +240,7 @@ export default function SmartMarkup({ project_id }) {
                 }}
                 onRightButtonClicked={()=>{
                     console.log("right")
+                    rightButtonClicked();
                 }}
             />
             <ClassesList

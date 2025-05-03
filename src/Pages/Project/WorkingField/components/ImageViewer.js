@@ -10,29 +10,9 @@ import React, {
 
 
 
-const ImageViewer = ({ setCanvasSize }) => {
+const ImageViewer = ({ setCanvasSize, image }) => {
     const imageRef = useRef(null);
-    const [image, setImage] = useState();
-
-    useEffect(() => {
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
-        axios.get(`${settings.server.addr}/get-image-by-id/${localStorage.getItem("working-field-image-id")}?t=${Date.now()}`, {
-            responseType: "arraybuffer"
-        })
-            .then(res => {
-                const base64 = btoa(
-                    new Uint8Array(res.data).reduce(
-                        (data, byte) => data + String.fromCharCode(byte),
-                        ''
-                    )
-                )
-                setImage(`data:image/jpeg;charset=utf-8;base64,${base64}`);
-            })
-            .catch(err => {
-                console.log(err);
-            })
-    }, []);
-
+    
     return (
         <CardMedia
             key={image}

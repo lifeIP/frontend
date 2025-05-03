@@ -95,8 +95,8 @@ export default function ProjectPage() {
         }
     };
 
-    async function getListOfImages(project_id) {
-        let url = "/get_projects_images_list/" + project_id;
+    async function getListOfImages(project_id, startIndex) {
+        let url = "/get_projects_images_list/" + project_id + "/" + startIndex;
 
         try {
             axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
@@ -104,7 +104,8 @@ export default function ProjectPage() {
 
             if (res.status === 200 || res.status === 201) {
                 setListImages(res.data.ids);
-                console.log(res.data.ids);
+                localStorage.setItem("list_of_ids_images", JSON.stringify({startIndex: startIndex, ids: res.data.ids}));
+                // console.log(res.data.ids);
             } else {
                 throw new Error('Ошибка при отправке данных');
             }
@@ -116,7 +117,7 @@ export default function ProjectPage() {
 
     useEffect(() => {
         setProjectId(localStorage.getItem("last_project_id"));
-        getListOfImages(localStorage.getItem("last_project_id"));
+        getListOfImages(localStorage.getItem("last_project_id"), 1);
     }, []);
 
     useEffect(()=>{
