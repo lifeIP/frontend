@@ -8,6 +8,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
 import settings from "../../../settings.json"
+import ListOfMembers from './components/ListOfMembers';
 
 
 export default function ProjectPage() {
@@ -133,8 +134,9 @@ export default function ProjectPage() {
                 </Typography>
             </Hat>
 
+            <Box sx={{maxWidth: "51.05vw"}}>
             <Grid container spacing={1}>
-                <Grid size={4.88}>
+                <Grid size={6}>
                     <ProjectCardPreview
                         isImage={isImage}
                         prjctName={prjctName}
@@ -142,7 +144,11 @@ export default function ProjectPage() {
                         rows={rows}
                     />
                 </Grid>
+                <Grid size={6}>
+                    <ListOfMembers/>
+                </Grid>
             </Grid>
+            </Box>
 
             <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginTop: '1.85vh' }}>
                 <CardContent>
@@ -164,7 +170,9 @@ export default function ProjectPage() {
                 <Grid container spacing={1} sx={{ marginTop: '1vh' }}>
                     {listImages.map((id) => (
                         <Grid size={3}>
+                            {/* <Box sx={{maxHeight: "15vw"}}> */}
                             <ImageViewer image_id={id} setCanvasSize={() => { }} />
+                            {/* </Box> */}
                         </Grid>
                     ))}
                 </Grid>

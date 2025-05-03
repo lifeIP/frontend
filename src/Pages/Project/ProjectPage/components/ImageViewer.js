@@ -16,27 +16,10 @@ const ImageViewer = ({ image_id }) => {
 
 
     const canvasRef = useRef(null);
-    const [canvasSize, setCanvasSize] = useState({ width: 2000, height: 2000 });
 
     const imageRef = useRef(null);
     // const [isLoading, setLoading] = useState(true);
     const [image, setImage] = useState();
-
-
-    const drawCanvas = () => {
-        if (canvasRef.current) {
-            const context = canvasRef.current.getContext('2d');
-
-            context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-            context.lineWidth = 3;
-
-            const path1 = new Path2D();
-            context.strokeStyle = "#FF0000";
-            path1.rect(20, 20, 100, 100)
-            path1.closePath();    //  закрываем путь
-            context.stroke(path1);
-        }
-    };
 
 
     useEffect(() => {
@@ -59,9 +42,6 @@ const ImageViewer = ({ image_id }) => {
             })
     }, []);
 
-    // useEffect(() => {
-    //     // drawCanvas();
-    // }, [canvasSize]);
 
 
     return (
@@ -74,37 +54,19 @@ const ImageViewer = ({ image_id }) => {
                         navigate("/working-field");
                     }}
                 >
-                    <canvas
-                        ref={canvasRef}
-                        width={canvasSize.width}
-                        height={canvasSize.height}
-                        style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            width: '100%',
-                            height: '100%',
-                            zIndex: 15,
-                        }}
-                    />
                     <CardMedia
                         key={image}
                         ref={imageRef}
                         component="img"
-                        onLoad={() => {
-                            setCanvasSize({
-                                width: imageRef.current.width,
-                                height: imageRef.current.height
-                            });
-                        }}
+                        
                         src={image}
                         alt="Фотография"
                         sx={{
-                            width: '100%',   // Ширина фотографии — 100% ширины контейнера
-                            height: '100%',  // Высота автоматически адаптируется под ширину
-                            objectFit: 'contain',  // Подгоняем картинку без искажений
+                            width: '100%',
+                            height: '20vh',
+                            objectFit: "contain",
                             display: 'block',
-                            margin: '0 auto'  // Центрируем изображение горизонтально
+                            margin: '0 auto'
                         }}
                     />
                 </CardActionArea>

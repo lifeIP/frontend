@@ -120,8 +120,8 @@ export default function SmartMarkup({ project_id }) {
         setStateEditing(false);
         console.log('control fired!')
     });
-    
-    
+
+
     useEffect(() => {
 
         localStorage.setItem('rect_list', JSON.stringify([]));
@@ -200,7 +200,15 @@ export default function SmartMarkup({ project_id }) {
                     </TransformComponent>
                 </TransformWrapper>
             </Box>
-            <Actions setStateEditing={setStateEditing} />
+            <Actions
+                setStateEditing={setStateEditing}
+                onLeftButtonClicked={()=>{
+                    console.log("left")
+                }}
+                onRightButtonClicked={()=>{
+                    console.log("right")
+                }}
+            />
             <ClassesList
                 selectedClass={selectedClass}
                 data_markup_classes={data_markup_classes}
