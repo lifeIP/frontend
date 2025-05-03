@@ -71,14 +71,17 @@ export default function SmartMarkup({ project_id }) {
         }
     };
 
-    async function saveMask(){
+    async function saveMask() {
         console.log('S fired!');
-        
+
         let url = "/set_mask_on_image/" + localStorage.getItem("working-field-image-id");
-        let data = {forms: JSON.parse(localStorage.getItem('rect_list'))
+        let data = {
+            forms: JSON.parse(localStorage.getItem('rect_list')),
+            canvasWidth: canvasSize.width,
+            canvasHeight: canvasSize.height
         }
-        // console.log(data);
-        
+        console.log(data);
+
         try {
             axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
             const res = await axios.post(`${settings.server.addr}${url}`, data);
@@ -122,7 +125,7 @@ export default function SmartMarkup({ project_id }) {
     }]);
     // Загрузка информации о проекте
     useEffect(() => {
-        if(project_id === 0) return
+        if (project_id === 0) return
         axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
         axios.get(settings.server.addr + "/get_list_of_classes_in_project/" + project_id)
             .then(res => {
@@ -143,7 +146,7 @@ export default function SmartMarkup({ project_id }) {
 
     const CanvasOverImageComponent = memo(({ data_markup_classes, currentClass, currentScale, inBoundingBox, stateEditing, canvasSize, isSaved, setSaved }) => {
         return <CanvasOverImage
-        data_markup_classes={data_markup_classes}
+            data_markup_classes={data_markup_classes}
             currentClass={currentClass}
             currentScale={currentScale}
             inBoundingBox={inBoundingBox}
@@ -167,7 +170,7 @@ export default function SmartMarkup({ project_id }) {
                             <Card sx={{ width: "51.05vw" }}>
                                 <ImageViewer setCanvasSize={setCanvasSize} />
                                 <CanvasOverImageComponent
-                                data_markup_classes={data_markup_classes}
+                                    data_markup_classes={data_markup_classes}
                                     currentClass={data_markup_classes.at(selectedClass)}
                                     currentScale={currentScale}
                                     inBoundingBox={inBoundingBox}

@@ -26,26 +26,43 @@ const CanvasOverImage = ({ data_markup_classes, currentClass, currentScale, inBo
             const context = canvasRef.current.getContext('2d');
 
             context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-            context.lineWidth = 3;
+            context.lineWidth = 3 / currentScale;
 
             if (rect_list.length === 0) {
                 rect_list = JSON.parse(localStorage.getItem('rect_list'))
             }
+            
             rect_list.map((item, index) => {
+                let multiplier_w = 1;
+                let multiplier_h = 1;
+                if(canvasSize.width !== item.canvasWidth){
+                    multiplier_w = (item.canvasWidth / canvasSize.width);
+                }
+                else{
+                    multiplier_w = 1;
+                }
+                if(canvasSize.height !== item.canvasHeight){   
+                    multiplier_h = (item.canvasHeight / canvasSize.height); 
+                }
+                else{
+                    multiplier_h = 1;
+                }
+                console.log(multiplier_w)
+                console.log(multiplier_h)
                 const path1 = new Path2D();
                 context.strokeStyle = item.class_color;
                 item.points.map((point) => {
-                    if (point.id === 0) path1.moveTo(point.x, point.y);
-                    path1.lineTo(point.x, point.y);
-                    path1.moveTo(point.x, point.y);
+                    if (point.id === 0) path1.moveTo(point.x / multiplier_w, point.y / multiplier_h);
+                    path1.lineTo(point.x / multiplier_w, point.y / multiplier_h);
+                    path1.moveTo(point.x / multiplier_w, point.y / multiplier_h);
 
                     context.strokeStyle = "#000000";
-                    context.fillRect(point.x - 3, point.y - 3, 6, 6);
+                    context.fillRect((point.x - 3) / multiplier_w, (point.y - 3) / multiplier_w, 6, 6);
                     context.strokeStyle = item.class_color;
                 });
 
-                path1.moveTo(item.points[0].x, item.points[0].y);
-                path1.lineTo(item.points[item.points.length - 1].x, item.points[item.points.length - 1].y);
+                path1.moveTo(item.points[0].x / multiplier_w, (item.points[0].y) / multiplier_h);
+                path1.lineTo(item.points[item.points.length - 1].x / multiplier_w, item.points[item.points.length - 1].y / multiplier_w);
 
                 path1.closePath();
                 context.stroke(path1);
@@ -113,6 +130,8 @@ const CanvasOverImage = ({ data_markup_classes, currentClass, currentScale, inBo
             if (Math.abs(rect_shape_w) < 8 && Math.abs(rect_shape_h) < 8) return;
             rect_class_c = currentClass.class_color;
             rect_list.push({
+                canvasWidth: canvasSize.width,
+                canvasHeight: canvasSize.height,
                 class_id: currentClass.id,
                 class_color: currentClass.class_color,
                 class_name: currentClass.class_name,
@@ -193,10 +212,13 @@ const CanvasOverImage = ({ data_markup_classes, currentClass, currentScale, inBo
                 res.data.forms.map((item) => {
                     
                     let finded_item = findByClassId(data_markup_classes, item.class_id);
-                    // console.log(finded_item);
+
+
                     rect_list.push({
+                        canvasWidth: res.data.canvasWidth,
+                        canvasHeight: res.data.canvasHeight,
                         ...finded_item,
-                        ...item
+                        ...item,
                     })
                 })
                 localStorage.setItem('rect_list', JSON.stringify(rect_list));
