@@ -200,9 +200,21 @@ export default function SmartMarkup({ project_id }) {
         const list_of_ids_images = JSON.parse(localStorage.getItem("list_of_ids_images"));
         const working_field_image_id = JSON.parse(localStorage.getItem("working-field-image-id"));
         const index_now = list_of_ids_images.ids.indexOf(working_field_image_id);
-        if(list_of_ids_images.ids.length > index_now){
+        if(list_of_ids_images.ids.length - 1 > index_now){
             localStorage.setItem("working-field-image-id", list_of_ids_images.ids[index_now+1])
+            localStorage.setItem('rect_list', JSON.stringify([]));
             setImageId(imageId+1);
+        }
+    }
+    function leftButtonClicked(){
+        const list_of_ids_images = JSON.parse(localStorage.getItem("list_of_ids_images"));
+        const working_field_image_id = JSON.parse(localStorage.getItem("working-field-image-id"));
+        const index_now = list_of_ids_images.ids.indexOf(working_field_image_id);
+        if(index_now>0){
+            localStorage.setItem("working-field-image-id", list_of_ids_images.ids[index_now-1])
+            localStorage.setItem('rect_list', JSON.stringify([]));
+            setImageId(imageId-1);
+            return;
         }
     }
     return (
@@ -237,6 +249,7 @@ export default function SmartMarkup({ project_id }) {
                 setStateEditing={setStateEditing}
                 onLeftButtonClicked={()=>{
                     console.log("left")
+                    leftButtonClicked();
                 }}
                 onRightButtonClicked={()=>{
                     console.log("right")
