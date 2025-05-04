@@ -195,7 +195,24 @@ export default function SmartMarkup({ project_id }) {
         />
     });
 
+    function getListOfImages(project_id, startIndex) {
+        let url = "/get_projects_images_list/" + project_id + "/" + startIndex;
 
+
+            axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+            axios.get(`${settings.server.addr}${url}`).then((res)=>{
+
+            if (res.status === 200 || res.status === 201) {
+                // setListImages(res.data.ids);
+                localStorage.setItem("list_of_ids_images", JSON.stringify({startIndex: startIndex, ids: res.data.ids}));
+                // console.log(res.data.ids);
+            } else {
+                throw new Error('Ошибка при отправке данных');
+            }
+        }).catch((err)=>{
+            console.error(err);
+        });
+    }
     function rightButtonClicked(){
         const list_of_ids_images = JSON.parse(localStorage.getItem("list_of_ids_images"));
         const working_field_image_id = JSON.parse(localStorage.getItem("working-field-image-id"));
@@ -204,7 +221,10 @@ export default function SmartMarkup({ project_id }) {
             localStorage.setItem("working-field-image-id", list_of_ids_images.ids[index_now+1])
             localStorage.setItem('rect_list', JSON.stringify([]));
             setImageId(imageId+1);
+            return
         }
+        getListOfImages(project_id, list_of_ids_images.startIndex + 49);
+        
     }
     function leftButtonClicked(){
         const list_of_ids_images = JSON.parse(localStorage.getItem("list_of_ids_images"));
@@ -216,6 +236,11 @@ export default function SmartMarkup({ project_id }) {
             setImageId(imageId-1);
             return;
         }
+        if(list_of_ids_images.startIndex - 49 < 0){
+            getListOfImages(project_id, 1);
+            return;
+        }
+        getListOfImages(project_id, list_of_ids_images.startIndex - 49);
     }
     return (
         <Card sx={{ width: "51.05vw" }} ref={mainRef}>
