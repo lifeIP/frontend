@@ -2,8 +2,11 @@ import { Card, CardActionArea, CardContent, CardMedia, Divider, IconButton, Typo
 import React, { useEffect, useState } from 'react';
 
 import SettingsIcon from '@mui/icons-material/Settings';
+import { useNavigate } from 'react-router';
 
 function ProjectCardPreview({ isImage, prjctName, prjctDescription, rows, actionAreaDisabled = true, onClick = () => { } }) {
+    const navigate = useNavigate();
+    
     const [image, setImage] = useState("https://kuzov73.ru/image/cache/no_image-1000x1000.jpg");
     useEffect(() => {
         if (isImage !== undefined) {
@@ -68,19 +71,19 @@ function ProjectCardPreview({ isImage, prjctName, prjctDescription, rows, action
                 </CardContent>
             </CardActionArea>
 
-            {/* {
+            {
                 actionAreaDisabled?(
                 <IconButton
                     sx={{ position: 'absolute', top: 8, right: 8 }}
                     aria-label="settings"
-                    onClick={() => {onClick()}}
+                    onClick={() => {navigate("/project-settings");}}
                 >
                     <SettingsIcon />
                 </IconButton>
                 ):(
                     <div></div>
                 )
-            } */}
+            }
         </Card>
     );
 }

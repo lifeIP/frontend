@@ -2,7 +2,7 @@ import { Box, Card, CardContent, Fab, Grid, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import Center from '../../../components/Center/Center';
 import Hat from '../../../components/Hat/Hat';
-import ProjectCardPreview from '../CreateProject/components/ProjectCardPreview';
+import ProjectCardPreview from './components/ProjectCardPreview';
 import ImageViewer from './components/ImageViewer'
 import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from 'react-router';
@@ -131,7 +131,7 @@ export default function ProjectPage() {
         <Center>
             <Hat>
                 <Typography gutterBottom variant="h3" component="div" textAlign="center">
-                    Проект {projectId}
+                    Проект
                 </Typography>
             </Hat>
 

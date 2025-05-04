@@ -8,7 +8,7 @@ import ProjectViewComponent from './components/ProjectViewComponent';
 
 
 export default function ProjectsListPage() {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const [listProjects, setListProjects] = useState([]);
 
 
