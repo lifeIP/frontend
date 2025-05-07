@@ -110,8 +110,8 @@ export default function SmartMarkup({ project_id }) {
     }
 
     useKey('s', () => saveMask());
-    useKey('a', () => console.log('A fired!'));
-    useKey('d', () => console.log('D fired!'));
+    useKey('a', () => leftButtonClicked());
+    useKey('d', () => rightButtonClicked());
     useKey('ShiftLeft', () => {
         setStateEditing(true);
         console.log('shift fired!')

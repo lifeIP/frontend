@@ -62,7 +62,7 @@ function ProjectCardPreviewSettings({ setImageEvent, setImage, setPrjctName, set
 
                 <Box sx={{ marginTop: "15px", display: "flex", justifyContent: "center" }}>
                     <Button variant="contained" onClick={() => fileInputRef.current.click()}>Фото проекта</Button>
-                    <Button variant="contained" onClick={() => handleCreateProjectButtonClicked()} sx={{ marginLeft: "15px" }}>Создать</Button>
+                    <Button variant="contained" onClick={() => handleCreateProjectButtonClicked()} sx={{ marginLeft: "15px" }}>Сохранить</Button>
                     <input onChange={handleChange} multiple={false} ref={fileInputRef} type='file' accept=".jpg, .png, .jpeg" hidden />
                 </Box>
 
