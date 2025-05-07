@@ -15,7 +15,7 @@ import PolylineOutlinedIcon from '@mui/icons-material/PolylineOutlined';
 import FullscreenOutlinedIcon from '@mui/icons-material/FullscreenOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
-export default function Actions({setStateEditing, onRightButtonClicked=()=>{}, onLeftButtonClicked=()=>{}}) {
+export default function Actions({setEdit, setStateEditing, onRightButtonClicked=()=>{}, onLeftButtonClicked=()=>{}}) {
     return (
         <Box sx={{
             position: 'fixed',
@@ -30,25 +30,32 @@ export default function Actions({setStateEditing, onRightButtonClicked=()=>{}, o
                     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <IconButton onClick={() => {
                             setStateEditing(false);
+                            setEdit(false);
                         }}><PanToolOutlinedIcon /></IconButton>
                         
                         <IconButton onClick={() => {
                             setStateEditing(true);
+                            setEdit(false);
                         }}><RectangleOutlinedIcon /></IconButton>
                         
                         <IconButton disabled onClick={() => {
                             setStateEditing(true);
+                            setEdit(false);
                         }}><PolylineOutlinedIcon /></IconButton>
 
-                        <IconButton disabled onClick={() => {
+                        <IconButton onClick={() => {
+                            setStateEditing(true);
+                            setEdit(true);
                         }}><EditOutlinedIcon /></IconButton>
 
                         <IconButton onClick={() => {
                             onLeftButtonClicked();
+                            setEdit(false);
                         }}><ArrowBackIosNewOutlinedIcon /></IconButton>
                         
                         <IconButton onClick={() => {
                             onRightButtonClicked();
+                            setEdit(false);
                         }}><ArrowForwardIosOutlinedIcon /></IconButton>
                         
                         <IconButton disabled onClick={() => {

@@ -48,6 +48,8 @@ export default function SmartMarkup({ project_id }) {
                     callback.current(event);
                 } else if (key === 'd' && event.key === 'd') {
                     callback.current(event);
+                } else if (key === 'e' && event.key === 'e') {
+                    callback.current(event);
                 }
                 else if (key === 'ShiftLeft' && event.key === 'ShiftLeft') {
                     callback.current(event);
@@ -112,13 +114,16 @@ export default function SmartMarkup({ project_id }) {
     useKey('s', () => saveMask());
     useKey('a', () => leftButtonClicked());
     useKey('d', () => rightButtonClicked());
+
+    const [edit, setEdit] = useState(false);
+    useKey('e', () => {
+        setEdit(true);
+    });
     useKey('ShiftLeft', () => {
         setStateEditing(true);
-        console.log('shift fired!')
     });
     useKey('ControlLeft', () => {
         setStateEditing(false);
-        console.log('control fired!')
     });
 
 
@@ -182,13 +187,14 @@ export default function SmartMarkup({ project_id }) {
             })
     }, [imageId]);
 
-    const CanvasOverImageComponent = memo(({ data_markup_classes, currentClass, currentScale, inBoundingBox, stateEditing, canvasSize, isSaved, setSaved }) => {
+    const CanvasOverImageComponent = memo(({ edit, data_markup_classes, currentClass, currentScale, inBoundingBox, stateEditing, canvasSize, isSaved, setSaved }) => {
         return <CanvasOverImage
             data_markup_classes={data_markup_classes}
             currentClass={currentClass}
             currentScale={currentScale}
             inBoundingBox={inBoundingBox}
             stateEditing={stateEditing}
+            edit={edit}
             canvasSize={canvasSize}
             setSaved={setSaved}
             isSaved={isSaved}
@@ -199,44 +205,44 @@ export default function SmartMarkup({ project_id }) {
         let url = "/get_projects_images_list/" + project_id + "/" + startIndex;
 
 
-            axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
-            axios.get(`${settings.server.addr}${url}`).then((res)=>{
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+        axios.get(`${settings.server.addr}${url}`).then((res) => {
 
             if (res.status === 200 || res.status === 201) {
                 // setListImages(res.data.ids);
-                localStorage.setItem("list_of_ids_images", JSON.stringify({startIndex: startIndex, ids: res.data.ids}));
+                localStorage.setItem("list_of_ids_images", JSON.stringify({ startIndex: startIndex, ids: res.data.ids }));
                 // console.log(res.data.ids);
             } else {
                 throw new Error('Ошибка при отправке данных');
             }
-        }).catch((err)=>{
+        }).catch((err) => {
             console.error(err);
         });
     }
-    function rightButtonClicked(){
+    function rightButtonClicked() {
         const list_of_ids_images = JSON.parse(localStorage.getItem("list_of_ids_images"));
         const working_field_image_id = JSON.parse(localStorage.getItem("working-field-image-id"));
         const index_now = list_of_ids_images.ids.indexOf(working_field_image_id);
-        if(list_of_ids_images.ids.length - 1 > index_now){
-            localStorage.setItem("working-field-image-id", list_of_ids_images.ids[index_now+1])
+        if (list_of_ids_images.ids.length - 1 > index_now) {
+            localStorage.setItem("working-field-image-id", list_of_ids_images.ids[index_now + 1])
             localStorage.setItem('rect_list', JSON.stringify([]));
-            setImageId(imageId+1);
+            setImageId(imageId + 1);
             return
         }
         getListOfImages(project_id, list_of_ids_images.startIndex + 49);
-        
+
     }
-    function leftButtonClicked(){
+    function leftButtonClicked() {
         const list_of_ids_images = JSON.parse(localStorage.getItem("list_of_ids_images"));
         const working_field_image_id = JSON.parse(localStorage.getItem("working-field-image-id"));
         const index_now = list_of_ids_images.ids.indexOf(working_field_image_id);
-        if(index_now>0){
-            localStorage.setItem("working-field-image-id", list_of_ids_images.ids[index_now-1])
+        if (index_now > 0) {
+            localStorage.setItem("working-field-image-id", list_of_ids_images.ids[index_now - 1])
             localStorage.setItem('rect_list', JSON.stringify([]));
-            setImageId(imageId-1);
+            setImageId(imageId - 1);
             return;
         }
-        if(list_of_ids_images.startIndex - 49 < 0){
+        if (list_of_ids_images.startIndex - 49 < 0) {
             getListOfImages(project_id, 1);
             return;
         }
@@ -256,6 +262,7 @@ export default function SmartMarkup({ project_id }) {
                             <Card sx={{ width: "51.05vw" }}>
                                 <ImageViewer setCanvasSize={setCanvasSize} image={image} />
                                 <CanvasOverImageComponent
+                                    edit={edit}
                                     data_markup_classes={data_markup_classes}
                                     currentClass={data_markup_classes.at(selectedClass)}
                                     currentScale={currentScale}
@@ -271,12 +278,13 @@ export default function SmartMarkup({ project_id }) {
                 </TransformWrapper>
             </Box>
             <Actions
+                setEdit={setEdit}
                 setStateEditing={setStateEditing}
-                onLeftButtonClicked={()=>{
+                onLeftButtonClicked={() => {
                     console.log("left")
                     leftButtonClicked();
                 }}
-                onRightButtonClicked={()=>{
+                onRightButtonClicked={() => {
                     console.log("right")
                     rightButtonClicked();
                 }}

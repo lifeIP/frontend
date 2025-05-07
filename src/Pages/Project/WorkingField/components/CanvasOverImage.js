@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import settings from "../../../../settings.json"
 
-const CanvasOverImage = ({ data_markup_classes, currentClass, currentScale, inBoundingBox, stateEditing, canvasSize, setSaved, isSaved }) => {
+const CanvasOverImage = ({ edit, data_markup_classes, currentClass, currentScale, inBoundingBox, stateEditing, canvasSize, setSaved, isSaved }) => {
     const canvasRef = useRef(null);
 
     let mouse_pos_x = -1;
@@ -19,8 +19,8 @@ const CanvasOverImage = ({ data_markup_classes, currentClass, currentScale, inBo
     let rect_shape_h = 0;
     let rect_class_c = "#00FF00";
     let rect_list = [];
-    
-    
+
+
 
     // Функция для рисования на канвасе
     const drawCanvas = () => {
@@ -33,20 +33,20 @@ const CanvasOverImage = ({ data_markup_classes, currentClass, currentScale, inBo
             if (rect_list.length === 0) {
                 rect_list = JSON.parse(localStorage.getItem('rect_list'))
             }
-            
+
             rect_list.map((item, index) => {
                 let multiplier_w = 1;
                 let multiplier_h = 1;
-                if(canvasSize.width !== item.canvasWidth){
+                if (canvasSize.width !== item.canvasWidth) {
                     multiplier_w = (item.canvasWidth / canvasSize.width);
                 }
-                else{
+                else {
                     multiplier_w = 1;
                 }
-                if(canvasSize.height !== item.canvasHeight){   
-                    multiplier_h = (item.canvasHeight / canvasSize.height); 
+                if (canvasSize.height !== item.canvasHeight) {
+                    multiplier_h = (item.canvasHeight / canvasSize.height);
                 }
-                else{
+                else {
                     multiplier_h = 1;
                 }
                 // console.log(multiplier_w)
@@ -60,7 +60,7 @@ const CanvasOverImage = ({ data_markup_classes, currentClass, currentScale, inBo
 
                     context.strokeStyle = "#000000";
                     // contain(item);
-                    context.fillRect((point.x - (3/currentScale)) / multiplier_w, (point.y - (3/currentScale)) / multiplier_w, (6/currentScale), (6/currentScale));
+                    context.fillRect((point.x - (3 / currentScale)) / multiplier_w, (point.y - (3 / currentScale)) / multiplier_w, (6 / currentScale), (6 / currentScale));
                     context.strokeStyle = item.class_color;
                 });
 
@@ -80,10 +80,10 @@ const CanvasOverImage = ({ data_markup_classes, currentClass, currentScale, inBo
             context.stroke(path1);
 
             context.strokeStyle = "#000000";
-            context.fillRect(rect_pos_x - (3/currentScale), rect_pos_y - (3/currentScale), (6/currentScale), (6/currentScale));
-            context.fillRect(rect_pos_x + rect_shape_w - (3/currentScale), rect_pos_y + rect_shape_h - (3/currentScale), (6/currentScale), (6/currentScale));
-            context.fillRect(rect_pos_x - (3/currentScale), rect_pos_y + rect_shape_h - (3/currentScale), (6/currentScale), (6/currentScale));
-            context.fillRect(rect_pos_x + rect_shape_w - (3/currentScale), rect_pos_y - (3/currentScale), (6/currentScale), (6/currentScale));
+            context.fillRect(rect_pos_x - (3 / currentScale), rect_pos_y - (3 / currentScale), (6 / currentScale), (6 / currentScale));
+            context.fillRect(rect_pos_x + rect_shape_w - (3 / currentScale), rect_pos_y + rect_shape_h - (3 / currentScale), (6 / currentScale), (6 / currentScale));
+            context.fillRect(rect_pos_x - (3 / currentScale), rect_pos_y + rect_shape_h - (3 / currentScale), (6 / currentScale), (6 / currentScale));
+            context.fillRect(rect_pos_x + rect_shape_w - (3 / currentScale), rect_pos_y - (3 / currentScale), (6 / currentScale), (6 / currentScale));
             context.strokeStyle = currentClass.class_color;
         }
     };
@@ -91,63 +91,50 @@ const CanvasOverImage = ({ data_markup_classes, currentClass, currentScale, inBo
 
 
     let leftButtonPressed = false;
-    const handleMouseMove = (event) => {
-        function contain(){
-            rect_list.map((item, index)=>{
-                let multiplier_w = 1;
-                let multiplier_h = 1;
-                if(canvasSize.width !== item.canvasWidth){
-                    multiplier_w = (item.canvasWidth / canvasSize.width);
-                }
-                else{
-                    multiplier_w = 1;
-                }
-                if(canvasSize.height !== item.canvasHeight){   
-                    multiplier_h = (item.canvasHeight / canvasSize.height); 
-                }
-                else{
-                    multiplier_h = 1;
-                }
-
-                item.points.map((point, id)=>{
-                    if(Math.abs(point.x / multiplier_w - mouse_pos_x) < 3 && Math.abs(point.y / multiplier_h - mouse_pos_y) < 3){
-                        console.log(index + " / " + id);  
-                        return true;            
-                    }   
-                });
-            });
-            return false;
-        }
-        contain();
-
-        if (!inBoundingBox || !stateEditing) { return }
-
-        if (leftButtonPressed) {
-            console.log('Левая кнопка зажата');
-            rect_shape_w = mouse_pos_x - rect_pos_x;
-            rect_shape_h = mouse_pos_y - rect_pos_y;
-            drawCanvas();
-        }
-
-        if (!canvasRef.current) return;
-
-        const rect = canvasRef.current.getBoundingClientRect();
-        const relativeX = event.clientX - rect.left;
-        const relativeY = event.clientY - rect.top;
-
-        let x_pos = relativeX / currentScale;
-        let y_pos = relativeY / currentScale;
-
-        mouse_pos_x = x_pos;
-        mouse_pos_y = y_pos;
-
-    };
+    let selected_point = false;
+    let selected_rect_id = 0;
+    let selected_point_id = 0;
 
     function handleLeftButtonPressed(event) {
         if (!inBoundingBox || !stateEditing) { return }
-        if (event.button === 0) { // Левая кнопка мыши
+
+        if (edit && stateEditing) {
+            function contain() {
+                let answer = false;
+                rect_list.map((item, index) => {
+                    let multiplier_w = 1;
+                    let multiplier_h = 1;
+                    if (canvasSize.width !== item.canvasWidth) {
+                        multiplier_w = (item.canvasWidth / canvasSize.width);
+                    }
+                    else {
+                        multiplier_w = 1;
+                    }
+                    if (canvasSize.height !== item.canvasHeight) {
+                        multiplier_h = (item.canvasHeight / canvasSize.height);
+                    }
+                    else {
+                        multiplier_h = 1;
+                    }
+
+                    item.points.map((point, id) => {
+                        if (Math.abs(point.x / multiplier_w - mouse_pos_x) < 3 && Math.abs(point.y / multiplier_h - mouse_pos_y) < 3) {
+                            console.log(index + " / " + id);
+                            selected_rect_id = index;
+                            selected_point_id = id;
+                            answer = true;
+                            return true;
+                        }
+                    });
+                });
+                return answer;
+            }
+            selected_point = contain();
+            // console.log(selected_point);
+        }
+
+        if (event.button === 0 && !edit) {
             leftButtonPressed = true;
-            console.log('Левая кнопка нажата');
             rect_pos_x = mouse_pos_x;
             rect_pos_y = mouse_pos_y;
         }
@@ -155,13 +142,16 @@ const CanvasOverImage = ({ data_markup_classes, currentClass, currentScale, inBo
 
     const handleLeftButtonReleased = (event) => {
         if (!inBoundingBox || !stateEditing) { return }
-        if (leftButtonPressed && event.button === 0) { // Левая кнопка мыши
+        if (selected_point) selected_point = false;
+        if (leftButtonPressed && event.button === 0) {
             leftButtonPressed = false;
-            console.log('Левая кнопка отпущена');
+            // console.log('Левая кнопка отпущена');
+
 
             if (Math.abs(rect_shape_w) < 8 && Math.abs(rect_shape_h) < 8) return;
             rect_class_c = currentClass.class_color;
             rect_list.push({
+                mask_type: 0,
                 canvasWidth: canvasSize.width,
                 canvasHeight: canvasSize.height,
                 class_id: currentClass.id,
@@ -195,14 +185,61 @@ const CanvasOverImage = ({ data_markup_classes, currentClass, currentScale, inBo
         }
     };
 
+    const handleMouseMove = (event) => {
 
-    function save_mask_on_server() {
-        let data = localStorage.getItem('rect_list');
-        // console.log(data);
-    }
+        if (!inBoundingBox || !stateEditing) { return }
+
+        if (selected_point) {
+            if (rect_list.at(selected_rect_id).mask_type == 0) {
+                if(selected_point_id == 0){
+                    rect_list.at(selected_rect_id).points.at(0).x = mouse_pos_x;
+                    rect_list.at(selected_rect_id).points.at(0).y = mouse_pos_y;
+                    rect_list.at(selected_rect_id).points.at(3).x = mouse_pos_x;
+                    rect_list.at(selected_rect_id).points.at(1).y = mouse_pos_y;
+                } else if(selected_point_id == 1){
+                    rect_list.at(selected_rect_id).points.at(1).x = mouse_pos_x;
+                    rect_list.at(selected_rect_id).points.at(1).y = mouse_pos_y;
+                    rect_list.at(selected_rect_id).points.at(2).x = mouse_pos_x;
+                    rect_list.at(selected_rect_id).points.at(0).y = mouse_pos_y;
+                } else if(selected_point_id == 2){
+                    rect_list.at(selected_rect_id).points.at(2).x = mouse_pos_x;
+                    rect_list.at(selected_rect_id).points.at(2).y = mouse_pos_y;
+                    rect_list.at(selected_rect_id).points.at(1).x = mouse_pos_x;
+                    rect_list.at(selected_rect_id).points.at(3).y = mouse_pos_y;
+                } else if(selected_point_id == 3){
+                    rect_list.at(selected_rect_id).points.at(3).x = mouse_pos_x;
+                    rect_list.at(selected_rect_id).points.at(3).y = mouse_pos_y;
+                    rect_list.at(selected_rect_id).points.at(0).x = mouse_pos_x;
+                    rect_list.at(selected_rect_id).points.at(2).y = mouse_pos_y;
+                }
+            }
+            localStorage.setItem('rect_list', JSON.stringify(rect_list));
+            drawCanvas();
+        }
+        if (leftButtonPressed) {
+            console.log('Левая кнопка зажата');
+            // console.log(selected_point);
+            rect_shape_w = mouse_pos_x - rect_pos_x;
+            rect_shape_h = mouse_pos_y - rect_pos_y;
+            drawCanvas();
+        }
+
+        if (!canvasRef.current) return;
+
+        const rect = canvasRef.current.getBoundingClientRect();
+        const relativeX = event.clientX - rect.left;
+        const relativeY = event.clientY - rect.top;
+
+        let x_pos = relativeX / currentScale;
+        let y_pos = relativeY / currentScale;
+
+        mouse_pos_x = x_pos;
+        mouse_pos_y = y_pos;
+
+    };
+
     useEffect(() => {
         if (isSaved === true) return;
-        save_mask_on_server();
         setSaved(true);
     }, [isSaved]);
 
@@ -232,9 +269,9 @@ const CanvasOverImage = ({ data_markup_classes, currentClass, currentScale, inBo
     };
 
     useEffect(() => {
-        if(rect_list.length != 0) return
-        if(data_markup_classes[0].id === -1) return
-        if(localStorage.getItem("now_is_last_list") === true) return
+        if (rect_list.length != 0) return
+        if (data_markup_classes[0].id === -1) return
+        if (localStorage.getItem("now_is_last_list") === true) return
 
         // console.log(data_markup_classes);
         axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
@@ -242,7 +279,7 @@ const CanvasOverImage = ({ data_markup_classes, currentClass, currentScale, inBo
             .then(res => {
                 if (res.data.forms.length === 0) localStorage.setItem("now_is_last_list", true)
                 res.data.forms.map((item) => {
-                    
+
                     let finded_item = findByClassId(data_markup_classes, item.class_id);
 
 
