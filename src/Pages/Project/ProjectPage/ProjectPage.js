@@ -107,11 +107,11 @@ export default function ProjectPage() {
                 localStorage.setItem("list_of_ids_images", JSON.stringify({startIndex: startIndex, ids: res.data.ids}));
                 // console.log(res.data.ids);
             } else {
-                throw new Error('Ошибка при отправке данных');
+                // throw new Error('Ошибка при отправке данных');
             }
         } catch (err) {
             console.error(err);
-            throw err;
+            // throw err;
         }
     }
 
