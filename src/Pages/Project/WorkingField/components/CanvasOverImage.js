@@ -19,6 +19,8 @@ const CanvasOverImage = ({ data_markup_classes, currentClass, currentScale, inBo
     let rect_shape_h = 0;
     let rect_class_c = "#00FF00";
     let rect_list = [];
+    
+    
 
     // Функция для рисования на канвасе
     const drawCanvas = () => {
@@ -57,7 +59,8 @@ const CanvasOverImage = ({ data_markup_classes, currentClass, currentScale, inBo
                     path1.moveTo(point.x / multiplier_w, point.y / multiplier_h);
 
                     context.strokeStyle = "#000000";
-                    context.fillRect((point.x - 3) / multiplier_w, (point.y - 3) / multiplier_w, 6, 6);
+                    // contain(item);
+                    context.fillRect((point.x - (3/currentScale)) / multiplier_w, (point.y - (3/currentScale)) / multiplier_w, (6/currentScale), (6/currentScale));
                     context.strokeStyle = item.class_color;
                 });
 
@@ -77,10 +80,10 @@ const CanvasOverImage = ({ data_markup_classes, currentClass, currentScale, inBo
             context.stroke(path1);
 
             context.strokeStyle = "#000000";
-            context.fillRect(rect_pos_x - 3, rect_pos_y - 3, 6, 6);
-            context.fillRect(rect_pos_x + rect_shape_w - 3, rect_pos_y + rect_shape_h - 3, 6, 6);
-            context.fillRect(rect_pos_x - 3, rect_pos_y + rect_shape_h - 3, 6, 6);
-            context.fillRect(rect_pos_x + rect_shape_w - 3, rect_pos_y - 3, 6, 6);
+            context.fillRect(rect_pos_x - (3/currentScale), rect_pos_y - (3/currentScale), (6/currentScale), (6/currentScale));
+            context.fillRect(rect_pos_x + rect_shape_w - (3/currentScale), rect_pos_y + rect_shape_h - (3/currentScale), (6/currentScale), (6/currentScale));
+            context.fillRect(rect_pos_x - (3/currentScale), rect_pos_y + rect_shape_h - (3/currentScale), (6/currentScale), (6/currentScale));
+            context.fillRect(rect_pos_x + rect_shape_w - (3/currentScale), rect_pos_y - (3/currentScale), (6/currentScale), (6/currentScale));
             context.strokeStyle = currentClass.class_color;
         }
     };
@@ -89,6 +92,34 @@ const CanvasOverImage = ({ data_markup_classes, currentClass, currentScale, inBo
 
     let leftButtonPressed = false;
     const handleMouseMove = (event) => {
+        function contain(){
+            rect_list.map((item, index)=>{
+                let multiplier_w = 1;
+                let multiplier_h = 1;
+                if(canvasSize.width !== item.canvasWidth){
+                    multiplier_w = (item.canvasWidth / canvasSize.width);
+                }
+                else{
+                    multiplier_w = 1;
+                }
+                if(canvasSize.height !== item.canvasHeight){   
+                    multiplier_h = (item.canvasHeight / canvasSize.height); 
+                }
+                else{
+                    multiplier_h = 1;
+                }
+
+                item.points.map((point, id)=>{
+                    if(Math.abs(point.x / multiplier_w - mouse_pos_x) < 3 && Math.abs(point.y / multiplier_h - mouse_pos_y) < 3){
+                        console.log(index + " / " + id);  
+                        return true;            
+                    }   
+                });
+            });
+            return false;
+        }
+        contain();
+
         if (!inBoundingBox || !stateEditing) { return }
 
         if (leftButtonPressed) {
@@ -109,6 +140,7 @@ const CanvasOverImage = ({ data_markup_classes, currentClass, currentScale, inBo
 
         mouse_pos_x = x_pos;
         mouse_pos_y = y_pos;
+
     };
 
     function handleLeftButtonPressed(event) {
