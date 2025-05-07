@@ -187,8 +187,9 @@ export default function SmartMarkup({ project_id }) {
             })
     }, [imageId]);
 
-    const CanvasOverImageComponent = memo(({ edit, data_markup_classes, currentClass, currentScale, inBoundingBox, stateEditing, canvasSize, isSaved, setSaved }) => {
+    const CanvasOverImageComponent = memo(({ maskType, edit, data_markup_classes, currentClass, currentScale, inBoundingBox, stateEditing, canvasSize, isSaved, setSaved }) => {
         return <CanvasOverImage
+            maskType={maskType}
             data_markup_classes={data_markup_classes}
             currentClass={currentClass}
             currentScale={currentScale}
@@ -248,6 +249,8 @@ export default function SmartMarkup({ project_id }) {
         }
         getListOfImages(project_id, list_of_ids_images.startIndex - 49);
     }
+
+    const [maskType, setMaskType] = useState(0);
     return (
         <Card sx={{ width: "51.05vw" }} ref={mainRef}>
             <Box sx={{ position: 'relative', width: '100%', height: 'auto' }}>
@@ -262,6 +265,7 @@ export default function SmartMarkup({ project_id }) {
                             <Card sx={{ width: "51.05vw" }}>
                                 <ImageViewer setCanvasSize={setCanvasSize} image={image} />
                                 <CanvasOverImageComponent
+                                    maskType={maskType}
                                     edit={edit}
                                     data_markup_classes={data_markup_classes}
                                     currentClass={data_markup_classes.at(selectedClass)}
@@ -278,6 +282,7 @@ export default function SmartMarkup({ project_id }) {
                 </TransformWrapper>
             </Box>
             <Actions
+                setMaskType={setMaskType}
                 setEdit={setEdit}
                 setStateEditing={setStateEditing}
                 onLeftButtonClicked={() => {

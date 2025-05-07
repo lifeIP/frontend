@@ -15,7 +15,7 @@ import PolylineOutlinedIcon from '@mui/icons-material/PolylineOutlined';
 import FullscreenOutlinedIcon from '@mui/icons-material/FullscreenOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
-export default function Actions({setEdit, setStateEditing, onRightButtonClicked=()=>{}, onLeftButtonClicked=()=>{}}) {
+export default function Actions({setMaskType, setEdit, setStateEditing, onRightButtonClicked=()=>{}, onLeftButtonClicked=()=>{}}) {
     return (
         <Box sx={{
             position: 'fixed',
@@ -34,11 +34,13 @@ export default function Actions({setEdit, setStateEditing, onRightButtonClicked=
                         }}><PanToolOutlinedIcon /></IconButton>
                         
                         <IconButton onClick={() => {
+                            setMaskType(0);
                             setStateEditing(true);
                             setEdit(false);
                         }}><RectangleOutlinedIcon /></IconButton>
                         
-                        <IconButton disabled onClick={() => {
+                        <IconButton onClick={() => {
+                            setMaskType(1);
                             setStateEditing(true);
                             setEdit(false);
                         }}><PolylineOutlinedIcon /></IconButton>
