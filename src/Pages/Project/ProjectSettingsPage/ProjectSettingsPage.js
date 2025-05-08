@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import Center from '../../../components/Center/Center';
 import Hat from '../../../components/Hat/Hat';
 import { Box, Grid, Typography } from '@mui/material';
-import ProjectCardPreview from '../CreateProject/components/ProjectCardPreview';
-import ProjectCardPreviewSettings from '../CreateProject/components/ProjectCardPreviewSettings';
-import ProjectMainSetting from '../CreateProject/components/ProjectMainSetting';
+import ProjectCardPreview from './components/ProjectCardPreview';
+import ProjectCardPreviewSettings from './components/ProjectCardPreviewSettings';
+import ProjectMainSetting from "./components/ProjectMainSetting";
 import axios from 'axios';
 import { useNavigate } from 'react-router';
 import settings from "../../../settings.json"
@@ -53,8 +53,8 @@ export default function ProjectSettingsPage() {
             if (res.status === 200 || res.status === 201) {
                 let list_of_class_name = []
 
-                res.data.map((item) => {
-                    list_of_class_name.push({ label: item.class_name, color: item.class_color, description: item.class_description });
+                res.data.map((item, index) => {
+                    list_of_class_name.push({id: index, label: item.class_name, color: item.class_color, description: item.class_description, disabled: true });
                 })
                 setRows(list_of_class_name);
                 // console.log(list_of_class_name);
@@ -146,7 +146,6 @@ export default function ProjectSettingsPage() {
             description: prjctDescription ? prjctDescription : " ",
             classes: [...classes],
         }
-        console.log(data);
         try {
             axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
             const res = await axios.put(`${settings.server.addr}${url}`, data);
@@ -205,6 +204,8 @@ export default function ProjectSettingsPage() {
                             setImage={setImage}
                             setPrjctName={setPrjctName}
                             setPrjctDescription={setPrjctDescription}
+                            prjctName={prjctName}
+                            prjctDescription={prjctDescription}
                         />
                     </Grid>
                 </Grid>
@@ -212,7 +213,6 @@ export default function ProjectSettingsPage() {
             <Box sx={{ display: "flex", justifyContent: "center", marginTop: '1.85vh', marginBottom: '1.85vh' }}>
                 <ProjectMainSetting rows={rows} setRows={setRows} />
             </Box>
-
         </Center>
     );
 }
