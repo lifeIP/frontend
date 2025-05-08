@@ -19,9 +19,9 @@ export default function Statistics() {
     const series = [
         {
             data: [
-                { id: 0, value: 10, label: (location) => { if (location == "tooltip") return "some1" } },
-                { id: 1, value: 15, label: (location) => { if (location == "tooltip") return "some2" } },
-                { id: 2, value: 20, label: (location) => { if (location == "tooltip") return "some3" } },
+                { id: 0, value: 100, label: (location) => { if (location == "tooltip") return "Свободные ресурсы %" } },
+                // { id: 1, value: 15, label: (location) => { if (location == "tooltip") return "some2" } },
+                // { id: 2, value: 20, label: (location) => { if (location == "tooltip") return "some3" } },
             ],
         },
     ];
