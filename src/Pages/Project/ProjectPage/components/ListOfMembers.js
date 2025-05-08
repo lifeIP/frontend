@@ -23,7 +23,7 @@ function ListOfMembers() {
                     В проекте пока нет сторонних участников
                 </Typography>
                 <Box sx={{ display: 'flex', justifyContent: 'center'}}>
-                <Fab  color="primary" size="large" aria-label="добавить участник">
+                <Fab disabled color="primary" size="large" aria-label="добавить участник">
                     <AddIcon />
                 </Fab>
                 </Box>

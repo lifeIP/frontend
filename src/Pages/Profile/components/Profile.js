@@ -173,7 +173,7 @@ export default function Profile() {
                 {!is_load ? (
                     <Skeleton animation="wave" variant="rectangular" />
                 ) : (
-                    <Button aria-label="edit">
+                    <Button disabled aria-label="edit">
                         <EditRoundedIcon size="smal" /> ИЗМЕНИТЬ
                     </Button>
                 )}
