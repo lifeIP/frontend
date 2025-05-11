@@ -1,15 +1,11 @@
 import { Box, Card, CardContent, Fab, Typography } from '@mui/material';
 import React from 'react';
 import AddIcon from '@mui/icons-material/Add';
+import AddMemberDialog from './AddMemberDialog';
 
 function ListOfMembers() {
     return (
         <Card sx={{ width: "100%", borderRadius: "12px", height: "45vh" }}>
-            {/* <CardContent>
-                <Typography>
-                    В проекте пока нет сторонних участников
-                </Typography>
-            </CardContent> */}
             <Box
                 sx={{
                     display: 'flex',           // Включаем flex-вёрстку
@@ -23,9 +19,7 @@ function ListOfMembers() {
                     В проекте пока нет сторонних участников
                 </Typography>
                 <Box sx={{ display: 'flex', justifyContent: 'center'}}>
-                <Fab disabled color="primary" size="large" aria-label="добавить участник">
-                    <AddIcon />
-                </Fab>
+                <AddMemberDialog/>
                 </Box>
                 </Box>
             </Box>
