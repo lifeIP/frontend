@@ -211,7 +211,9 @@ export default function SmartMarkup({ project_id }) {
 
             if (res.status === 200 || res.status === 201) {
                 // setListImages(res.data.ids);
-                localStorage.setItem("list_of_ids_images", JSON.stringify({ startIndex: startIndex, ids: res.data.ids }));
+                if(res.data.ids.length != 0){
+                    localStorage.setItem("list_of_ids_images", JSON.stringify({ startIndex: startIndex, ids: res.data.ids }));
+                }
                 // console.log(res.data.ids);
             } else {
                 throw new Error('Ошибка при отправке данных');

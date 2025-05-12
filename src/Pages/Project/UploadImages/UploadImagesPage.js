@@ -2,16 +2,43 @@ import { Box, Button, Grid, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import Center from '../../../components/Center/Center';
 import Hat from '../../../components/Hat/Hat';
-import DragDropFileUpload from './components/DragDropFileUpload'
+import DragDropFileUpload from './components/DragDropFileUpload';
 import ImageUploadViewer from './components/ImageUploadViewer';
+import axios from 'axios';
+import settings from "../../../settings.json"
 
 export default function UploadImagesPage() {
     const [files, setFiles] = useState([]);
     const [buttonDisabled, setButtonDisabled] = useState(true);
     const [dragDropDisabled, setDragDropDisabled] = useState(false);
     const [startUpload, setStartUpload] = useState(false);
+    let project_id = -1;
+
+    async function createTask() {
+        let url = "/create-task/";
+
+        try {
+            axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+            const res = await axios.post(`${settings.server.addr}${url}`, {
+                project_id: project_id,
+                author_user_id: 1,
+                assignee_user_id: 1,
+                description: "Описание"
+            });
+
+            if (res.status === 200 || res.status === 201) {
+                setStartUpload(true);
+                setButtonDisabled(true);
+            } else {
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
 
     useEffect(()=>{
+        project_id = JSON.parse(localStorage.getItem("last_project_id"));
         if(files.length == 0) return;
         setButtonDisabled(false);
     }, [files]);
@@ -44,8 +71,7 @@ export default function UploadImagesPage() {
                 fullWidth
                 sx={{ marginTop: "1.75vh" }}
                 onClick={()=>{
-                    setStartUpload(true);
-                    setButtonDisabled(true);
+                    createTask();
                 }}
             >Отправить</Button>
 
@@ -53,7 +79,7 @@ export default function UploadImagesPage() {
                 <Grid container spacing={1}>
                     {files.map((item) => (
                         <Grid size={3}>
-                            <ImageUploadViewer disabled={buttonDisabled} file={item} startUpload={startUpload} />
+                            <ImageUploadViewer disabled={buttonDisabled} file={item} startUpload={startUpload}/>
                         </Grid>
                     ))}
                 </Grid>

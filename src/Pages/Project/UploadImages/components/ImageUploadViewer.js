@@ -48,12 +48,14 @@ const ImageUploadViewer = ({ file, startUpload, disabled }) => {
 
             if (res.status === 200 || res.status === 201) {
                 console.log('Файл успешно отправлен!');
+                
             } else {
-                throw new Error('Ошибка при отправке файла');
+                console.log('Файл не отправлен');
+                // throw new Error('Ошибка при отправке файла');
             }
         } catch (err) {
             console.error(err);
-            throw err;
+            // throw err;
         }
     };
 

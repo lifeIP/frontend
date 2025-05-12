@@ -1,11 +1,26 @@
 import * as React from 'react';
-import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, FormHelperText, Fab } from '@mui/material';
+import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, FormHelperText, Fab, Alert } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import axios from 'axios';
+import settings from "../../../../settings.json"
 
 export default function AddMemberDialog() {
   const [open, setOpen] = React.useState(false);
   const [email, setEmail] = React.useState('');
   const [isValidEmail, setIsValidEmail] = React.useState(true);
+
+  function addNewMember(member_email){
+    const url = "/add_new_member_in_project/"
+    axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+    axios.post(`${settings.server.addr}${url}`, {member_email: member_email}).then(res=>{
+      if(res.data.status == 1){
+        alert("Приглашение отправлено");
+      }
+    }).catch(err=>{
+      console.log(err);
+      alert("Что-то пошло не так. Попробуйте позже.");
+    })
+  }
 
   // Регулярное выражение для проверки email
   const validateEmail = (value) => {
@@ -16,6 +31,7 @@ export default function AddMemberDialog() {
   const handleSubmit = () => {
     if (validateEmail(email)) {
       console.log(`Отправлен новый email: ${email}`);
+      addNewMember(email);
       setOpen(false);
       setEmail('');
     } else {
