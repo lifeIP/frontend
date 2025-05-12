@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, Grid, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import Center from '../../../components/Center/Center';
 import Hat from '../../../components/Hat/Hat';
@@ -6,6 +6,7 @@ import DragDropFileUpload from './components/DragDropFileUpload';
 import ImageUploadViewer from './components/ImageUploadViewer';
 import axios from 'axios';
 import settings from "../../../settings.json"
+import TaskForm from './components/TaskForm';
 
 export default function UploadImagesPage() {
     const [files, setFiles] = useState([]);
@@ -37,9 +38,9 @@ export default function UploadImagesPage() {
     }
 
 
-    useEffect(()=>{
+    useEffect(() => {
         project_id = JSON.parse(localStorage.getItem("last_project_id"));
-        if(files.length == 0) return;
+        if (files.length == 0) return;
         setButtonDisabled(false);
     }, [files]);
 
@@ -57,6 +58,12 @@ export default function UploadImagesPage() {
         setFiles(all_files);
         setDragDropDisabled(true);
     };
+
+
+    const recipients = [
+        { id: 1, name: 'Иван Иванов' },
+        { id: 2, name: 'Марья Сидорова' },
+    ];
     return (
         <Center>
             <Hat>
@@ -64,13 +71,20 @@ export default function UploadImagesPage() {
                     Загрузка фотографий
                 </Typography>
             </Hat>
+
+            <Card sx={{ borderRadius: "12px", width: "51.05vw", marginBottom: "1.75vh"}}>
+                <CardContent>
+                    <TaskForm recipients={recipients} />
+                </CardContent>
+            </Card>
+
             <DragDropFileUpload disabled={dragDropDisabled} onFileUpload={handleFileUpload} />
             <Button
                 disabled={buttonDisabled}
                 variant='contained'
                 fullWidth
                 sx={{ marginTop: "1.75vh" }}
-                onClick={()=>{
+                onClick={() => {
                     createTask();
                 }}
             >Отправить</Button>
@@ -79,7 +93,7 @@ export default function UploadImagesPage() {
                 <Grid container spacing={1}>
                     {files.map((item) => (
                         <Grid size={3}>
-                            <ImageUploadViewer disabled={buttonDisabled} file={item} startUpload={startUpload}/>
+                            <ImageUploadViewer disabled={buttonDisabled} file={item} startUpload={startUpload} />
                         </Grid>
                     ))}
                 </Grid>
