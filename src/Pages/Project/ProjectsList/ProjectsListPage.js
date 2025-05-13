@@ -5,15 +5,16 @@ import AddIcon from '@mui/icons-material/Add';
 import axios from 'axios';
 import settings from "../../../settings.json"
 import ProjectViewComponent from './components/ProjectViewComponent';
+import InvitationDialog from '../ProjectsPage/components/InvitationDialog';
 
 
-export default function ProjectsListPage() {
+export default function ProjectsListPage({ purpose = "inside" }) {
     const navigate = useNavigate();
     const [listProjects, setListProjects] = useState([]);
 
 
     async function getListOfProjects() {
-        let url = "/get-projects-id";
+        let url = purpose == "inside" ? "/get-projects-ids/" : "/get-outside-projects-ids/";
 
         try {
             axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
@@ -37,30 +38,50 @@ export default function ProjectsListPage() {
     return (
         <>
             <Box sx={{ marginBottom: '1.85vh', marginTop: '1.85vh' }}>
-                <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginBottom: '1.85vh' }}>
-                    <CardContent>
-                        <Typography gutterBottom variant="h3" component="div" textAlign="center">
-                            Ваши проекты
-                        </Typography>
-                    </CardContent>
-
-                    <Box sx={{ display: "flex", justifyContent: "center" }}>
-                        <Fab size="medium" aria-label="добавить класс" onClick={() => { navigate("/create-project") }}>
-                            <AddIcon />
-                        </Fab>
-                    </Box>
-                    <CardContent>
-                    </CardContent>
-                </Card>
+                
+                    {purpose == "inside" ? (
+                        <>
+                        <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginBottom: '1.85vh' }}>
+                            <CardContent>
+                                <Typography gutterBottom variant="h3" component="div" textAlign="center">
+                                    Ваши проекты
+                                </Typography>
+                            </CardContent>
+                            <Box sx={{ display: "flex", justifyContent: "center" }}>
+                                <Fab size="medium" aria-label="добавить класс" onClick={() => { navigate("/create-project") }}>
+                                    <AddIcon />
+                                </Fab>
+                            </Box>
+                            <CardContent>
+                            </CardContent>
+                            </Card>
+                        </>
+                    ) : (
+                        <>
+                            <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginBottom: '1.85vh', marginTop: '1.85vh' }}>
+                                <CardContent>
+                                    <Typography gutterBottom variant="h3" component="div" textAlign="center">
+                                        Сторонние проекты
+                                    </Typography>
+                                </CardContent>
+                                <Box sx={{ display: "flex", justifyContent: "center" }}>
+                                    <InvitationDialog />
+                                </Box>
+                                <CardContent>
+                                </CardContent>
+                            </Card>
+                        </>
+                    )}
+                
             </Box>
-            <Box sx={{maxWidth: "51.05vw"}}>
-            <Grid container spacing="1.85vh">
-                {listProjects.map((item, index) => (
-                    <Grid size={6}>
-                        <ProjectViewComponent project_id={item}/>
-                    </Grid>
-                ))}
-            </Grid>
+            <Box sx={{ maxWidth: "51.05vw" }}>
+                <Grid container spacing="1.85vh">
+                    {listProjects.map((item, index) => (
+                        <Grid size={6}>
+                            <ProjectViewComponent project_id={item} />
+                        </Grid>
+                    ))}
+                </Grid>
             </Box>
 
         </>
