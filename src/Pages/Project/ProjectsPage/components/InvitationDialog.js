@@ -22,9 +22,7 @@ export default function InvitationDialog() {
     };
 
     const handleDeclineInvitation = (id) => {
-        setInvitations((prevInvites) =>
-            prevInvites.filter((invite) => invite.id !== id)
-        );
+        decline_invitation(id);
     };
 
     // Функции управления окном
@@ -75,7 +73,27 @@ export default function InvitationDialog() {
         }
     }
 
-    React.useEffect(()=>{
+    async function decline_invitation(invite_id) {
+        let url = "/decline_invitation/" + invite_id;
+
+        try {
+            axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+            const res = await axios.get(`${settings.server.addr}${url}`);
+
+            if (res.status === 200 || res.status === 201) {
+                setInvitations((prevInvites) =>
+                    prevInvites.filter((invite) => invite.id !== invite_id)
+                );
+            } else {
+                // throw new Error('Ошибка при отправке данных');
+            }
+        } catch (err) {
+            console.error(err);
+            // throw err;
+        }
+    }
+
+    React.useEffect(() => {
         get_all_invitation();
     }, []);
 
