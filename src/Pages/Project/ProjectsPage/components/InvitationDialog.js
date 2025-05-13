@@ -3,23 +3,22 @@ import { Button, ListItem, ListItemAvatar, Avatar, Typography, Dialog, DialogTit
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined';
 import AddIcon from '@mui/icons-material/Add';
-
+import axios from 'axios';
+import settings from "../../../../settings.json"
 
 // Имитация данных приглашений
-const initialInvitations = [
-    { id: 1, sender: 'Иван Петров', project: 'Проект Alpha' },
-    { id: 2, sender: 'Анна Смирнова', project: 'Проект Beta' },
-];
+// const initialInvitations = [
+//     { id: 1, sender: 'Иван Петров', project: 'Проект Alpha' },
+//     { id: 2, sender: 'Анна Смирнова', project: 'Проект Beta' },
+// ];
 
 export default function InvitationDialog() {
-    const [invitations, setInvitations] = React.useState(initialInvitations);
+    const [invitations, setInvitations] = React.useState([]);
     const [open, setOpen] = React.useState(false);
 
     // Функция обновления статуса приглашения
     const handleAcceptInvitation = (id) => {
-        setInvitations((prevInvites) =>
-            prevInvites.filter((invite) => invite.id !== id)
-        );
+        accept_invitation(id);
     };
 
     const handleDeclineInvitation = (id) => {
@@ -36,6 +35,49 @@ export default function InvitationDialog() {
     const handleClose = () => {
         setOpen(false);
     };
+
+
+    async function get_all_invitation() {
+        let url = "/get_all_invitation/";
+
+        try {
+            axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+            const res = await axios.get(`${settings.server.addr}${url}`);
+
+            if (res.status === 200 || res.status === 201) {
+                setInvitations(res.data.invitations);
+                console.log(res.data.invitations);
+            } else {
+                // throw new Error('Ошибка при отправке данных');
+            }
+        } catch (err) {
+            console.error(err);
+            // throw err;
+        }
+    }
+    async function accept_invitation(invite_id) {
+        let url = "/accept_invitation/" + invite_id;
+
+        try {
+            axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+            const res = await axios.get(`${settings.server.addr}${url}`);
+
+            if (res.status === 200 || res.status === 201) {
+                setInvitations((prevInvites) =>
+                    prevInvites.filter((invite) => invite.id !== invite_id)
+                );
+            } else {
+                // throw new Error('Ошибка при отправке данных');
+            }
+        } catch (err) {
+            console.error(err);
+            // throw err;
+        }
+    }
+
+    React.useEffect(()=>{
+        get_all_invitation();
+    }, []);
 
     return (
         <>

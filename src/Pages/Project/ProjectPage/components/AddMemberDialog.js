@@ -59,7 +59,7 @@ export default function AddMemberDialog() {
 
   return (
     <>
-      <Fab color="primary" size="large" aria-label="Добавить участника" onClick={handleClickOpen}>
+      <Fab size="medium" aria-label="добавить проект" onClick={handleClickOpen}>
         <AddIcon />
       </Fab>
       <Dialog fullWidth open={open} onClose={handleClose}>

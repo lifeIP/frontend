@@ -26,7 +26,6 @@ export default function ProjectsPage() {
                 </CardContent>
                 <Box sx={{ display: "flex", justifyContent: "center" }}>
                     <InvitationDialog/>
-                    
                 </Box>
                 <CardContent>
                 </CardContent>

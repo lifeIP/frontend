@@ -37,15 +37,9 @@ export default function ProfilePage() {
                     <Statistics />
                 </Grid>
             </Grid>
-
-            <ProjectsListPage />
-            <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginBottom: '1.85vh', marginTop: '1.85vh' }}>
-                <CardContent>
-                    <Typography gutterBottom variant="h3" component="div" textAlign="center">
-                        Сторонние проекты
-                    </Typography>
-                </CardContent>
-            </Card>
+            <Box sx={{marginTop: '1.85vh'}}>
+                <History/>
+            </Box>
         </Center>
     );
 }

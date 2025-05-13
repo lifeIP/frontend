@@ -171,9 +171,7 @@ export default function ProjectPage() {
                 <Grid container spacing={1} sx={{ marginTop: '1vh' }}>
                     {listImages.map((id) => (
                         <Grid size={3}>
-                            {/* <Box sx={{maxHeight: "15vw"}}> */}
                             <ImageViewer image_id={id} setCanvasSize={() => { }} />
-                            {/* </Box> */}
                         </Grid>
                     ))}
                 </Grid>
