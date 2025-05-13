@@ -12,7 +12,10 @@ export default function AddMemberDialog() {
   function addNewMember(member_email){
     const url = "/add_new_member_in_project/"
     axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
-    axios.post(`${settings.server.addr}${url}`, {member_email: member_email}).then(res=>{
+    axios.post(`${settings.server.addr}${url}`, {
+      member_email: member_email, 
+      project_id: JSON.parse(localStorage.getItem("last_project_id"))
+    }).then(res=>{
       if(res.data.status == 1){
         alert("Приглашение отправлено");
       }

@@ -44,7 +44,6 @@ export default function ProjectsListPage() {
                         </Typography>
                     </CardContent>
 
-
                     <Box sx={{ display: "flex", justifyContent: "center" }}>
                         <Fab size="medium" aria-label="добавить класс" onClick={() => { navigate("/create-project") }}>
                             <AddIcon />

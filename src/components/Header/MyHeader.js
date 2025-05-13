@@ -153,24 +153,12 @@ export default function MyHeader({ selectedTheme, changeTheme}) {
         }
     }
 
-
-    function RenderOrder() {
-        if (cookies["role"] === 'user') {
-            if (cookies.my_theme) {
-                return <Button sx={{ color: "#000000" }} onClick={() => { navigate('/order'); }}><Typography variant="h7" gutterBottom>Заказы</Typography></Button>
-            }
-            else {
-                return <Button sx={{ color: "#FFFFFF" }} onClick={() => { navigate('/order'); }}><Typography variant="h7" gutterBottom>Заказы</Typography></Button>
-            }
-        }
-    }
-
     function RenderRightPanel() {
         if (cookies.my_theme) {
             return (
                 <Box component="div" sx={{ marginLeft: 8, display: 'inline' }}>
+                    <Button sx={{ color: "#000000" }} onClick={() => { navigate('/projects'); }}><Typography variant="h7" gutterBottom>Проекты</Typography></Button>
                     <Button sx={{ color: "#000000" }} onClick={() => { navigate('/profile'); }}><Typography variant="h7" gutterBottom>Профиль</Typography></Button>
-                    <RenderOrder />
                     <Button sx={{ color: "#000000" }} onClick={() => { navigate('/about'); }}><Typography variant="h7" gutterBottom>О нас</Typography></Button>
                     <LoginLabel />
                 </Box>
@@ -179,8 +167,8 @@ export default function MyHeader({ selectedTheme, changeTheme}) {
         else {
             return (
                 <Box component="div" sx={{ marginLeft: 8, display: 'inline' }}>
+                    <Button sx={{ color: "#FFFFFF" }} onClick={() => { navigate('/projects'); }}><Typography variant="h7" gutterBottom>Проекты</Typography></Button>
                     <Button sx={{ color: "#FFFFFF" }} onClick={() => { navigate('/profile'); }}><Typography variant="h7" gutterBottom>Профиль</Typography></Button>
-                    <RenderOrder />
                     <Button sx={{ color: "#FFFFFF" }} onClick={() => { navigate('/about'); }}><Typography variant="h7" gutterBottom>О нас</Typography></Button>
                     <LoginLabel />
                 </Box>

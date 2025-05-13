@@ -16,6 +16,7 @@ export default function UploadImagesPage() {
     let project_id = -1;
 
     async function createTask() {
+        project_id = JSON.parse(localStorage.getItem("last_project_id"));
         let url = "/create-task/";
 
         try {

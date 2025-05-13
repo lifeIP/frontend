@@ -28,7 +28,7 @@ export default function ProfilePage() {
                     Профиль
                 </Typography>
             </Hat>
-
+            
             <Grid container spacing="1.05vw" maxWidth="51.05vw">
                 <Grid>
                     <Profile />
@@ -39,7 +39,13 @@ export default function ProfilePage() {
             </Grid>
 
             <ProjectsListPage />
-
+            <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginBottom: '1.85vh', marginTop: '1.85vh' }}>
+                <CardContent>
+                    <Typography gutterBottom variant="h3" component="div" textAlign="center">
+                        Сторонние проекты
+                    </Typography>
+                </CardContent>
+            </Card>
         </Center>
     );
 }
