@@ -1,7 +1,7 @@
 import React from 'react';
 import { Select, MenuItem, TextField, Button, Box, Typography } from '@mui/material';
 
-const TaskForm = ({ recipients }) => {
+const TaskForm = ({ recipients, setAssigneeUserId }) => {
   const [selectedRecipient, setSelectedRecipient] = React.useState('myself');
   const [taskDescription, setTaskDescription] = React.useState('');
   
@@ -24,7 +24,7 @@ const TaskForm = ({ recipients }) => {
       <Select fullWidth value={selectedRecipient} onChange={handleChangeRecipient}>
         <MenuItem value="" disabled>-- Выберите получателя --</MenuItem>
         {recipients.map((recipient) => (
-          <MenuItem key={recipient.id} value={recipient.name}>{recipient.name}</MenuItem>
+          <MenuItem onClick={()=>{setAssigneeUserId(recipient.id)}} key={recipient.id} value={recipient.name}>{recipient.name}</MenuItem>
         ))}
         <MenuItem value="myself">Сам себе</MenuItem>
       </Select>

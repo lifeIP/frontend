@@ -13,6 +13,7 @@ export default function UploadImagesPage() {
     const [buttonDisabled, setButtonDisabled] = useState(true);
     const [dragDropDisabled, setDragDropDisabled] = useState(false);
     const [startUpload, setStartUpload] = useState(false);
+    const [assigneeUserId, setAssigneeUserId] = useState(0);
     let project_id = -1;
 
     async function createTask() {
@@ -21,11 +22,13 @@ export default function UploadImagesPage() {
 
         try {
             axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+            
             const res = await axios.post(`${settings.server.addr}${url}`, {
                 project_id: project_id,
                 author_user_id: 1,
-                assignee_user_id: 1,
-                description: "Описание"
+                assignee_user_id: assigneeUserId,
+                description: "Описание",
+                target_quantity: files.length
             });
 
             if (res.status === 200 || res.status === 201) {
@@ -37,13 +40,34 @@ export default function UploadImagesPage() {
             console.error(err);
         }
     }
+    const [recipients, setRecipients] = useState([]);
 
+    async function get_all_members_in_project() {
+        let url = "/get_all_members_in_project/" + JSON.parse(localStorage.getItem("last_project_id"));
+
+        try {
+            axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+            const res = await axios.get(`${settings.server.addr}${url}`);
+            if (res.status === 200 || res.status === 201) {
+                let data = []
+                res.data.members.map((item)=>{
+                    data.push({id: item.member_id, name: item.name})
+                })
+                setRecipients(data);
+            } else {
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
     useEffect(() => {
         project_id = JSON.parse(localStorage.getItem("last_project_id"));
         if (files.length == 0) return;
         setButtonDisabled(false);
     }, [files]);
+
+    useEffect(()=>{get_all_members_in_project();}, []);
 
     const handleFileUpload = (files) => {
         let all_files = []
@@ -61,10 +85,7 @@ export default function UploadImagesPage() {
     };
 
 
-    const recipients = [
-        { id: 1, name: 'Иван Иванов' },
-        { id: 2, name: 'Марья Сидорова' },
-    ];
+
     return (
         <Center>
             <Hat>
@@ -73,9 +94,9 @@ export default function UploadImagesPage() {
                 </Typography>
             </Hat>
 
-            <Card sx={{ borderRadius: "12px", width: "51.05vw", marginBottom: "1.75vh"}}>
+            <Card sx={{ borderRadius: "12px", width: "51.05vw", marginBottom: "1.75vh" }}>
                 <CardContent>
-                    <TaskForm recipients={recipients} />
+                    <TaskForm recipients={recipients} setAssigneeUserId={setAssigneeUserId}/>
                 </CardContent>
             </Card>
 
