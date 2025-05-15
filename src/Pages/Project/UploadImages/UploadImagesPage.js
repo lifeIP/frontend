@@ -43,7 +43,7 @@ export default function UploadImagesPage() {
     const [recipients, setRecipients] = useState([]);
 
     async function get_all_members_in_project() {
-        let url = "/get_all_members_in_project/" + JSON.parse(localStorage.getItem("last_project_id"));
+        let url = "/get_all_members_in_project_without_me/" + JSON.parse(localStorage.getItem("last_project_id"));
 
         try {
             axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
