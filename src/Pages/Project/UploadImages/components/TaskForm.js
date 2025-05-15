@@ -44,7 +44,7 @@ const TaskForm = ({ recipients, setAssigneeUserId }) => {
       />
 
       {/* Кнопка отправки формы */}
-      <Button type="submit" color="primary" disabled={!selectedRecipient || taskDescription.length === 0}>Отправить задание</Button>
+      {/* <Button type="submit" color="primary" disabled={!selectedRecipient || taskDescription.length === 0}>Отправить задание</Button> */}
     </Box>
   );
 };

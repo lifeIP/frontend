@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Fab, Grid, Typography } from '@mui/material';
+import { Box, Card, CardContent, Fab, Grid, List, ListItem, ListItemText, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import Center from '../../../components/Center/Center';
 import Hat from '../../../components/Hat/Hat';
@@ -24,6 +24,7 @@ export default function ProjectPage() {
 
 
     const [listImages, setListImages] = useState([]);
+    const [listTasks, setListTasks] = useState([]);
     const [unwrap, setUnwrap] = useState(false);
 
 
@@ -107,7 +108,7 @@ export default function ProjectPage() {
 
             if (res.status === 200 || res.status === 201) {
                 setListImages(res.data.ids);
-                localStorage.setItem("list_of_ids_images", JSON.stringify({startIndex: startIndex, ids: res.data.ids}));
+                localStorage.setItem("list_of_ids_images", JSON.stringify({ startIndex: startIndex, ids: res.data.ids }));
                 // console.log(res.data.ids);
             } else {
                 // throw new Error('Ошибка при отправке данных');
@@ -118,20 +119,38 @@ export default function ProjectPage() {
         }
     }
 
+
+    async function getListOfTasks(project_id) {
+        let url = "/get-member-task-info-in-project/" + project_id + "/" + JSON.parse(localStorage.getItem("user_id"));
+
+        try {
+            axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+            const res = await axios.get(`${settings.server.addr}${url}`);
+
+            if (res.status === 200 || res.status === 201) {
+                setListTasks(res.data.tasks);
+            } else {
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     useEffect(() => {
         setProjectId(localStorage.getItem("last_project_id"));
     }, []);
 
-    useEffect(()=>{
-        if (projectId!=0){
+    useEffect(() => {
+        if (projectId != 0) {
             getInfoOfProjects();
             getListOfClassesInProject();
             getProjectsPhotoPreviewById();
+            getListOfTasks(projectId);
         }
     }, [projectId])
 
-    useEffect(()=>{
-        if(unwrap){
+    useEffect(() => {
+        if (unwrap) {
             getListOfImages(localStorage.getItem("last_project_id"), 1);
         }
     }, [unwrap]);
@@ -143,21 +162,67 @@ export default function ProjectPage() {
                 </Typography>
             </Hat>
 
-            <Box sx={{maxWidth: "51.05vw"}}>
-            <Grid container spacing={1}>
-                <Grid size={6}>
-                    <ProjectCardPreview
-                        isImage={isImage}
-                        prjctName={prjctName}
-                        prjctDescription={prjctDescription}
-                        rows={rows}
-                    />
+            <Box sx={{ maxWidth: "51.05vw" }}>
+                <Grid container spacing={1}>
+                    <Grid size={6}>
+                        <ProjectCardPreview
+                            isImage={isImage}
+                            prjctName={prjctName}
+                            prjctDescription={prjctDescription}
+                            rows={rows}
+                        />
+                    </Grid>
+                    <Grid size={6}>
+                        <ListOfMembers />
+                    </Grid>
                 </Grid>
-                <Grid size={6}>
-                    <ListOfMembers/>
-                </Grid>
-            </Grid>
             </Box>
+
+            {listTasks.length == 0? (<></>):(
+            <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginTop: '1.85vh' }}>
+                <CardContent>
+                    <Typography gutterBottom variant="h3" component="div" textAlign="center">
+                        Ваши задачи
+                    </Typography>
+                </CardContent>
+                <CardContent>
+                    <List disablePadding>
+                        {listTasks.map((item) => (
+                            <ListItem
+                                button
+                                divider
+                                key={item.task_id}
+                                sx={{
+                                    py: 2,
+                                    px: 2,
+                                    borderRadius: '8px',
+                                    bgcolor: 'background.paper',
+                                    border: '1px solid rgba(0, 0, 0, 0.1)', // Тонкая граница вокруг пункта
+                                    '&:hover': {
+                                        //   backgroundColor: '#F0F0FF', // Светлый голубой оттенок при наведении
+                                        transform: 'scale(1.01)', // Легкий эффект увеличения при наведении
+                                        transition: '.3s ease-in-out',
+                                    },
+                                }}
+                            >
+                                <ListItemText
+                                    primary={
+                                        <Typography variant="subtitle1" fontWeight="bold" color="text.primary">
+                                            ID {item.task_id} Количество: {item.quantity}
+                                        </Typography>
+                                    }
+                                    secondary={
+                                        <Typography variant="body2" color="text.secondary">
+                                            {item.description}
+                                        </Typography>
+                                    }
+                                />
+                            </ListItem>
+                        ))}
+                    </List>
+                </CardContent>
+            </Card>
+            )}
 
             <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginTop: '1.85vh' }}>
                 <CardContent>
@@ -170,27 +235,26 @@ export default function ProjectPage() {
                         <Fab size="medium" aria-label="добавить фото в проект" onClick={() => { navigate("/upload-images") }}>
                             <AddIcon />
                         </Fab>
-                        <Fab size="medium" aria-label="Развернуть список" sx={{marginLeft: "10px"}} onClick={() => { setUnwrap(!unwrap) }}>
-                            {unwrap? <KeyboardArrowUpOutlinedIcon/>:<KeyboardArrowDownOutlinedIcon/>}
+                        <Fab size="medium" aria-label="Развернуть список" sx={{ marginLeft: "10px" }} onClick={() => { setUnwrap(!unwrap) }}>
+                            {unwrap ? <KeyboardArrowUpOutlinedIcon /> : <KeyboardArrowDownOutlinedIcon />}
                         </Fab>
                     </Box>
                 </CardContent>
-
             </Card>
-            {unwrap?(
+            {unwrap ? (
                 <Box sx={{ width: "51.05vw" }}>
-                <Grid container spacing={1} sx={{ marginTop: '1vh' }}>
-                    {listImages.map((id) => (
-                        <Grid size={3}>
-                            <ImageViewer image_id={id} setCanvasSize={() => { }} />
-                        </Grid>
-                    ))}
-                </Grid>
-            </Box>
-            ):(
+                    <Grid container spacing={1} sx={{ marginTop: '1vh' }}>
+                        {listImages.map((id) => (
+                            <Grid size={3}>
+                                <ImageViewer image_id={id} setCanvasSize={() => { }} />
+                            </Grid>
+                        ))}
+                    </Grid>
+                </Box>
+            ) : (
                 <></>
             )}
-            
+
         </Center>
     );
 }
