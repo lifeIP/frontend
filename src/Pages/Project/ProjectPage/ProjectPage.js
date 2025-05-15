@@ -10,6 +10,8 @@ import axios from 'axios';
 import settings from "../../../settings.json"
 import ListOfMembers from './components/ListOfMembers';
 
+import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
+import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
 
 export default function ProjectPage() {
     const navigate = useNavigate()
@@ -22,6 +24,7 @@ export default function ProjectPage() {
 
 
     const [listImages, setListImages] = useState([]);
+    const [unwrap, setUnwrap] = useState(false);
 
 
     async function getInfoOfProjects() {
@@ -117,7 +120,6 @@ export default function ProjectPage() {
 
     useEffect(() => {
         setProjectId(localStorage.getItem("last_project_id"));
-        getListOfImages(localStorage.getItem("last_project_id"), 1);
     }, []);
 
     useEffect(()=>{
@@ -127,6 +129,12 @@ export default function ProjectPage() {
             getProjectsPhotoPreviewById();
         }
     }, [projectId])
+
+    useEffect(()=>{
+        if(unwrap){
+            getListOfImages(localStorage.getItem("last_project_id"), 1);
+        }
+    }, [unwrap]);
     return (
         <Center>
             <Hat>
@@ -159,15 +167,18 @@ export default function ProjectPage() {
                 </CardContent>
                 <CardContent>
                     <Box sx={{ display: "flex", justifyContent: "center" }}>
-                        <Fab size="medium" aria-label="добавить проект" onClick={() => { navigate("/upload-images") }}>
+                        <Fab size="medium" aria-label="добавить фото в проект" onClick={() => { navigate("/upload-images") }}>
                             <AddIcon />
+                        </Fab>
+                        <Fab size="medium" aria-label="Развернуть список" sx={{marginLeft: "10px"}} onClick={() => { setUnwrap(!unwrap) }}>
+                            {unwrap? <KeyboardArrowUpOutlinedIcon/>:<KeyboardArrowDownOutlinedIcon/>}
                         </Fab>
                     </Box>
                 </CardContent>
 
             </Card>
-
-            <Box sx={{ width: "51.05vw" }}>
+            {unwrap?(
+                <Box sx={{ width: "51.05vw" }}>
                 <Grid container spacing={1} sx={{ marginTop: '1vh' }}>
                     {listImages.map((id) => (
                         <Grid size={3}>
@@ -176,6 +187,10 @@ export default function ProjectPage() {
                     ))}
                 </Grid>
             </Box>
+            ):(
+                <></>
+            )}
+            
         </Center>
     );
 }

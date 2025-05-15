@@ -29,7 +29,7 @@ function ProjectCardPreviewSettings({ setImageEvent, setImage, setPrjctName, set
         };
     };
     return (
-        <Card sx={{ borderRadius: "12px", width: "25vw", height: "45vh" }}>
+        <Card sx={{ borderRadius: "12px", width: "100%", height: "45vh" }}>
             <CardContent>
                 <Typography gutterBottom variant="h4" component="div" textAlign="center">
                     Внешний вид
