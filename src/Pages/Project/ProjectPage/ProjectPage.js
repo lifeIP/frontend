@@ -189,6 +189,7 @@ export default function ProjectPage() {
                     <List disablePadding>
                         {listTasks.map((item) => (
                             <ListItem
+                            onClick={()=>{console.log("task_id " + item.task_id)}}
                                 button
                                 divider
                                 key={item.task_id}
@@ -254,7 +255,6 @@ export default function ProjectPage() {
             ) : (
                 <></>
             )}
-
         </Center>
     );
 }
