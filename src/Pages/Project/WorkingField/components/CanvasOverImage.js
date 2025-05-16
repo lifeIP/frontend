@@ -28,7 +28,7 @@ const CanvasOverImage = ({ maskType, edit, data_markup_classes, currentClass, cu
             const context = canvasRef.current.getContext('2d');
 
             context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-            context.lineWidth = 3 / currentScale;
+            context.lineWidth = 3;
 
             if (rect_list.length === 0) {
                 rect_list = JSON.parse(localStorage.getItem('rect_list'))
@@ -61,7 +61,7 @@ const CanvasOverImage = ({ maskType, edit, data_markup_classes, currentClass, cu
 
                     context.strokeStyle = "#000000";
                     // contain(item);
-                    context.fillRect((point.x - (3 / currentScale)) / multiplier_w, (point.y - (3 / currentScale)) / multiplier_w, (6 / currentScale), (6 / currentScale));
+                    context.fillRect((point.x -  3) / multiplier_w, (point.y -  3) / multiplier_w, 6, 6);
                     context.strokeStyle = item.class_color;
                 });
 
@@ -81,10 +81,10 @@ const CanvasOverImage = ({ maskType, edit, data_markup_classes, currentClass, cu
                 context.stroke(path1);
 
                 context.strokeStyle = "#000000";
-                context.fillRect(rect_pos_x - (3 / currentScale), rect_pos_y - (3 / currentScale), (6 / currentScale), (6 / currentScale));
-                context.fillRect(rect_pos_x + rect_shape_w - (3 / currentScale), rect_pos_y + rect_shape_h - (3 / currentScale), (6 / currentScale), (6 / currentScale));
-                context.fillRect(rect_pos_x - (3 / currentScale), rect_pos_y + rect_shape_h - (3 / currentScale), (6 / currentScale), (6 / currentScale));
-                context.fillRect(rect_pos_x + rect_shape_w - (3 / currentScale), rect_pos_y - (3 / currentScale), (6 / currentScale), (6 / currentScale));
+                context.fillRect(rect_pos_x -  3, rect_pos_y -  3, 6, 6);
+                context.fillRect(rect_pos_x + rect_shape_w -  3, rect_pos_y + rect_shape_h -  3, 6, 6);
+                context.fillRect(rect_pos_x -  3, rect_pos_y + rect_shape_h -  3, 6, 6);
+                context.fillRect(rect_pos_x + rect_shape_w -  3, rect_pos_y -  3, 6, 6);
                 context.strokeStyle = currentClass.class_color;
             }
             else {
@@ -97,12 +97,12 @@ const CanvasOverImage = ({ maskType, edit, data_markup_classes, currentClass, cu
                     }
                     path1.lineTo(point.x, point.y);
                     path1.moveTo(point.x, point.y);
-                    context.fillRect(point.x - (3 / currentScale), point.y - (3 / currentScale), (6 / currentScale), (6 / currentScale));
+                    context.fillRect(point.x -  3, point.y -  3, 6, 6);
                 })
                 if (mouse_pos_x > 0 || mouse_pos_y > 0) {
                     path1.lineTo(mouse_pos_x, mouse_pos_y);
                     path1.moveTo(mouse_pos_x, mouse_pos_y);
-                    context.fillRect(mouse_pos_x - (3 / currentScale), mouse_pos_y - (3 / currentScale), (6 / currentScale), (6 / currentScale));
+                    context.fillRect(mouse_pos_x -  3, mouse_pos_y -  3, 6, 6);
                 }
                 path1.closePath();
                 context.stroke(path1);
@@ -253,32 +253,47 @@ const CanvasOverImage = ({ maskType, edit, data_markup_classes, currentClass, cu
         mouse_pos_y = y_pos;
 
         if (selected_point) {
+            let multiplier_w = 1;
+            let multiplier_h = 1;
+            if (canvasSize.width !== rect_list.at(selected_rect_id).canvasWidth) {
+                multiplier_w = (rect_list.at(selected_rect_id).canvasWidth / canvasSize.width);
+            }
+            else {
+                multiplier_w = 1;
+            }
+            if (canvasSize.height !== rect_list.at(selected_rect_id).canvasHeight) {
+                multiplier_h = (rect_list.at(selected_rect_id).canvasHeight / canvasSize.height);
+            }
+            else {
+                multiplier_h = 1;
+            }
+
             if (rect_list.at(selected_rect_id).mask_type == 0) {
                 if (selected_point_id == 0) {
-                    rect_list.at(selected_rect_id).points.at(0).x = mouse_pos_x;
-                    rect_list.at(selected_rect_id).points.at(0).y = mouse_pos_y;
-                    rect_list.at(selected_rect_id).points.at(3).x = mouse_pos_x;
-                    rect_list.at(selected_rect_id).points.at(1).y = mouse_pos_y;
+                    rect_list.at(selected_rect_id).points.at(0).x = mouse_pos_x * multiplier_w;
+                    rect_list.at(selected_rect_id).points.at(0).y = mouse_pos_y * multiplier_h;
+                    rect_list.at(selected_rect_id).points.at(3).x = mouse_pos_x * multiplier_w;
+                    rect_list.at(selected_rect_id).points.at(1).y = mouse_pos_y * multiplier_h;
                 } else if (selected_point_id == 1) {
-                    rect_list.at(selected_rect_id).points.at(1).x = mouse_pos_x;
-                    rect_list.at(selected_rect_id).points.at(1).y = mouse_pos_y;
-                    rect_list.at(selected_rect_id).points.at(2).x = mouse_pos_x;
-                    rect_list.at(selected_rect_id).points.at(0).y = mouse_pos_y;
+                    rect_list.at(selected_rect_id).points.at(1).x = mouse_pos_x * multiplier_w;
+                    rect_list.at(selected_rect_id).points.at(1).y = mouse_pos_y * multiplier_h;
+                    rect_list.at(selected_rect_id).points.at(2).x = mouse_pos_x * multiplier_w;
+                    rect_list.at(selected_rect_id).points.at(0).y = mouse_pos_y * multiplier_h;
                 } else if (selected_point_id == 2) {
-                    rect_list.at(selected_rect_id).points.at(2).x = mouse_pos_x;
-                    rect_list.at(selected_rect_id).points.at(2).y = mouse_pos_y;
-                    rect_list.at(selected_rect_id).points.at(1).x = mouse_pos_x;
-                    rect_list.at(selected_rect_id).points.at(3).y = mouse_pos_y;
+                    rect_list.at(selected_rect_id).points.at(2).x = mouse_pos_x * multiplier_w;
+                    rect_list.at(selected_rect_id).points.at(2).y = mouse_pos_y * multiplier_h;
+                    rect_list.at(selected_rect_id).points.at(1).x = mouse_pos_x * multiplier_w;
+                    rect_list.at(selected_rect_id).points.at(3).y = mouse_pos_y * multiplier_h;
                 } else if (selected_point_id == 3) {
-                    rect_list.at(selected_rect_id).points.at(3).x = mouse_pos_x;
-                    rect_list.at(selected_rect_id).points.at(3).y = mouse_pos_y;
-                    rect_list.at(selected_rect_id).points.at(0).x = mouse_pos_x;
-                    rect_list.at(selected_rect_id).points.at(2).y = mouse_pos_y;
+                    rect_list.at(selected_rect_id).points.at(3).x = mouse_pos_x * multiplier_w;
+                    rect_list.at(selected_rect_id).points.at(3).y = mouse_pos_y * multiplier_h;
+                    rect_list.at(selected_rect_id).points.at(0).x = mouse_pos_x * multiplier_w;
+                    rect_list.at(selected_rect_id).points.at(2).y = mouse_pos_y * multiplier_h;
                 }
             }
             else{
-                rect_list.at(selected_rect_id).points.at(selected_point_id).x = mouse_pos_x;
-                rect_list.at(selected_rect_id).points.at(selected_point_id).y = mouse_pos_y;
+                rect_list.at(selected_rect_id).points.at(selected_point_id).x = mouse_pos_x * multiplier_w;
+                rect_list.at(selected_rect_id).points.at(selected_point_id).y = mouse_pos_y * multiplier_h;
             }
             localStorage.setItem('rect_list', JSON.stringify(rect_list));
 
@@ -334,11 +349,8 @@ const CanvasOverImage = ({ maskType, edit, data_markup_classes, currentClass, cu
                 res.data.forms.map((item) => {
 
                     let finded_item = findByClassId(data_markup_classes, item.class_id);
-
-
+                    
                     rect_list.push({
-                        canvasWidth: res.data.canvasWidth,
-                        canvasHeight: res.data.canvasHeight,
                         ...finded_item,
                         ...item,
                     })

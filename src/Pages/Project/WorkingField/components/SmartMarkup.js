@@ -86,8 +86,6 @@ export default function SmartMarkup({ project_id }) {
         let url = "/set_mask_on_image/" + localStorage.getItem("working-field-image-id");
         let data = {
             forms: JSON.parse(localStorage.getItem('rect_list')),
-            canvasWidth: canvasSize.width,
-            canvasHeight: canvasSize.height
         }
         console.log(data);
 
