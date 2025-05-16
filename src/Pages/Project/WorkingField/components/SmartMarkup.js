@@ -130,6 +130,8 @@ export default function SmartMarkup({ project_id }) {
     useEffect(() => {
 
         localStorage.setItem('rect_list', JSON.stringify([]));
+        localStorage.setItem('poligon_points_list', JSON.stringify([]));
+
         localStorage.setItem("now_is_last_list", false);
         document.addEventListener('mousemove', handleMouseMove);
         return () => {
@@ -229,6 +231,7 @@ export default function SmartMarkup({ project_id }) {
         if (list_of_ids_images.ids.length - 1 > index_now) {
             localStorage.setItem("working-field-image-id", list_of_ids_images.ids[index_now + 1])
             localStorage.setItem('rect_list', JSON.stringify([]));
+            localStorage.setItem('poligon_points_list', JSON.stringify([]));
             setImageId(imageId + 1);
             return
         }
@@ -245,6 +248,7 @@ export default function SmartMarkup({ project_id }) {
         if (index_now > 0) {
             localStorage.setItem("working-field-image-id", list_of_ids_images.ids[index_now - 1])
             localStorage.setItem('rect_list', JSON.stringify([]));
+            localStorage.setItem('poligon_points_list', JSON.stringify([]));
             setImageId(imageId - 1);
             return;
         }

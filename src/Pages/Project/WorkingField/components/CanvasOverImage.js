@@ -90,18 +90,18 @@ const CanvasOverImage = ({ maskType, edit, data_markup_classes, currentClass, cu
             else {
                 const path1 = new Path2D();
                 context.strokeStyle = currentClass.class_color;
-                poligon_points.map((point, index)=>{
-                    if(index == 0){
+                poligon_points.map((point, index) => {
+                    if (index == 0) {
                         path1.moveTo(point.x, point.y);
                     }
                     path1.lineTo(point.x, point.y);
                     path1.moveTo(point.x, point.y);
                     context.fillRect(point.x - (3 / currentScale), point.y - (3 / currentScale), (6 / currentScale), (6 / currentScale));
                 })
-                if(mouse_pos_x > 0 || mouse_pos_y > 0){
-                path1.lineTo(mouse_pos_x, mouse_pos_y);
-                path1.moveTo(mouse_pos_x, mouse_pos_y);
-                context.fillRect(mouse_pos_x - (3 / currentScale), mouse_pos_y - (3 / currentScale), (6 / currentScale), (6 / currentScale));
+                if (mouse_pos_x > 0 || mouse_pos_y > 0) {
+                    path1.lineTo(mouse_pos_x, mouse_pos_y);
+                    path1.moveTo(mouse_pos_x, mouse_pos_y);
+                    context.fillRect(mouse_pos_x - (3 / currentScale), mouse_pos_y - (3 / currentScale), (6 / currentScale), (6 / currentScale));
                 }
                 path1.closePath();
                 context.stroke(path1);
@@ -151,7 +151,6 @@ const CanvasOverImage = ({ maskType, edit, data_markup_classes, currentClass, cu
                 return answer;
             }
             selected_point = contain();
-            // console.log(selected_point);
         }
         if (event.button === 0 && !edit) {
             leftButtonPressed = true;
@@ -160,6 +159,9 @@ const CanvasOverImage = ({ maskType, edit, data_markup_classes, currentClass, cu
                 rect_pos_y = mouse_pos_y;
             }
         }
+
+
+
     };
 
     const handleLeftButtonReleased = (event) => {
@@ -206,9 +208,28 @@ const CanvasOverImage = ({ maskType, edit, data_markup_classes, currentClass, cu
                 localStorage.setItem('rect_list', JSON.stringify(rect_list));
             }
             else {
-                poligon_points.push({ x: mouse_pos_x, y: mouse_pos_y });
+                if (mouse_pos_x == -1 || mouse_pos_y == -1) { return }
+                if (poligon_points.length > 2) {
+                    const dist_points = Math.sqrt((mouse_pos_x - poligon_points.at(0).x) ** 2 + (mouse_pos_y - poligon_points.at(0).y) ** 2)
+                    if (dist_points < 8) {
+                        // poligon_points.push({ id: poligon_points.length, x: poligon_points.at(0).x, y: poligon_points.at(0).y })
+                        rect_list.push({
+                            mask_type: 1,
+                            canvasWidth: canvasSize.width,
+                            canvasHeight: canvasSize.height,
+                            class_id: currentClass.id,
+                            class_color: currentClass.class_color,
+                            class_name: currentClass.class_name,
+                            points: poligon_points
+                        })
+                        localStorage.setItem('rect_list', JSON.stringify(rect_list));
+                        localStorage.setItem('poligon_points_list', JSON.stringify([]));
+                        poligon_points = []
+                        return
+                    }
+                }
+                poligon_points.push({ id: poligon_points.length, x: mouse_pos_x, y: mouse_pos_y });
                 localStorage.setItem('poligon_points_list', JSON.stringify(poligon_points));
-                console.log(poligon_points)
             }
             setSaved(false);
         }
@@ -255,14 +276,12 @@ const CanvasOverImage = ({ maskType, edit, data_markup_classes, currentClass, cu
                 }
             }
             localStorage.setItem('rect_list', JSON.stringify(rect_list));
-            
+
         }
         if (leftButtonPressed) {
-            console.log('Левая кнопка зажата');
             // console.log(selected_point);
             rect_shape_w = mouse_pos_x - rect_pos_x;
             rect_shape_h = mouse_pos_y - rect_pos_y;
-            
         }
         drawCanvas();
     };
@@ -320,7 +339,7 @@ const CanvasOverImage = ({ maskType, edit, data_markup_classes, currentClass, cu
                     })
                 })
                 localStorage.setItem('rect_list', JSON.stringify(rect_list));
-                localStorage.setItem('poligon_points_list', JSON.stringify([]));
+                localStorage.setItem('poligon_points_list', JSON.stringify(poligon_points));
             })
             .catch(err => {
                 console.log(err);
