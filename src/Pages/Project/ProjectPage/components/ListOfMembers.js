@@ -37,6 +37,7 @@ function ListOfMembers() {
         <Card sx={{ width: "100%", borderRadius: "12px", height: "45vh" }}>
             <Box sx={{ position: "relative", height: "100%", width: "100%" }}>
                 <CardContent>
+                    <Typography gutterBottom variant="h4" component="div" textAlign="center">Участники</Typography>
                     {loading ? (
                         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
                             <CircularProgress />
@@ -46,7 +47,7 @@ function ListOfMembers() {
                             Нет участников.
                         </Typography>
                     ) : (
-                        <List disablePadding sx={{overflowY: "auto", maxHeight: 300, '& ul': { padding: 0 },}}>
+                        <List disablePadding sx={{overflowY: "auto", maxHeight: "250px", '& ul': { padding: 0 }}}>
                             {data.map((item) => (
 
                                 <ListItem

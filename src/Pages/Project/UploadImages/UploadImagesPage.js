@@ -7,8 +7,11 @@ import ImageUploadViewer from './components/ImageUploadViewer';
 import axios from 'axios';
 import settings from "../../../settings.json"
 import TaskForm from './components/TaskForm';
+import { useNavigate } from 'react-router';
 
 export default function UploadImagesPage() {
+    const navigate = useNavigate()
+
     const [files, setFiles] = useState([]);
     const [buttonDisabled, setButtonDisabled] = useState(true);
     const [dragDropDisabled, setDragDropDisabled] = useState(false);
@@ -28,7 +31,7 @@ export default function UploadImagesPage() {
                 author_user_id: 1,
                 assignee_user_id: assigneeUserId,
                 description: "Описание",
-                target_quantity: files.length
+                target_quantity: files.length - JSON.parse(localStorage.getItem("canceled_image_count"))
             });
 
             if (res.status === 200 || res.status === 201) {
@@ -65,6 +68,7 @@ export default function UploadImagesPage() {
         project_id = JSON.parse(localStorage.getItem("last_project_id"));
         if (files.length == 0) return;
         setButtonDisabled(false);
+        localStorage.setItem("canceled_image_count", 0);
     }, [files]);
 
     useEffect(()=>{get_all_members_in_project();}, []);
@@ -74,6 +78,9 @@ export default function UploadImagesPage() {
         if (files === undefined) return;
         if (files.length === 0) return;
         Array.from(files).map(element => {
+            if (all_files.length >= 500){
+                return
+            }
             let file_type = element.type;
             if (file_type === "image/jpg" || file_type === "image/jpeg" || file_type === "image/png") {
                 console.log("Доступно");
@@ -85,6 +92,32 @@ export default function UploadImagesPage() {
     };
 
 
+    async function get_task_status() {
+        let url = "/upload_image_in_project_status/" + JSON.parse(localStorage.getItem("last_project_id"));
+
+        try {
+            axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+            const res = await axios.get(`${settings.server.addr}${url}`);
+            if (res.status === 200 || res.status === 201) {
+                console.log(res.data)
+                if(res.data.status == 0){
+                    navigate("/project");
+                }
+            } else {
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    useEffect(() => {
+        const timerID = setInterval(() => {
+            if(startUpload){
+                get_task_status();
+            }
+        }, 1000);
+        return () => clearInterval(timerID);
+    });
 
     return (
         <Center>
@@ -101,6 +134,7 @@ export default function UploadImagesPage() {
             </Card>
 
             <DragDropFileUpload disabled={dragDropDisabled} onFileUpload={handleFileUpload} />
+            {files.length}/500
             <Button
                 disabled={buttonDisabled}
                 variant='contained'
@@ -110,7 +144,6 @@ export default function UploadImagesPage() {
                     createTask();
                 }}
             >Отправить</Button>
-
             <Box sx={{ maxWidth: "51.05vw", marginTop: "1.75vh" }}>
                 <Grid container spacing={1}>
                     {files.map((item) => (

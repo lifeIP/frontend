@@ -31,7 +31,7 @@ const ImageUploadViewer = ({ file, startUpload, disabled }) => {
     useEffect(() => {
         if (!startUpload) return;
         if (!imageStatus) return;
-
+        
         sendImage(localStorage.getItem("last_project_id"));
         console.log("upload start");
         console.log(file);
@@ -82,6 +82,12 @@ const ImageUploadViewer = ({ file, startUpload, disabled }) => {
                     disabled={disabled}
                     onClick={() => {
                         setImageStatus(!imageStatus);
+                        if(imageStatus){
+                        localStorage.setItem("canceled_image_count", JSON.parse(localStorage.getItem("canceled_image_count")) + 1);
+                        }
+                        else{
+                        localStorage.setItem("canceled_image_count", JSON.parse(localStorage.getItem("canceled_image_count")) - 1);    
+                        }
                     }}>
                     <Box sx={{
                         position: 'absolute',
