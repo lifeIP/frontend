@@ -88,6 +88,7 @@ const CanvasOverImage = ({ maskType, edit, data_markup_classes, currentClass, cu
                 context.strokeStyle = currentClass.class_color;
             }
             else {
+                if (edit) return
                 const path1 = new Path2D();
                 context.strokeStyle = currentClass.class_color;
                 poligon_points.map((point, index) => {
@@ -274,6 +275,10 @@ const CanvasOverImage = ({ maskType, edit, data_markup_classes, currentClass, cu
                     rect_list.at(selected_rect_id).points.at(0).x = mouse_pos_x;
                     rect_list.at(selected_rect_id).points.at(2).y = mouse_pos_y;
                 }
+            }
+            else{
+                rect_list.at(selected_rect_id).points.at(selected_point_id).x = mouse_pos_x;
+                rect_list.at(selected_rect_id).points.at(selected_point_id).y = mouse_pos_y;
             }
             localStorage.setItem('rect_list', JSON.stringify(rect_list));
 
