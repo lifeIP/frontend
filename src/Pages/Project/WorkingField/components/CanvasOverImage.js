@@ -61,7 +61,7 @@ const CanvasOverImage = ({ maskType, edit, data_markup_classes, currentClass, cu
 
                     context.strokeStyle = "#000000";
                     // contain(item);
-                    context.fillRect((point.x -  3) / multiplier_w, (point.y -  3) / multiplier_w, 6, 6);
+                    context.fillRect((point.x - 3) / multiplier_w, (point.y - 3) / multiplier_w, 6, 6);
                     context.strokeStyle = item.class_color;
                 });
 
@@ -81,10 +81,10 @@ const CanvasOverImage = ({ maskType, edit, data_markup_classes, currentClass, cu
                 context.stroke(path1);
 
                 context.strokeStyle = "#000000";
-                context.fillRect(rect_pos_x -  3, rect_pos_y -  3, 6, 6);
-                context.fillRect(rect_pos_x + rect_shape_w -  3, rect_pos_y + rect_shape_h -  3, 6, 6);
-                context.fillRect(rect_pos_x -  3, rect_pos_y + rect_shape_h -  3, 6, 6);
-                context.fillRect(rect_pos_x + rect_shape_w -  3, rect_pos_y -  3, 6, 6);
+                context.fillRect(rect_pos_x - 3, rect_pos_y - 3, 6, 6);
+                context.fillRect(rect_pos_x + rect_shape_w - 3, rect_pos_y + rect_shape_h - 3, 6, 6);
+                context.fillRect(rect_pos_x - 3, rect_pos_y + rect_shape_h - 3, 6, 6);
+                context.fillRect(rect_pos_x + rect_shape_w - 3, rect_pos_y - 3, 6, 6);
                 context.strokeStyle = currentClass.class_color;
             }
             else {
@@ -97,12 +97,12 @@ const CanvasOverImage = ({ maskType, edit, data_markup_classes, currentClass, cu
                     }
                     path1.lineTo(point.x, point.y);
                     path1.moveTo(point.x, point.y);
-                    context.fillRect(point.x -  3, point.y -  3, 6, 6);
+                    context.fillRect(point.x - 3, point.y - 3, 6, 6);
                 })
                 if (mouse_pos_x > 0 || mouse_pos_y > 0) {
                     path1.lineTo(mouse_pos_x, mouse_pos_y);
                     path1.moveTo(mouse_pos_x, mouse_pos_y);
-                    context.fillRect(mouse_pos_x -  3, mouse_pos_y -  3, 6, 6);
+                    context.fillRect(mouse_pos_x - 3, mouse_pos_y - 3, 6, 6);
                 }
                 path1.closePath();
                 context.stroke(path1);
@@ -291,15 +291,13 @@ const CanvasOverImage = ({ maskType, edit, data_markup_classes, currentClass, cu
                     rect_list.at(selected_rect_id).points.at(2).y = mouse_pos_y * multiplier_h;
                 }
             }
-            else{
+            else {
                 rect_list.at(selected_rect_id).points.at(selected_point_id).x = mouse_pos_x * multiplier_w;
                 rect_list.at(selected_rect_id).points.at(selected_point_id).y = mouse_pos_y * multiplier_h;
             }
             localStorage.setItem('rect_list', JSON.stringify(rect_list));
-
         }
         if (leftButtonPressed) {
-            // console.log(selected_point);
             rect_shape_w = mouse_pos_x - rect_pos_x;
             rect_shape_h = mouse_pos_y - rect_pos_y;
         }
@@ -312,6 +310,16 @@ const CanvasOverImage = ({ maskType, edit, data_markup_classes, currentClass, cu
     }, [isSaved]);
 
 
+    const handleResize = () => {
+        console.log("resized");
+    };
+    useEffect(() => {
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
 
     // Эффект для инициализации канваса после рендера
@@ -349,7 +357,7 @@ const CanvasOverImage = ({ maskType, edit, data_markup_classes, currentClass, cu
                 res.data.forms.map((item) => {
 
                     let finded_item = findByClassId(data_markup_classes, item.class_id);
-                    
+
                     rect_list.push({
                         ...finded_item,
                         ...item,
