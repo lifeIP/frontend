@@ -21,6 +21,7 @@ import ProjectPage from "./Pages/Project/ProjectPage/ProjectPage";
 import { Box } from "@mui/material";
 import ProjectSettingsPage from "./Pages/Project/ProjectSettingsPage/ProjectSettingsPage";
 import ProjectsPage from "./Pages/Project/ProjectsPage/ProjectsPage";
+import WorkingFieldForTasks from "./Pages/Project/WorkingFieldForTasks/WorkingPage";
 
 
 const lightTheme = createTheme({
@@ -122,6 +123,11 @@ function App() {
             <Route path="/working-field" element={
               <div>
                 <WorkingPage />
+              </div>}
+            />
+            <Route path="/task" element={
+              <div>
+                <WorkingFieldForTasks />
               </div>}
             />
             <Route path="/upload-images" element={
