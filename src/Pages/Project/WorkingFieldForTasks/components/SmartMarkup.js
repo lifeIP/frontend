@@ -189,10 +189,10 @@ export default function SmartMarkup({ project_id, taskId }) {
     const [canvasSize, setCanvasSize] = useState({ width: 2000, height: 2000 });
     const [isSaved, setSaved] = useState(false);
 
-    const [image, setImage] = useState(undefined);
+    const [image, setImage] = useState("https://orthomoda.ru/bitrix/templates/.default/img/no-photo.jpg");
     const [isLoaded, setIsLoaded] = useState(false);
 
-    const [imageId, setImageId] = useState(0);
+    const [imageId, setImageId] = useState(-1);
 
     useEffect(() => {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
@@ -207,7 +207,7 @@ export default function SmartMarkup({ project_id, taskId }) {
                     )
                 )
                 setImage(`data:image/jpeg;charset=utf-8;base64,${base64}`);
-                setImageId(imageId);
+                // setImageId(imageId);
                 setIsLoaded(true);
             })
             .catch(err => {
@@ -227,7 +227,7 @@ export default function SmartMarkup({ project_id, taskId }) {
                     )
                 )
                 setImage(`data:image/jpeg;charset=utf-8;base64,${base64}`);
-                setImageId(imageId);
+                // setImageId(imageId);
                 setIsLoaded(true);
                 
             })
@@ -272,10 +272,16 @@ export default function SmartMarkup({ project_id, taskId }) {
             console.error(err);
         });
     }
+    
     function rightButtonClicked() {
         const list_of_ids_images = JSON.parse(localStorage.getItem("list_of_ids_images"));
         const working_field_image_id = JSON.parse(localStorage.getItem("working-field-image-id"));
-        const index_now = list_of_ids_images.ids.indexOf(working_field_image_id);
+        let index_now = list_of_ids_images.ids.indexOf(working_field_image_id);
+        if (!JSON.parse(localStorage.getItem("task_flag")) && index_now==0){
+            index_now = -1;
+            localStorage.setItem("task_flag", true);
+            setIsLoaded(false);
+        }
         if (list_of_ids_images.ids.length - 1 > index_now) {
             localStorage.setItem("working-field-image-id", list_of_ids_images.ids[index_now + 1])
             localStorage.setItem('rect_list', JSON.stringify([]));
@@ -289,6 +295,11 @@ export default function SmartMarkup({ project_id, taskId }) {
         const list_of_ids_images = JSON.parse(localStorage.getItem("list_of_ids_images"));
         const working_field_image_id = JSON.parse(localStorage.getItem("working-field-image-id"));
         let index_now = list_of_ids_images.ids.indexOf(working_field_image_id);
+        if (JSON.parse(localStorage.getItem("task_flag")) && index_now==0){
+            localStorage.setItem("task_flag", true);
+            setIsLoaded(false);
+        }
+
         if (index_now == -1){
             index_now = 49;
         }
@@ -298,10 +309,13 @@ export default function SmartMarkup({ project_id, taskId }) {
             localStorage.setItem('rect_list', JSON.stringify([]));
             localStorage.setItem('poligon_points_list', JSON.stringify([]));
             setImageId(imageId - 1);
+            localStorage.setItem("task_flag", true);
             return;
         }
         if (list_of_ids_images.startIndex - 1 < 1) {
             // getListOfImages(taskId, 1);
+            localStorage.setItem("task_flag", false);
+            // setImageId(1);
             return;
         }
         getListOfImages(taskId, list_of_ids_images.startIndex - 1);

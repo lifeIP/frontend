@@ -12,10 +12,13 @@ import React, {
 
 const ImageViewer = ({ setCanvasSize, image, isLoaded }) => {
     const imageRef = useRef(null);
-
+    const [flag, setFlag] = useState(false);
+    useEffect( ()=>{
+        setFlag(JSON.parse(localStorage.getItem("task_flag")));
+    }, [image]);
     return (
         <>
-        {isLoaded?(
+        {isLoaded&&flag?(
             <CardMedia
             key={image}
             ref={imageRef}

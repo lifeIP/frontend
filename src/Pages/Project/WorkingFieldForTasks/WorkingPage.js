@@ -52,6 +52,7 @@ export default function WorkingFieldForTasks() {
     useEffect(() => {
         localStorage.setItem('rect_list', JSON.stringify([]));
         localStorage.setItem("list_of_ids_images", JSON.stringify([]));
+        localStorage.setItem("task_flag", false);
 
         setProjectId(localStorage.getItem("last_project_id"));
         setTaskId(localStorage.getItem("last_task_id"));
