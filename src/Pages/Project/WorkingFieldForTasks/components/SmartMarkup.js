@@ -21,6 +21,7 @@ import ClassesList from './ClassesList';
 import axios from 'axios';
 import ImageViewer from "./ImageViewer";
 import CanvasOverImage from "./CanvasOverImage";
+import PhotoPagination from "./PhotoPagination";
 
 
 
@@ -323,6 +324,7 @@ export default function SmartMarkup({ project_id, taskId }) {
 
     const [maskType, setMaskType] = useState(0);
     return (
+        <>
         <Card sx={{ width: "51.05vw" }} ref={mainRef}>
             <Box sx={{ position: 'relative', width: '100%', height: 'auto' }}>
                 
@@ -371,5 +373,7 @@ export default function SmartMarkup({ project_id, taskId }) {
                 data_markup_classes={data_markup_classes}
                 setSelectedClass={setSelectedClass} />
         </Card>
+        <PhotoPagination setImageId={setImageId}/>
+        </>
     );
 }

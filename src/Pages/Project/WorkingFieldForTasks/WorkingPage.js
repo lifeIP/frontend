@@ -20,6 +20,7 @@ import Hat from '../../../components/Hat/Hat';
 
 import axios from 'axios';
 import settings from "../../../settings.json"
+import PhotoPagination from './components/PhotoPagination';
 
 
 export default function WorkingFieldForTasks() {
@@ -51,7 +52,8 @@ export default function WorkingFieldForTasks() {
 
     useEffect(() => {
         localStorage.setItem('rect_list', JSON.stringify([]));
-        localStorage.setItem("list_of_ids_images", JSON.stringify([]));
+        localStorage.setItem("list_of_ids_images", JSON.stringify({ startIndex: 1, ids: [] }));
+        localStorage.setItem("list_of_ids_images_task", JSON.stringify({ startIndex: 1, ids: [] }));
         localStorage.setItem("task_flag", false);
 
         setProjectId(localStorage.getItem("last_project_id"));
@@ -96,7 +98,6 @@ export default function WorkingFieldForTasks() {
                     </CardContent>
                 </Card>
             </Box>
-
         </Center>
     );
 }
