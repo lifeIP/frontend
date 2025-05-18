@@ -373,7 +373,7 @@ export default function SmartMarkup({ project_id, taskId }) {
                 data_markup_classes={data_markup_classes}
                 setSelectedClass={setSelectedClass} />
         </Card>
-        <PhotoPagination setImageId={setImageId}/>
+        <PhotoPagination setImageId={setImageId} setIsLoaded={setIsLoaded}/>
         </>
     );
 }

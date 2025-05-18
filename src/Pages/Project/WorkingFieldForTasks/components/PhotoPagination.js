@@ -9,7 +9,7 @@ import ImageViewerPagination from './ImageViewerPagination';
 import { useNavigate } from 'react-router';
 
 
-function PhotoPagination({setImageId}) {
+function PhotoPagination({setImageId, setIsLoaded}) {
   const navigate = useNavigate()
   const [totalPhotos, setTotalPhotos] = useState(0);
   const [unwrap, setUnwrap] = useState(false);
@@ -103,7 +103,7 @@ function PhotoPagination({setImageId}) {
             <Grid container spacing={1} sx={{ marginTop: '1vh' }}>
               {listImages.map((id) => (
                 <Grid size={3}>
-                  <ImageViewerPagination setImageId={setImageId} image_id={id} setCanvasSize={() => { }}/>
+                  <ImageViewerPagination setImageId={setImageId} setIsLoaded={setIsLoaded} image_id={id} setCanvasSize={() => { }}/>
                 </Grid>
               ))}
             </Grid>
