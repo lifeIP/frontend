@@ -325,6 +325,7 @@ export default function SmartMarkup({ project_id, taskId }) {
     return (
         <Card sx={{ width: "51.05vw" }} ref={mainRef}>
             <Box sx={{ position: 'relative', width: '100%', height: 'auto' }}>
+                
                 <TransformWrapper
                     disabled={stateEditing}
                     onTransformed={(e) => {

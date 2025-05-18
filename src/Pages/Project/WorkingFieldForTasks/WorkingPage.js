@@ -68,7 +68,7 @@ export default function WorkingFieldForTasks() {
                 </Typography>
             </Hat>
 
-            <Box>
+            <Box >
                 <SmartMarkupComponent project_id={projectId} taskId={taskId}/>
             </Box>
 

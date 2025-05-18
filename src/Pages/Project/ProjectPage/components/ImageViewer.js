@@ -23,7 +23,7 @@ const ImageViewer = ({ image_id }) => {
 
 
     useEffect(() => {
-
+        imageRef.current.src = null
         axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
         axios.get(`${settings.server.addr}/get-image-by-id/${image_id}?t=${Date.now()}`, {
             responseType: "arraybuffer"
@@ -40,7 +40,7 @@ const ImageViewer = ({ image_id }) => {
             .catch(err => {
                 console.log(err);
             })
-    }, []);
+    }, [image_id]);
 
 
 

@@ -10,8 +10,9 @@ import axios from 'axios';
 import settings from "../../../settings.json"
 import ListOfMembers from './components/ListOfMembers';
 
-import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
-import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
+
+import PhotoPagination from './components/PhotoPagination';
+import DatasetPage from '../DatasetPage/DatasetPage';
 
 export default function ProjectPage() {
     const navigate = useNavigate()
@@ -21,11 +22,8 @@ export default function ProjectPage() {
     const [prjctName, setPrjctName] = useState("Имя проекта");
     const [prjctDescription, setPrjctDescription] = useState("Краткое описание проекта, оно не должно превышать определённого количества символов.");
     const [rows, setRows] = useState([]);
-
-
-    const [listImages, setListImages] = useState([]);
     const [listTasks, setListTasks] = useState([]);
-    const [unwrap, setUnwrap] = useState(false);
+    
 
 
     async function getInfoOfProjects() {
@@ -99,25 +97,6 @@ export default function ProjectPage() {
         }
     };
 
-    async function getListOfImages(project_id, startIndex) {
-        let url = "/get_projects_images_list/" + project_id + "/" + startIndex;
-
-        try {
-            axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
-            const res = await axios.get(`${settings.server.addr}${url}`);
-
-            if (res.status === 200 || res.status === 201) {
-                setListImages(res.data.ids);
-                localStorage.setItem("list_of_ids_images", JSON.stringify({ startIndex: startIndex, ids: res.data.ids }));
-                // console.log(res.data.ids);
-            } else {
-                // throw new Error('Ошибка при отправке данных');
-            }
-        } catch (err) {
-            console.error(err);
-            // throw err;
-        }
-    }
 
 
     async function getListOfTasks(project_id) {
@@ -149,11 +128,9 @@ export default function ProjectPage() {
         }
     }, [projectId])
 
-    useEffect(() => {
-        if (unwrap) {
-            getListOfImages(localStorage.getItem("last_project_id"), 1);
-        }
-    }, [unwrap]);
+   
+
+
     return (
         <Center>
             <Hat>
@@ -178,6 +155,15 @@ export default function ProjectPage() {
                 </Grid>
             </Box>
 
+            <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginTop: '1.85vh' }}>
+                <CardContent>
+                    <Typography gutterBottom variant="h3" component="div" textAlign="center">
+                        Набор данных
+                    </Typography>
+                </CardContent>
+                    <DatasetPage />
+            </Card>
+
             {listTasks.length == 0? (<></>):(
             <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginTop: '1.85vh' }}>
                 <CardContent>
@@ -185,6 +171,8 @@ export default function ProjectPage() {
                         Ваши задачи
                     </Typography>
                 </CardContent>
+
+                {/* Отображение Ваших задач */}
                 <CardContent>
                     <List disablePadding>
                         {listTasks.map((item) => (
@@ -228,38 +216,8 @@ export default function ProjectPage() {
                     </List>
                 </CardContent>
             </Card>
-            )}
-
-            <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginTop: '1.85vh' }}>
-                <CardContent>
-                    <Typography gutterBottom variant="h3" component="div" textAlign="center">
-                        Фотографии
-                    </Typography>
-                </CardContent>
-                <CardContent>
-                    <Box sx={{ display: "flex", justifyContent: "center" }}>
-                        <Fab size="medium" aria-label="добавить фото в проект" onClick={() => { navigate("/upload-images") }}>
-                            <AddIcon />
-                        </Fab>
-                        <Fab size="medium" aria-label="Развернуть список" sx={{ marginLeft: "10px" }} onClick={() => { setUnwrap(!unwrap) }}>
-                            {unwrap ? <KeyboardArrowUpOutlinedIcon /> : <KeyboardArrowDownOutlinedIcon />}
-                        </Fab>
-                    </Box>
-                </CardContent>
-            </Card>
-            {unwrap ? (
-                <Box sx={{ width: "51.05vw" }}>
-                    <Grid container spacing={1} sx={{ marginTop: '1vh' }}>
-                        {listImages.map((id) => (
-                            <Grid size={3}>
-                                <ImageViewer image_id={id} setCanvasSize={() => { }} />
-                            </Grid>
-                        ))}
-                    </Grid>
-                </Box>
-            ) : (
-                <></>
-            )}
+            )}    
+            <PhotoPagination/>
         </Center>
     );
 }
