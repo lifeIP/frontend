@@ -21,6 +21,7 @@ import Hat from '../../../components/Hat/Hat';
 import axios from 'axios';
 import settings from "../../../settings.json"
 import PhotoPagination from './components/PhotoPagination';
+import TaskManagement from './components/TaskManagement';
 
 
 export default function WorkingFieldForTasks() {
@@ -79,7 +80,7 @@ export default function WorkingFieldForTasks() {
                 justifyContent: "center",
                 marginTop: '1.85vh'
             }}>
-                <Card elevation={3} sx={{
+                <Card sx={{
                     borderRadius: "12px",
                     width: "51.05vw",
                     boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px"
@@ -97,6 +98,13 @@ export default function WorkingFieldForTasks() {
                         </List>
                     </CardContent>
                 </Card>
+            </Box>
+            <Box sx={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: '1.85vh'
+            }}>
+            <TaskManagement/>
             </Box>
         </Center>
     );
