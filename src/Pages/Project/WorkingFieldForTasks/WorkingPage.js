@@ -21,7 +21,7 @@ import Hat from '../../../components/Hat/Hat';
 import axios from 'axios';
 import settings from "../../../settings.json"
 import PhotoPagination from './components/PhotoPagination';
-import TaskManagement from './components/TaskManagement';
+import TaskManagement from './components/TaskManagement/TaskManagement';
 
 
 export default function WorkingFieldForTasks() {

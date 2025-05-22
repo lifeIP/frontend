@@ -1,8 +1,11 @@
 import { Box, Card, CardContent, Typography } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
+import Slider from '@mui/material/Slider';
+import MinimumDistanceSlider from './MinimumDistanceSlider';
 
 
 export default function TaskManagement() {
+
     return (
         <Card sx={{
             borderRadius: "12px",
@@ -19,6 +22,7 @@ export default function TaskManagement() {
                 <Typography>
                     Разделение датасета на train/test/valid
                 </Typography>
+                <MinimumDistanceSlider/>
             </CardContent>
         </Card>
     );
