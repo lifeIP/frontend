@@ -11,7 +11,7 @@ export default function ProjectViewComponent({project_id}) {
     const [prjctName, setPrjctName] = useState("Имя проекта");
     const [prjctDescription, setPrjctDescription] = useState("Краткое описание проекта, оно не должно превышать определённого количества символов.");
     const [rows, setRows] = useState([]);
-
+    const [user_rights, set_user_rights] = useState(2);
 
     async function getInfoOfProjects() {
         let url = "/get-projects-info-by-id/" + project_id;
@@ -25,6 +25,8 @@ export default function ProjectViewComponent({project_id}) {
                 // console.log(res.data);
                 setPrjctName(res.data.name);
                 setPrjctDescription(res.data.description);
+                set_user_rights(res.data.user_rights);
+
             } else {
                 throw new Error('Ошибка при отправке даннх');
             }
@@ -84,6 +86,7 @@ export default function ProjectViewComponent({project_id}) {
             rows={rows}
             actionAreaDisabled={false}
             onClick={()=>{
+                localStorage.setItem("user_rights", user_rights);
                 localStorage.setItem("last_project_id", project_id);
                 navigate("/project");
             }}

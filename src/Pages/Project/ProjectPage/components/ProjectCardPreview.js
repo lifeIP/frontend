@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useNavigate } from 'react-router';
 
-function ProjectCardPreview({ isImage, prjctName, prjctDescription, rows, actionAreaDisabled = true, onClick = () => { } }) {
+function ProjectCardPreview({ isImage, prjctName, prjctDescription, rows, actionAreaDisabled = true, settingsIconRender=true, onClick = () => { } }) {
     const navigate = useNavigate();
     
     const [image, setImage] = useState("https://kuzov73.ru/image/cache/no_image-1000x1000.jpg");
@@ -73,6 +73,7 @@ function ProjectCardPreview({ isImage, prjctName, prjctDescription, rows, action
 
             {
                 actionAreaDisabled?(
+                    settingsIconRender?(
                 <IconButton
                     sx={{ position: 'absolute', top: 8, right: 8 }}
                     aria-label="settings"
@@ -80,6 +81,7 @@ function ProjectCardPreview({ isImage, prjctName, prjctDescription, rows, action
                 >
                     <SettingsIcon />
                 </IconButton>
+                    ):(<></>)
                 ):(
                     <div></div>
                 )

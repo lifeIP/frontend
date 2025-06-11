@@ -9,7 +9,7 @@ import settings from '../../../../settings.json';
 import LooksOneOutlinedIcon from '@mui/icons-material/LooksOneOutlined';
 import LooksTwoOutlinedIcon from '@mui/icons-material/LooksTwoOutlined';
 import Looks3OutlinedIcon from '@mui/icons-material/Looks3Outlined';
-function ListOfMembers() {
+function ListOfMembers({ renderAddButton = true }) {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -47,7 +47,7 @@ function ListOfMembers() {
                             Нет участников.
                         </Typography>
                     ) : (
-                        <List disablePadding sx={{overflowY: "auto", maxHeight: "250px", '& ul': { padding: 0 }}}>
+                        <List disablePadding sx={{ overflowY: "auto", maxHeight: "250px", '& ul': { padding: 0 } }}>
                             {data.map((item) => (
 
                                 <ListItem
@@ -66,14 +66,14 @@ function ListOfMembers() {
                                     }}
                                 >
                                     <ListItemIcon>
-                                        {item.user_rights == 0? <LooksOneOutlinedIcon/>:<></>}
-                                        {item.user_rights == 1? <LooksTwoOutlinedIcon/>:<></>}
-                                        {item.user_rights == 2? <Looks3OutlinedIcon/>:<></>}
+                                        {item.user_rights == 0 ? <LooksOneOutlinedIcon /> : <></>}
+                                        {item.user_rights == 1 ? <LooksTwoOutlinedIcon /> : <></>}
+                                        {item.user_rights == 2 ? <Looks3OutlinedIcon /> : <></>}
                                     </ListItemIcon>
                                     <ListItemText
                                         primary={
                                             <Typography variant="subtitle1" fontWeight="bold" color="text.primary">
-                                                {item.name} {item.is_creator?"(creator)":<></>}
+                                                {item.name} {item.is_creator ? "(creator)" : <></>}
                                             </Typography>
                                         }
                                     />
@@ -82,19 +82,21 @@ function ListOfMembers() {
                         </List>
                     )}
                 </CardContent>
-                <Box sx={{ width: "100%", alignItems: "center", display: "flex", justifyContent: "center" }}>
-                    <Box
-                        sx={{
-                            // width: "100%",
-                            position: "absolute",
-                            bottom: "10px",
-                            // alignItems: "center",
-                            // right: "0%",
-                        }}
-                    >
-                        <AddMemberDialog />
-                    </Box>
-                </Box>
+                {renderAddButton ? (
+                    <Box sx={{ width: "100%", alignItems: "center", display: "flex", justifyContent: "center" }}>
+                        <Box
+                            sx={{
+                                // width: "100%",
+                                position: "absolute",
+                                bottom: "10px",
+                                // alignItems: "center",
+                                // right: "0%",
+                            }}
+                        >
+                            <AddMemberDialog />
+                        </Box>
+                    </Box>) : (<></>)
+                }
             </Box>
         </Card>
     );

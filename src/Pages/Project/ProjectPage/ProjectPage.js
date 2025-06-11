@@ -23,7 +23,7 @@ export default function ProjectPage() {
     const [prjctDescription, setPrjctDescription] = useState("Краткое описание проекта, оно не должно превышать определённого количества символов.");
     const [rows, setRows] = useState([]);
     const [listTasks, setListTasks] = useState([]);
-    
+
 
 
     async function getInfoOfProjects() {
@@ -128,7 +128,7 @@ export default function ProjectPage() {
         }
     }, [projectId])
 
-   
+
 
 
     return (
@@ -143,6 +143,7 @@ export default function ProjectPage() {
                 <Grid container spacing={1}>
                     <Grid size={6}>
                         <ProjectCardPreview
+                        settingsIconRender={JSON.parse(localStorage.getItem("user_rights")) <= 1}
                             isImage={isImage}
                             prjctName={prjctName}
                             prjctDescription={prjctDescription}
@@ -150,74 +151,81 @@ export default function ProjectPage() {
                         />
                     </Grid>
                     <Grid size={6}>
-                        <ListOfMembers />
+                        <ListOfMembers renderAddButton={JSON.parse(localStorage.getItem("user_rights")) <= 1} />
                     </Grid>
                 </Grid>
             </Box>
 
-            <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginTop: '1.85vh' }}>
-                <CardContent>
-                    <Typography gutterBottom variant="h3" component="div" textAlign="center">
-                        Набор данных
-                    </Typography>
-                </CardContent>
-                    <DatasetPage />
-            </Card>
+            {
+                JSON.parse(localStorage.getItem("user_rights")) <= 1 ? (
+                    <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginTop: '1.85vh' }}>
+                        <CardContent>
+                            <Typography gutterBottom variant="h3" component="div" textAlign="center">
+                                Набор данных
+                            </Typography>
+                        </CardContent>
+                        <DatasetPage />
+                    </Card>) : (<></>)
 
-            {listTasks.length == 0? (<></>):(
-            <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginTop: '1.85vh' }}>
-                <CardContent>
-                    <Typography gutterBottom variant="h3" component="div" textAlign="center">
-                        Ваши задачи
-                    </Typography>
-                </CardContent>
+            }
+            {listTasks.length == 0 ? (<></>) : (
+                <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginTop: '1.85vh' }}>
+                    <CardContent>
+                        <Typography gutterBottom variant="h3" component="div" textAlign="center">
+                            Ваши задачи
+                        </Typography>
+                    </CardContent>
 
-                {/* Отображение Ваших задач */}
-                <CardContent>
-                    <List disablePadding>
-                        {listTasks.map((item) => (
-                            <ListItem
-                            onClick={()=>{
-                                localStorage.setItem("last_task_id", item.task_id);
-                                navigate("/task");
-                                console.log("task_id " + item.task_id);
-                            }}
-                                
-                                button
-                                divider
-                                key={item.task_id}
-                                sx={{
-                                    py: 2,
-                                    px: 2,
-                                    borderRadius: '8px',
-                                    bgcolor: 'background.paper',
-                                    border: '1px solid rgba(0, 0, 0, 0.1)', // Тонкая граница вокруг пункта
-                                    '&:hover': {
-                                        //   backgroundColor: '#F0F0FF', // Светлый голубой оттенок при наведении
-                                        transform: 'scale(1.01)', // Легкий эффект увеличения при наведении
-                                        transition: '.3s ease-in-out',
-                                    },
-                                }}
-                            >
-                                <ListItemText
-                                    primary={
-                                        <Typography variant="subtitle1" fontWeight="bold" color="text.primary">
-                                            ID {item.task_id} Количество: {item.quantity}
-                                        </Typography>
-                                    }
-                                    secondary={
-                                        <Typography variant="body2" color="text.secondary">
-                                            {item.description}
-                                        </Typography>
-                                    }
-                                />
-                            </ListItem>
-                        ))}
-                    </List>
-                </CardContent>
-            </Card>
-            )}    
-            <PhotoPagination/>
+                    {/* Отображение Ваших задач */}
+                    <CardContent>
+                        <List disablePadding>
+                            {listTasks.map((item) => (
+                                <ListItem
+                                    onClick={() => {
+                                        localStorage.setItem("last_task_id", item.task_id);
+                                        navigate("/task");
+                                        console.log("task_id " + item.task_id);
+                                    }}
+
+                                    button
+                                    divider
+                                    key={item.task_id}
+                                    sx={{
+                                        py: 2,
+                                        px: 2,
+                                        borderRadius: '8px',
+                                        bgcolor: 'background.paper',
+                                        border: '1px solid rgba(0, 0, 0, 0.1)', // Тонкая граница вокруг пункта
+                                        '&:hover': {
+                                            //   backgroundColor: '#F0F0FF', // Светлый голубой оттенок при наведении
+                                            transform: 'scale(1.01)', // Легкий эффект увеличения при наведении
+                                            transition: '.3s ease-in-out',
+                                        },
+                                    }}
+                                >
+                                    <ListItemText
+                                        primary={
+                                            <Typography variant="subtitle1" fontWeight="bold" color="text.primary">
+                                                ID {item.task_id} Количество: {item.quantity}
+                                            </Typography>
+                                        }
+                                        secondary={
+                                            <Typography variant="body2" color="text.secondary">
+                                                {item.description}
+                                            </Typography>
+                                        }
+                                    />
+                                </ListItem>
+                            ))}
+                        </List>
+                    </CardContent>
+                </Card>
+            )}
+
+            {
+                JSON.parse(localStorage.getItem("user_rights")) <= 1 ? (
+                    <PhotoPagination />) : (<></>)
+            }
         </Center>
     );
 }
