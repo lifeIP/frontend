@@ -9,7 +9,7 @@ import ImageViewerPagination from './ImageViewerPagination';
 import { useNavigate } from 'react-router';
 
 
-function PhotoPagination({setImageId, setIsLoaded}) {
+function PhotoMarkedUpPagination({setImageId, setIsLoaded}) {
   const navigate = useNavigate()
   const [totalPhotos, setTotalPhotos] = useState(0);
   const [unwrap, setUnwrap] = useState(false);
@@ -17,7 +17,7 @@ function PhotoPagination({setImageId, setIsLoaded}) {
 
   async function getListOfImages(task_id, startIndex) {
     if (startIndex == 0) return;
-    let url = "/get_task_images_not_marked_up_list/" + task_id + "/" + startIndex;
+    let url = "/get_task_images_marked_up_list/" + task_id + "/" + startIndex;
 
     try {
       axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
@@ -27,7 +27,7 @@ function PhotoPagination({setImageId, setIsLoaded}) {
         // console.log(res.data)
         setListImages(res.data.ids);
         setTotalPhotos(res.data.total_images_count)
-        localStorage.setItem("list_of_not_marked_up_ids_images_task", JSON.stringify({ startIndex: startIndex, ids: res.data.ids }));
+        localStorage.setItem("list_of_marked_up_ids_images_task", JSON.stringify({ startIndex: startIndex, ids: res.data.ids }));
         localStorage.setItem("list_of_ids_images_task", JSON.stringify({ startIndex: startIndex, ids: res.data.ids }));
         setUnwrap(true);
       } else {
@@ -74,7 +74,7 @@ function PhotoPagination({setImageId, setIsLoaded}) {
       <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginTop: '1.85vh' }}>
         <CardContent>
           <Typography gutterBottom variant="h3" component="div" textAlign="center">
-            Не размеченные
+            Размеченные
           </Typography>
         </CardContent>
         <CardContent>
@@ -104,7 +104,7 @@ function PhotoPagination({setImageId, setIsLoaded}) {
             <Grid container spacing={1} sx={{ marginTop: '1vh' }}>
               {listImages.map((id) => (
                 <Grid size={3}>
-                  <ImageViewerPagination setImageId={setImageId} setIsLoaded={setIsLoaded} image_id={id} setCanvasSize={() => { }}/>
+                  <ImageViewerPagination dst='list_of_marked_up_ids_images_task' setImageId={setImageId} setIsLoaded={setIsLoaded} image_id={id} setCanvasSize={() => { }}/>
                 </Grid>
               ))}
             </Grid>
@@ -129,4 +129,4 @@ function PhotoPagination({setImageId, setIsLoaded}) {
   );
 };
 
-export default PhotoPagination;
+export default PhotoMarkedUpPagination;

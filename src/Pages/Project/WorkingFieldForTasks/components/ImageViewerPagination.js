@@ -11,7 +11,7 @@ import { useNavigate } from "react-router";
 
 
 
-const ImageViewerPagination = ({setImageId, image_id, setIsLoaded }) => {
+const ImageViewerPagination = ({setImageId, image_id, setIsLoaded, dst="list_of_not_marked_up_ids_images_task" }) => {
     const navigate = useNavigate();
 
 
@@ -54,6 +54,7 @@ const ImageViewerPagination = ({setImageId, image_id, setIsLoaded }) => {
                         localStorage.setItem('rect_list', JSON.stringify([]));
                         localStorage.setItem('poligon_points_list', JSON.stringify([]));
                         localStorage.setItem("list_of_ids_images", localStorage.getItem("list_of_ids_images_task"));
+                        localStorage.setItem("list_of_ids_images", localStorage.getItem(dst));
                         localStorage.setItem("task_flag", true);
                         setImageId(image_id);
                         setIsLoaded(true);

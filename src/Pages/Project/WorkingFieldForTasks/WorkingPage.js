@@ -55,6 +55,8 @@ export default function WorkingFieldForTasks() {
         localStorage.setItem('rect_list', JSON.stringify([]));
         localStorage.setItem("list_of_ids_images", JSON.stringify({ startIndex: 1, ids: [] }));
         localStorage.setItem("list_of_ids_images_task", JSON.stringify({ startIndex: 1, ids: [] }));
+        localStorage.setItem("list_of_marked_up_ids_images_task", JSON.stringify({ startIndex: 1, ids: [] }));
+        localStorage.setItem("list_of_not_marked_up_ids_images_task", JSON.stringify({ startIndex: 1, ids: [] }));
         localStorage.setItem("task_flag", false);
 
         setProjectId(localStorage.getItem("last_project_id"));

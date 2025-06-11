@@ -22,6 +22,7 @@ import axios from 'axios';
 import ImageViewer from "./ImageViewer";
 import CanvasOverImage from "./CanvasOverImage";
 import PhotoPagination from "./PhotoPagination";
+import PhotoMarkedUpPagination from "./PhotoMarkedUpPagination";
 
 
 
@@ -374,6 +375,7 @@ export default function SmartMarkup({ project_id, taskId }) {
                 setSelectedClass={setSelectedClass} />
         </Card>
         <PhotoPagination setImageId={setImageId} setIsLoaded={setIsLoaded}/>
+        <PhotoMarkedUpPagination setImageId={setImageId} setIsLoaded={setIsLoaded}/>
         </>
     );
 }
