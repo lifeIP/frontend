@@ -76,38 +76,6 @@ export default function WorkingFieldForTasks() {
             <Box >
                 <SmartMarkupComponent project_id={projectId} taskId={taskId}/>
             </Box>
-
-            <Box sx={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: '1.85vh'
-            }}>
-                <Card sx={{
-                    borderRadius: "12px",
-                    width: "51.05vw",
-                    boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px"
-                }}>
-                    <CardContent>
-                        <Typography gutterBottom variant="h3" component="div" textAlign="center" fontWeight="bold">
-                            Информация
-                        </Typography>
-                        <List dense disablePadding>
-                            <ListItemText primary={<Typography>Ctrl — Включить режим зума</Typography>} />
-                            <ListItemText primary={<Typography>Shift — Включить режим разметки (квадрат)</Typography>} />
-                            <ListItemText primary={<Typography>S — Сохранить изменения</Typography>} />
-                            <ListItemText primary={<Typography>A — Предыдущая фотография</Typography>} />
-                            <ListItemText primary={<Typography>D — Следующая фотография</Typography>} />
-                        </List>
-                    </CardContent>
-                </Card>
-            </Box>
-            <Box sx={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: '1.85vh'
-            }}>
-            <TaskManagement/>
-            </Box>
         </Center>
     );
 }

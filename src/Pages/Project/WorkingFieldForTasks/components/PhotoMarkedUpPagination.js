@@ -7,7 +7,7 @@ import axios from 'axios';
 import settings from "../../../../settings.json"
 import ImageViewerPagination from './ImageViewerPagination';
 import { useNavigate } from 'react-router';
-
+import { Tab, Tabs, Box } from '@mui/material';
 
 function PhotoMarkedUpPagination({setImageId, setIsLoaded}) {
   const navigate = useNavigate()

@@ -2,6 +2,13 @@ import settings from "../../../../settings.json"
 import {
     Box,
     Card,
+    CardContent,
+    List,
+    ListItem,
+    ListItemText,
+    Tab,
+    Tabs,
+    Typography,
 } from '@mui/material';
 
 import React, {
@@ -23,6 +30,7 @@ import ImageViewer from "./ImageViewer";
 import CanvasOverImage from "./CanvasOverImage";
 import PhotoPagination from "./PhotoPagination";
 import PhotoMarkedUpPagination from "./PhotoMarkedUpPagination";
+import TaskManagement from "./TaskManagement/TaskManagement";
 
 
 
@@ -31,7 +39,7 @@ export default function SmartMarkup({ project_id, taskId }) {
     const mainRef = useRef(null);
     const [inBoundingBox, setInBoundingBox] = useState(true);
 
-    
+
 
     function useKey(key, cb) {
         const callback = useRef(cb);
@@ -39,7 +47,7 @@ export default function SmartMarkup({ project_id, taskId }) {
         useEffect(() => {
             callback.current = cb;
         })
-        
+
 
         useEffect(() => {
             function handle(event) {
@@ -142,7 +150,7 @@ export default function SmartMarkup({ project_id, taskId }) {
     }, [])
 
 
-    function loadImageById(){
+    function loadImageById() {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
         axios.get(`${settings.server.addr}/get-image-by-id/${localStorage.getItem("working-field-image-id")}?t=${Date.now()}`, {
             responseType: "arraybuffer"
@@ -160,7 +168,7 @@ export default function SmartMarkup({ project_id, taskId }) {
                 console.log(err);
             })
     }
-    useEffect(()=>{
+    useEffect(() => {
         loadImageById();
     }, [taskId])
 
@@ -231,7 +239,7 @@ export default function SmartMarkup({ project_id, taskId }) {
                 setImage(`data:image/jpeg;charset=utf-8;base64,${base64}`);
                 // setImageId(imageId);
                 setIsLoaded(true);
-                
+
             })
             .catch(err => {
                 console.log(err);
@@ -253,9 +261,21 @@ export default function SmartMarkup({ project_id, taskId }) {
         />
     });
 
+    const [value, setValue] = React.useState(0);
+
+    // Обработчик изменения активной вкладки
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
+
     function getListOfImages(taskId, startIndex) {
         let url = "/get_task_images_list/" + taskId + "/" + startIndex;
-
+        if(value==0){
+            url = "/get_task_images_not_marked_up_list/" + taskId + "/" + startIndex;
+        }
+        else if(value==1){
+            url = "/get_task_images_marked_up_list/" + taskId + "/" + startIndex;
+        }
 
         axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
         axios.get(`${settings.server.addr}${url}`).then((res) => {
@@ -263,7 +283,7 @@ export default function SmartMarkup({ project_id, taskId }) {
             if (res.status === 200 || res.status === 201) {
                 // setListImages(res.data.ids);
                 console.log(res.data);
-                if(res.data.ids.length != 0){
+                if (res.data.ids.length != 0) {
                     localStorage.setItem("list_of_ids_images", JSON.stringify({ startIndex: startIndex, ids: res.data.ids }));
                 }
                 console.log(res.data.ids);
@@ -274,12 +294,12 @@ export default function SmartMarkup({ project_id, taskId }) {
             console.error(err);
         });
     }
-    
+
     function rightButtonClicked() {
         const list_of_ids_images = JSON.parse(localStorage.getItem("list_of_ids_images"));
         const working_field_image_id = JSON.parse(localStorage.getItem("working-field-image-id"));
         let index_now = list_of_ids_images.ids.indexOf(working_field_image_id);
-        if (!JSON.parse(localStorage.getItem("task_flag")) && index_now==0){
+        if (!JSON.parse(localStorage.getItem("task_flag")) && index_now == 0) {
             index_now = -1;
             localStorage.setItem("task_flag", true);
             setIsLoaded(false);
@@ -297,12 +317,12 @@ export default function SmartMarkup({ project_id, taskId }) {
         const list_of_ids_images = JSON.parse(localStorage.getItem("list_of_ids_images"));
         const working_field_image_id = JSON.parse(localStorage.getItem("working-field-image-id"));
         let index_now = list_of_ids_images.ids.indexOf(working_field_image_id);
-        if (JSON.parse(localStorage.getItem("task_flag")) && index_now==0){
+        if (JSON.parse(localStorage.getItem("task_flag")) && index_now == 0) {
             localStorage.setItem("task_flag", true);
             setIsLoaded(false);
         }
 
-        if (index_now == -1){
+        if (index_now == -1) {
             index_now = 49;
         }
         console.log(index_now);
@@ -326,56 +346,112 @@ export default function SmartMarkup({ project_id, taskId }) {
     const [maskType, setMaskType] = useState(0);
     return (
         <>
-        <Card sx={{ width: "51.05vw" }} ref={mainRef}>
-            <Box sx={{ position: 'relative', width: '100%', height: 'auto' }}>
-                
-                <TransformWrapper
-                    disabled={stateEditing}
-                    onTransformed={(e) => {
-                        setCurrentScale(e.state.scale);
-                    }}
-                >
-                    <TransformComponent>
-                        <Box sx={{ position: 'relative', width: '100%', height: 'auto' }}>
-                            <Card sx={{ width: "51.05vw" }}>
-                                <ImageViewer setCanvasSize={setCanvasSize} image={image} isLoaded={isLoaded}/>
-                                <CanvasOverImageComponent
-                                    maskType={maskType}
-                                    edit={edit}
-                                    data_markup_classes={data_markup_classes}
-                                    currentClass={data_markup_classes.at(selectedClass)}
-                                    currentScale={currentScale}
-                                    inBoundingBox={inBoundingBox}
-                                    canvasSize={canvasSize}
-                                    stateEditing={stateEditing}
-                                    setSaved={setSaved}
-                                    isSaved={isSaved} />
+            <Card sx={{ width: "51.05vw" }} ref={mainRef}>
+                <Box sx={{ position: 'relative', width: '100%', height: 'auto' }}>
 
-                            </Card>
-                        </Box>
-                    </TransformComponent>
-                </TransformWrapper>
-            </Box>
-            <Actions
-                setMaskType={setMaskType}
-                setEdit={setEdit}
-                setStateEditing={setStateEditing}
-                onLeftButtonClicked={() => {
-                    console.log("left")
-                    leftButtonClicked();
-                }}
-                onRightButtonClicked={() => {
-                    console.log("right")
-                    rightButtonClicked();
-                }}
-            />
-            <ClassesList
-                selectedClass={selectedClass}
-                data_markup_classes={data_markup_classes}
-                setSelectedClass={setSelectedClass} />
-        </Card>
-        <PhotoPagination setImageId={setImageId} setIsLoaded={setIsLoaded}/>
-        <PhotoMarkedUpPagination setImageId={setImageId} setIsLoaded={setIsLoaded}/>
+                    <TransformWrapper
+                        disabled={stateEditing}
+                        onTransformed={(e) => {
+                            setCurrentScale(e.state.scale);
+                        }}
+                    >
+                        <TransformComponent>
+                            <Box sx={{ position: 'relative', width: '100%', height: 'auto' }}>
+                                <Card sx={{ width: "51.05vw" }}>
+                                    <ImageViewer setCanvasSize={setCanvasSize} image={image} isLoaded={isLoaded} />
+                                    <CanvasOverImageComponent
+                                        maskType={maskType}
+                                        edit={edit}
+                                        data_markup_classes={data_markup_classes}
+                                        currentClass={data_markup_classes.at(selectedClass)}
+                                        currentScale={currentScale}
+                                        inBoundingBox={inBoundingBox}
+                                        canvasSize={canvasSize}
+                                        stateEditing={stateEditing}
+                                        setSaved={setSaved}
+                                        isSaved={isSaved} />
+
+                                </Card>
+                            </Box>
+                        </TransformComponent>
+                    </TransformWrapper>
+                </Box>
+                <Actions
+                    setMaskType={setMaskType}
+                    setEdit={setEdit}
+                    setStateEditing={setStateEditing}
+                    onLeftButtonClicked={() => {
+                        console.log("left")
+                        leftButtonClicked();
+                    }}
+                    onRightButtonClicked={() => {
+                        console.log("right")
+                        rightButtonClicked();
+                    }}
+                />
+                <ClassesList
+                    selectedClass={selectedClass}
+                    data_markup_classes={data_markup_classes}
+                    setSelectedClass={setSelectedClass} />
+            </Card>
+            <Card sx={{ width: "51.05vw" }}>
+                <Box alignItems="center" justifyContent="center" display="flex">
+                    <Tabs value={value} onChange={handleChange}>
+                        {/* Первая кнопка-текст занимает ровно половину пространства */}
+                        <Tab label="Не размеченные" variant="" />
+                        {/* Вторая кнопка-текст также занимает ровно половину пространства */}
+                        <Tab label="Размеченные" />
+                        <Tab label="Информация" />
+                        <Tab label="Управление" />
+                    </Tabs>
+                </Box>
+            </Card>
+
+            {value == 0 ? (<PhotoPagination setImageId={setImageId} setIsLoaded={setIsLoaded} />) :
+                (<></>)
+            }
+            {value == 1 ? (<PhotoMarkedUpPagination setImageId={setImageId} setIsLoaded={setIsLoaded} />) :
+                (<></>)
+            }
+            {value == 2 ? (
+                <Box sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginTop: '1.85vh'
+                }}>
+                    <Card sx={{
+                        borderRadius: "12px",
+                        width: "51.05vw",
+                        boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px"
+                    }}>
+                        <CardContent>
+                            <Typography gutterBottom variant="h3" component="div" textAlign="center" fontWeight="bold">
+                                Информация
+                            </Typography>
+                            <List dense disablePadding>
+                                <ListItemText primary={<Typography>Ctrl — Включить режим зума</Typography>} />
+                                <ListItemText primary={<Typography>Shift — Включить режим разметки (квадрат)</Typography>} />
+                                <ListItemText primary={<Typography>S — Сохранить изменения</Typography>} />
+                                <ListItemText primary={<Typography>A — Предыдущая фотография</Typography>} />
+                                <ListItemText primary={<Typography>D — Следующая фотография</Typography>} />
+                            </List>
+                        </CardContent>
+                    </Card>
+                </Box>
+            ) :
+                (<></>)
+            }
+            {value == 3 ? (
+                <Box sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginTop: '1.85vh'
+                }}>
+                    <TaskManagement />
+                </Box>
+            ) :
+                (<></>)
+            }
         </>
     );
 }
