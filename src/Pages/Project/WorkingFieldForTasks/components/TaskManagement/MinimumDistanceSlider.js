@@ -11,9 +11,8 @@ function valuetext(value) {
 
 const minDistance = 0;
 
-export default function MinimumDistanceSlider() {
-  const [value1, setValue1] = React.useState([70, 90]);
-  const [imageCount, setImageCount] = React.useState(0);
+export default function MinimumDistanceSlider({value1, setValue1, imageCount, setImageCount}) {
+
   
   async function getTaskImageCount() {
       let url = `/get_task_image_count/${JSON.parse(localStorage.getItem('last_task_id'))}`;
