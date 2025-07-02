@@ -23,6 +23,7 @@ export default function ProjectPage() {
     const [prjctDescription, setPrjctDescription] = useState("Краткое описание проекта, оно не должно превышать определённого количества символов.");
     const [rows, setRows] = useState([]);
     const [listTasks, setListTasks] = useState([]);
+    const [listAllTasks, setListAllTasks] = useState([]);
 
 
 
@@ -39,7 +40,7 @@ export default function ProjectPage() {
                 setPrjctName(res.data.name);
                 setPrjctDescription(res.data.description);
             } else {
-                throw new Error('Ошибка при отправке даннх');
+                // throw new Error('Ошибка при отправке даннх');
             }
         } catch (err) {
             console.error(err);
@@ -62,7 +63,7 @@ export default function ProjectPage() {
                 })
                 setRows(list_of_class_name);
             } else {
-                throw new Error('Ошибка при отправке даннх');
+                // throw new Error('Ошибка при отправке даннх');
             }
         } catch (err) {
             console.error(err);
@@ -89,7 +90,7 @@ export default function ProjectPage() {
                 )
                 setImage(`data:image/jpeg;charset=utf-8;base64,${base64}`);
             } else {
-                throw new Error('Ошибка при отправке даннх');
+                // throw new Error('Ошибка при отправке даннх');
             }
         } catch (err) {
             console.error(err);
@@ -114,6 +115,21 @@ export default function ProjectPage() {
             console.error(err);
         }
     }
+    async function getAllListOfTasks(project_id) {
+        let url = "/get-task-info-in-project/" + project_id;
+
+        try {
+            axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+            const res = await axios.get(`${settings.server.addr}${url}`);
+
+            if (res.status === 200 || res.status === 201) {
+                setListAllTasks(res.data.tasks);
+            } else {
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
     useEffect(() => {
         setProjectId(localStorage.getItem("last_project_id"));
@@ -125,6 +141,7 @@ export default function ProjectPage() {
             getListOfClassesInProject();
             getProjectsPhotoPreviewById();
             getListOfTasks(projectId);
+            getAllListOfTasks(projectId)
         }
     }, [projectId])
 
@@ -167,6 +184,10 @@ export default function ProjectPage() {
                         <DatasetPage />
                     </Card>) : (<></>)
 
+            }
+            {
+                JSON.parse(localStorage.getItem("user_rights")) <= 1 ? (
+                    <PhotoPagination />) : (<></>)
             }
             {listTasks.length == 0 ? (<></>) : (
                 <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginTop: '1.85vh' }}>
@@ -221,11 +242,67 @@ export default function ProjectPage() {
                     </CardContent>
                 </Card>
             )}
+            {listAllTasks.length == 0 ? (<></>) : (
+                <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginTop: '1.85vh' }}>
+                    <CardContent>
+                        <Typography gutterBottom variant="h3" component="div" textAlign="center">
+                            Все задачи
+                        </Typography>
+                    </CardContent>
 
-            {
-                JSON.parse(localStorage.getItem("user_rights")) <= 1 ? (
-                    <PhotoPagination />) : (<></>)
-            }
+                    {/* Отображение Ваших задач */}
+                    <CardContent>
+                        <List disablePadding>
+                            {listAllTasks.map((item) => (
+                                <ListItem
+                                    onClick={() => {
+                                        localStorage.setItem("last_task_id", item.task_id);
+                                        navigate("/task");
+                                        console.log("task_id " + item.task_id);
+                                    }}
+
+                                    button
+                                    divider
+                                    key={item.task_id}
+                                    sx={{
+                                        py: 2,
+                                        px: 2,
+                                        borderRadius: '8px',
+                                        bgcolor: 'background.paper',
+                                        border: '1px solid rgba(0, 0, 0, 0.1)', // Тонкая граница вокруг пункта
+                                        '&:hover': {
+                                            //   backgroundColor: '#F0F0FF', // Светлый голубой оттенок при наведении
+                                            transform: 'scale(1.01)', // Легкий эффект увеличения при наведении
+                                            transition: '.3s ease-in-out',
+                                        },
+                                    }}
+                                >
+                                    <ListItemText
+                                        primary={
+                                            <Typography variant="subtitle1" fontWeight="bold" color="text.primary">
+                                                ID {item.task_id} Количество: {item.quantity}
+                                            </Typography>
+                                        }
+                                        secondary={
+                                            <Typography variant="body2" color="text.secondary">
+                                                {item.description}
+                                            </Typography>
+                                        }
+                                    />
+                                    <ListItemText
+                                    
+                                        secondary={
+                                            <Typography textAlign="right" variant="body2" color="text.secondary">
+                                                {item.task_owner}
+                                            </Typography>
+                                        }
+                                    />
+                                </ListItem>
+                            ))}
+                        </List>
+                    </CardContent>
+                </Card>
+            )}
         </Center>
     );
 }
