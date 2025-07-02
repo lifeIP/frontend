@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Fab, Grid, List, ListItem, ListItemText, Typography } from '@mui/material';
+import { Box, Card, CardContent, Fab, Grid, List, ListItem, ListItemText, Tab, Tabs, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import Center from '../../../components/Center/Center';
 import Hat from '../../../components/Hat/Hat';
@@ -25,7 +25,10 @@ export default function ProjectPage() {
     const [listTasks, setListTasks] = useState([]);
     const [listAllTasks, setListAllTasks] = useState([]);
 
-
+    const [value, setValue] = React.useState(0);
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
 
     async function getInfoOfProjects() {
         let url = "/get-projects-info-by-id/" + projectId;
@@ -160,7 +163,7 @@ export default function ProjectPage() {
                 <Grid container spacing={1}>
                     <Grid size={6}>
                         <ProjectCardPreview
-                        settingsIconRender={JSON.parse(localStorage.getItem("user_rights")) <= 1}
+                            settingsIconRender={JSON.parse(localStorage.getItem("user_rights")) <= 1}
                             isImage={isImage}
                             prjctName={prjctName}
                             prjctDescription={prjctDescription}
@@ -172,137 +175,169 @@ export default function ProjectPage() {
                     </Grid>
                 </Grid>
             </Box>
+            <Card sx={{ width: "51.05vw",  marginTop: "1.85vh" }}>
+                <Box alignItems="center" justifyContent="center" display="flex">
+                    <Tabs value={value} onChange={handleChange}>
+                        <Tab label="Ваши задачи" variant="" />
+                        <Tab label="Все задачи" />
+                        <Tab label="Набор данных" />
+                        <Tab label="Загрузка фото" />
+                    </Tabs>
+                </Box>
+            </Card>
 
-            {
-                JSON.parse(localStorage.getItem("user_rights")) <= 1 ? (
+
+            {value == 0 ? (
+                <>{listTasks.length == 0 ? (<></>) : (
                     <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginTop: '1.85vh' }}>
                         <CardContent>
                             <Typography gutterBottom variant="h3" component="div" textAlign="center">
-                                Набор данных
+                                Ваши задачи
                             </Typography>
                         </CardContent>
-                        <DatasetPage />
-                    </Card>) : (<></>)
 
+                        {/* Отображение Ваших задач */}
+                        <CardContent>
+                            <List disablePadding>
+                                {listTasks.map((item) => (
+                                    <ListItem
+                                        onClick={() => {
+                                            localStorage.setItem("last_task_id", item.task_id);
+                                            navigate("/task");
+                                            console.log("task_id " + item.task_id);
+                                        }}
+
+                                        button
+                                        divider
+                                        key={item.task_id}
+                                        sx={{
+                                            py: 2,
+                                            px: 2,
+                                            borderRadius: '8px',
+                                            bgcolor: 'background.paper',
+                                            border: '1px solid rgba(0, 0, 0, 0.1)', // Тонкая граница вокруг пункта
+                                            '&:hover': {
+                                                //   backgroundColor: '#F0F0FF', // Светлый голубой оттенок при наведении
+                                                transform: 'scale(1.01)', // Легкий эффект увеличения при наведении
+                                                transition: '.3s ease-in-out',
+                                            },
+                                        }}
+                                    >
+                                        <ListItemText
+                                            primary={
+                                                <Typography variant="subtitle1" fontWeight="bold" color="text.primary">
+                                                    ID {item.task_id} Количество: {item.quantity}
+                                                </Typography>
+                                            }
+                                            secondary={
+                                                <Typography variant="body2" color="text.secondary">
+                                                    {item.description}
+                                                </Typography>
+                                            }
+                                        />
+                                    </ListItem>
+                                ))}
+                            </List>
+                        </CardContent>
+                    </Card>
+                )}</>
+            ) :
+                (<></>)
             }
-            {
-                JSON.parse(localStorage.getItem("user_rights")) <= 1 ? (
-                    <PhotoPagination />) : (<></>)
+            {value == 1 ? (
+                <>{listAllTasks.length == 0 ? (<></>) : (
+                    <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginTop: '1.85vh' }}>
+                        <CardContent>
+                            <Typography gutterBottom variant="h3" component="div" textAlign="center">
+                                Все задачи
+                            </Typography>
+                        </CardContent>
+
+                        {/* Отображение Ваших задач */}
+                        <CardContent>
+                            <List disablePadding>
+                                {listAllTasks.map((item) => (
+                                    <ListItem
+                                        onClick={() => {
+                                            localStorage.setItem("last_task_id", item.task_id);
+                                            navigate("/task");
+                                            console.log("task_id " + item.task_id);
+                                        }}
+
+                                        button
+                                        divider
+                                        key={item.task_id}
+                                        sx={{
+                                            py: 2,
+                                            px: 2,
+                                            borderRadius: '8px',
+                                            bgcolor: 'background.paper',
+                                            border: '1px solid rgba(0, 0, 0, 0.1)', // Тонкая граница вокруг пункта
+                                            '&:hover': {
+                                                //   backgroundColor: '#F0F0FF', // Светлый голубой оттенок при наведении
+                                                transform: 'scale(1.01)', // Легкий эффект увеличения при наведении
+                                                transition: '.3s ease-in-out',
+                                            },
+                                        }}
+                                    >
+                                        <ListItemText
+                                            primary={
+                                                <Typography variant="subtitle1" fontWeight="bold" color="text.primary">
+                                                    ID {item.task_id} Количество: {item.quantity}
+                                                </Typography>
+                                            }
+                                            secondary={
+                                                <Typography variant="body2" color="text.secondary">
+                                                    {item.description}
+                                                </Typography>
+                                            }
+                                        />
+                                        <ListItemText
+
+                                            secondary={
+                                                <Typography textAlign="right" variant="body2" color="text.secondary">
+                                                    {item.task_owner}
+                                                </Typography>
+                                            }
+                                        />
+                                    </ListItem>
+                                ))}
+                            </List>
+                        </CardContent>
+                    </Card>
+                )}
+                </>
+            ) :
+                (<></>)
             }
-            {listTasks.length == 0 ? (<></>) : (
-                <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginTop: '1.85vh' }}>
-                    <CardContent>
-                        <Typography gutterBottom variant="h3" component="div" textAlign="center">
-                            Ваши задачи
-                        </Typography>
-                    </CardContent>
+            {value == 2 ? (
+                <>
+                    {
+                        JSON.parse(localStorage.getItem("user_rights")) <= 1 ? (
+                            <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginTop: '1.85vh' }}>
+                                <CardContent>
+                                    <Typography gutterBottom variant="h3" component="div" textAlign="center">
+                                        Набор данных
+                                    </Typography>
+                                </CardContent>
+                                <DatasetPage />
+                            </Card>) : (<></>)
 
-                    {/* Отображение Ваших задач */}
-                    <CardContent>
-                        <List disablePadding>
-                            {listTasks.map((item) => (
-                                <ListItem
-                                    onClick={() => {
-                                        localStorage.setItem("last_task_id", item.task_id);
-                                        navigate("/task");
-                                        console.log("task_id " + item.task_id);
-                                    }}
-
-                                    button
-                                    divider
-                                    key={item.task_id}
-                                    sx={{
-                                        py: 2,
-                                        px: 2,
-                                        borderRadius: '8px',
-                                        bgcolor: 'background.paper',
-                                        border: '1px solid rgba(0, 0, 0, 0.1)', // Тонкая граница вокруг пункта
-                                        '&:hover': {
-                                            //   backgroundColor: '#F0F0FF', // Светлый голубой оттенок при наведении
-                                            transform: 'scale(1.01)', // Легкий эффект увеличения при наведении
-                                            transition: '.3s ease-in-out',
-                                        },
-                                    }}
-                                >
-                                    <ListItemText
-                                        primary={
-                                            <Typography variant="subtitle1" fontWeight="bold" color="text.primary">
-                                                ID {item.task_id} Количество: {item.quantity}
-                                            </Typography>
-                                        }
-                                        secondary={
-                                            <Typography variant="body2" color="text.secondary">
-                                                {item.description}
-                                            </Typography>
-                                        }
-                                    />
-                                </ListItem>
-                            ))}
-                        </List>
-                    </CardContent>
-                </Card>
-            )}
-            {listAllTasks.length == 0 ? (<></>) : (
-                <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginTop: '1.85vh' }}>
-                    <CardContent>
-                        <Typography gutterBottom variant="h3" component="div" textAlign="center">
-                            Все задачи
-                        </Typography>
-                    </CardContent>
-
-                    {/* Отображение Ваших задач */}
-                    <CardContent>
-                        <List disablePadding>
-                            {listAllTasks.map((item) => (
-                                <ListItem
-                                    onClick={() => {
-                                        localStorage.setItem("last_task_id", item.task_id);
-                                        navigate("/task");
-                                        console.log("task_id " + item.task_id);
-                                    }}
-
-                                    button
-                                    divider
-                                    key={item.task_id}
-                                    sx={{
-                                        py: 2,
-                                        px: 2,
-                                        borderRadius: '8px',
-                                        bgcolor: 'background.paper',
-                                        border: '1px solid rgba(0, 0, 0, 0.1)', // Тонкая граница вокруг пункта
-                                        '&:hover': {
-                                            //   backgroundColor: '#F0F0FF', // Светлый голубой оттенок при наведении
-                                            transform: 'scale(1.01)', // Легкий эффект увеличения при наведении
-                                            transition: '.3s ease-in-out',
-                                        },
-                                    }}
-                                >
-                                    <ListItemText
-                                        primary={
-                                            <Typography variant="subtitle1" fontWeight="bold" color="text.primary">
-                                                ID {item.task_id} Количество: {item.quantity}
-                                            </Typography>
-                                        }
-                                        secondary={
-                                            <Typography variant="body2" color="text.secondary">
-                                                {item.description}
-                                            </Typography>
-                                        }
-                                    />
-                                    <ListItemText
-                                    
-                                        secondary={
-                                            <Typography textAlign="right" variant="body2" color="text.secondary">
-                                                {item.task_owner}
-                                            </Typography>
-                                        }
-                                    />
-                                </ListItem>
-                            ))}
-                        </List>
-                    </CardContent>
-                </Card>
-            )}
+                    }
+                </>
+            ) :
+                (<></>)
+            }
+            {value == 3 ? (
+                <>
+                    {
+                        JSON.parse(localStorage.getItem("user_rights")) <= 1 ? (
+                            <PhotoPagination />) : (<></>)
+                    }
+                </>
+            ) :
+                (<></>)
+            }
         </Center>
     );
 }
