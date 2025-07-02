@@ -22,6 +22,7 @@ import { Box } from "@mui/material";
 import ProjectSettingsPage from "./Pages/Project/ProjectSettingsPage/ProjectSettingsPage";
 import ProjectsPage from "./Pages/Project/ProjectsPage/ProjectsPage";
 import WorkingFieldForTasks from "./Pages/Project/WorkingFieldForTasks/WorkingPage";
+import Footer from "./components/Footer/MyFooter";
 
 
 const lightTheme = createTheme({
@@ -83,6 +84,15 @@ function App() {
       return (
         <Box marginBottom="1.85vh">
           <MyHeader selectedTheme={selectedTheme === lightTheme ? true : false} changeTheme={changeTheme} />
+        </Box>
+      );
+    
+  }
+  function RenderFooter() {
+    
+      return (
+        <Box marginBottom="1.85vh" sx={{bottom: 0, position: "absolute"}}>
+          <Footer />
         </Box>
       );
     
@@ -186,6 +196,9 @@ function App() {
 
         </Routes>
       </BrowserRouter>
+      <Box sx={{position: "fixed", bottom: 0}}>
+        <Footer/>
+      </Box>
       <CssBaseline />
     </ThemeProvider>
   );

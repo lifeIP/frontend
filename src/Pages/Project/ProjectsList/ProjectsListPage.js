@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Fab, Grid, Typography } from '@mui/material';
+import { Box, Card, CardContent, Fab, Grid, Tab, Tabs, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import AddIcon from '@mui/icons-material/Add';
@@ -35,12 +35,12 @@ export default function ProjectsListPage({ purpose = "inside" }) {
     useEffect(() => {
         getListOfProjects();
     }, [])
+
     return (
         <>
             <Box sx={{ marginBottom: '1.85vh', marginTop: '1.85vh' }}>
-                
-                    {purpose == "inside" ? (
-                        <>
+                {purpose == "inside" ? (
+                    <>
                         <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginBottom: '1.85vh' }}>
                             <CardContent>
                                 <Typography gutterBottom variant="h3" component="div" textAlign="center">
@@ -54,25 +54,25 @@ export default function ProjectsListPage({ purpose = "inside" }) {
                             </Box>
                             <CardContent>
                             </CardContent>
-                            </Card>
-                        </>
-                    ) : (
-                        <>
-                            <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginBottom: '1.85vh', marginTop: '1.85vh' }}>
-                                <CardContent>
-                                    <Typography gutterBottom variant="h3" component="div" textAlign="center">
-                                        Сторонние проекты
-                                    </Typography>
-                                </CardContent>
-                                <Box sx={{ display: "flex", justifyContent: "center" }}>
-                                    <InvitationDialog />
-                                </Box>
-                                <CardContent>
-                                </CardContent>
-                            </Card>
-                        </>
-                    )}
-                
+                        </Card>
+                    </>
+                ) : (
+                    <>
+                        <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginBottom: '1.85vh', marginTop: '1.85vh' }}>
+                            <CardContent>
+                                <Typography gutterBottom variant="h3" component="div" textAlign="center">
+                                    Сторонние проекты
+                                </Typography>
+                            </CardContent>
+                            <Box sx={{ display: "flex", justifyContent: "center" }}>
+                                <InvitationDialog />
+                            </Box>
+                            <CardContent>
+                            </CardContent>
+                        </Card>
+                    </>
+                )}
+
             </Box>
             <Box sx={{ maxWidth: "51.05vw" }}>
                 <Grid container spacing="1.85vh">

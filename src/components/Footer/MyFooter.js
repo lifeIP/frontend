@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 export default function MyFooter() {
     return(
         <Box>
-            <h1>Footer</h1>
+            <h1>Darkup</h1>
         </Box>
     );
 }

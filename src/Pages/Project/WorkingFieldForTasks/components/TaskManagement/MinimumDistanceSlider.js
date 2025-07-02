@@ -56,10 +56,13 @@ export default function MinimumDistanceSlider() {
         getAriaValueText={valuetext}
         disableSwap
       />
+      <Typography>Всего размеченных фотографий: {imageCount}</Typography>
       <Typography>train: {value1[0]}%, test: {value1[1]-value1[0]}%, valid: {100 - value1[1]}%</Typography>
       <Typography>train: {Math.ceil(imageCount*(Number(value1[0]/100)))}, 
         test: {Math.floor(imageCount*(Number((value1[1]-value1[0])/100)))}, 
-        valid: {(imageCount - Math.ceil(imageCount*(Number(value1[0]/100))) - Math.floor(imageCount*(Number((value1[1]-value1[0])/100))))}</Typography>
+        valid: {(imageCount - Math.ceil(imageCount*(Number(value1[0]/100))) - 
+        Math.floor(imageCount*(Number((value1[1]-value1[0])/100))))}</Typography>
+    
     </Box>
   );
 }
