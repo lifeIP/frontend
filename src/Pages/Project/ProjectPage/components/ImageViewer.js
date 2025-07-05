@@ -10,7 +10,6 @@ import { useNavigate } from "react-router";
 
 
 
-
 const ImageViewer = ({ image_id }) => {
     const navigate = useNavigate();
 

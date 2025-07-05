@@ -12,7 +12,7 @@ import ListOfMembers from './components/ListOfMembers';
 
 
 import PhotoPagination from './components/PhotoPagination';
-import DatasetPage from '../DatasetPage/DatasetPage';
+import OverviewDataSet from './components/OverviewDataSet/OverviewDataSet';
 
 export default function ProjectPage() {
     const navigate = useNavigate()
@@ -310,24 +310,7 @@ export default function ProjectPage() {
             ) :
                 (<></>)
             }
-            {value == 2 ? (
-                <>
-                    {
-                        JSON.parse(localStorage.getItem("user_rights")) <= 1 ? (
-                            <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginTop: '1.85vh' }}>
-                                <CardContent>
-                                    <Typography gutterBottom variant="h3" component="div" textAlign="center">
-                                        Набор данных
-                                    </Typography>
-                                </CardContent>
-                                <DatasetPage />
-                            </Card>) : (<></>)
-
-                    }
-                </>
-            ) :
-                (<></>)
-            }
+            {value == 2 ? (<OverviewDataSet/>):(<></>)}
             {value == 3 ? (
                 <>
                     {
