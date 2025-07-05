@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup, Card, CardActionArea, CardContent, CardMedia, Fab, Grid, Icon, Typography } from '@mui/material';
+import { Box, Button, ButtonGroup, Card, CardActionArea, CardContent, CardMedia, Fab, Grid, Icon, Tab, Tabs, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from "react-router";
@@ -19,7 +19,6 @@ const ImageViewer = ({ image_id }) => {
     const [imagePurpose, setImagePurpose] = useState(0);
 
     const imageRef = useRef(null);
-    // const [isLoading, setLoading] = useState(true);
     const [image, setImage] = useState();
 
     async function getImagePurpose() {
@@ -61,15 +60,13 @@ const ImageViewer = ({ image_id }) => {
 
     }, [image_id]);
 
-    useEffect(()=>{
+    useEffect(() => {
         getImagePurpose();
     }, []);
 
     return (
         <Box position="relative">
-
             <Card>
-                
                 <CardActionArea
                     onClick={() => {
                         localStorage.setItem("working-field-image-id", image_id);
@@ -93,9 +90,9 @@ const ImageViewer = ({ image_id }) => {
                     />
                 </CardActionArea>
                 <Box position="absolute" top="8px" right="8px">
-                {imagePurpose==1?(<Icon sx={{ color: "#7cfc00" }}><SchoolOutlinedIcon/></Icon>):(<></>)}
-                {imagePurpose==2?(<Icon sx={{ color: "#00008b" }}><BiotechOutlinedIcon/></Icon>):(<></>)}
-                {imagePurpose==3?(<Icon sx={{ color: "#f3da0b" }}><RuleOutlinedIcon/></Icon>):(<></>)}
+                    {imagePurpose == 1 ? (<Icon sx={{ color: "#7cfc00" }}><SchoolOutlinedIcon /></Icon>) : (<></>)}
+                    {imagePurpose == 2 ? (<Icon sx={{ color: "#00008b" }}><BiotechOutlinedIcon /></Icon>) : (<></>)}
+                    {imagePurpose == 3 ? (<Icon sx={{ color: "#f3da0b" }}><RuleOutlinedIcon /></Icon>) : (<></>)}
                 </Box>
             </Card>
         </Box>
@@ -105,8 +102,13 @@ const ImageViewer = ({ image_id }) => {
 
 export default function OverviewDataSet() {
     const [totalPhotos, setTotalPhotos] = useState(0);
-    const [unwrap, setUnwrap] = useState(false);
     const [listImages, setListImages] = useState([]);
+
+    const [value, setValue] = React.useState(0);
+    // Обработчик изменения активной вкладки
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
 
     async function getListOfImages(project_id, startIndex) {
         if (startIndex == 0) return;
@@ -117,26 +119,22 @@ export default function OverviewDataSet() {
             const res = await axios.get(`${settings.server.addr}${url}`);
 
             if (res.status === 200 || res.status === 201) {
-                // setUnwrap(false);
                 setListImages(res.data.ids);
                 setTotalPhotos(res.data.total_images_count)
                 localStorage.setItem("list_of_ids_images", JSON.stringify({ startIndex: startIndex, ids: res.data.ids }));
-                setUnwrap(true);
             } else {
                 // throw new Error('Ошибка при отправке данных');
             }
         } catch (err) {
             console.error(err);
-            // throw err;
         }
     }
 
 
     useEffect(() => {
-        if (unwrap) {
-            getListOfImages(localStorage.getItem("last_project_id"), 1);
-        }
-    }, [unwrap]);
+        getListOfImages(localStorage.getItem("last_project_id"), 1);
+        
+    }, []);
     const photosPerPage = 50;
     const pagesCount = Math.ceil(totalPhotos / photosPerPage) + 1; // Всего страниц
 
@@ -164,60 +162,58 @@ export default function OverviewDataSet() {
         {
             JSON.parse(localStorage.getItem("user_rights")) <= 1 ? (
                 <>
-                <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginTop: '1.85vh' }}>
-                    <CardContent>
-                        <Typography gutterBottom variant="h3" component="div" textAlign="center">
-                            Набор данных
-                        </Typography>
-                    </CardContent>
-                    <CardContent>
-                            <Box sx={{ display: "flex", justifyContent: "center" }}>
-                                <Fab size="medium" aria-label="Развернуть список" sx={{ marginLeft: "10px" }} onClick={() => { setUnwrap(!unwrap) }}>
-                                    {unwrap ? <KeyboardArrowUpOutlinedIcon /> : <KeyboardArrowDownOutlinedIcon />}
-                                </Fab>
-                            </Box>
+                    <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginTop: '1.85vh' }}>
+                        <CardContent>
+                            <Typography gutterBottom variant="h3" component="div" textAlign="center">
+                                Набор данных
+                            </Typography>
                         </CardContent>
-                </Card>
+                    </Card>
                     <>
-                        {unwrap ? (
-                            <>
-                                <Card sx={{ borderRadius: "12px", width: "51.05vw", marginTop: '1.85vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                    <CardContent>
-                                        <ButtonGroup variant="contained" color="primary" aria-label="pagination buttons group">
-                                            <Button disabled={currentPage <= 1} onClick={previousPage}>Назад</Button>
-                                            <Button disabled={currentPage >= pagesCount - 1} onClick={nextPage}>Вперед</Button>
-                                        </ButtonGroup>
-                                    </CardContent>
-                                    <Typography variant="h6" gutterBottom>
-                                        Фото: {startPhotoNumber}/{startPhotoNumber + JSON.parse(localStorage.getItem("list_of_ids_images")).ids.length - 2} из {totalPhotos}
-                                    </Typography>
+                        <Card sx={{ width: "51.05vw", marginTop: '1.85vh' }}>
+                            <Box alignItems="center" justifyContent="center" display="flex">
+                                <Tabs value={value} onChange={handleChange}>
+                                    <Tab label="Ваши проекты" variant="" />
+                                    <Tab label="Исходные данные" />
+                                </Tabs>
+                            </Box>
+                        </Card>
+                        {value == 0 ? (<></>) : (<></>)}
+                        {value == 1 ? (<>
+                            <Card sx={{ borderRadius: "12px", width: "51.05vw", marginTop: '1.85vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                <CardContent>
+                                    <ButtonGroup variant="contained" color="primary" aria-label="pagination buttons group">
+                                        <Button disabled={currentPage <= 1} onClick={previousPage}>Назад</Button>
+                                        <Button disabled={currentPage >= pagesCount - 1} onClick={nextPage}>Вперед</Button>
+                                    </ButtonGroup>
+                                </CardContent>
+                                <Typography variant="h6" gutterBottom>
+                                    Фото: {startPhotoNumber}/{startPhotoNumber + JSON.parse(localStorage.getItem("list_of_ids_images")).ids.length - 2} из {totalPhotos}
+                                </Typography>
 
-                                </Card>
-                                <Box sx={{ width: "51.05vw" }}>
-                                    <Grid container spacing={1} sx={{ marginTop: '1vh' }}>
-                                        {listImages.map((id) => (
-                                            <Grid size={3}>
-                                                <ImageViewer image_id={id} setCanvasSize={() => { }} />
-                                            </Grid>
-                                        ))}
-                                    </Grid>
-                                </Box>
-                                <Card sx={{ borderRadius: "12px", width: "51.05vw", marginTop: '1.85vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                    <CardContent>
-                                        <ButtonGroup variant="contained" color="primary" aria-label="pagination buttons group">
-                                            <Button disabled={currentPage <= 1} onClick={previousPage}>Назад</Button>
-                                            <Button disabled={currentPage >= pagesCount - 1} onClick={nextPage}>Вперед</Button>
-                                        </ButtonGroup>
-                                    </CardContent>
-                                    <Typography variant="h6" gutterBottom>
-                                        Фото: {startPhotoNumber}/{startPhotoNumber + JSON.parse(localStorage.getItem("list_of_ids_images")).ids.length - 2} из {totalPhotos}
-                                    </Typography>
+                            </Card>
+                            <Box sx={{ width: "51.05vw" }}>
+                                <Grid container spacing={1} sx={{ marginTop: '1vh' }}>
+                                    {listImages.map((id) => (
+                                        <Grid size={3}>
+                                            <ImageViewer image_id={id} setCanvasSize={() => { }} />
+                                        </Grid>
+                                    ))}
+                                </Grid>
+                            </Box>
+                            <Card sx={{ borderRadius: "12px", width: "51.05vw", marginTop: '1.85vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                <CardContent>
+                                    <ButtonGroup variant="contained" color="primary" aria-label="pagination buttons group">
+                                        <Button disabled={currentPage <= 1} onClick={previousPage}>Назад</Button>
+                                        <Button disabled={currentPage >= pagesCount - 1} onClick={nextPage}>Вперед</Button>
+                                    </ButtonGroup>
+                                </CardContent>
+                                <Typography variant="h6" gutterBottom>
+                                    Фото: {startPhotoNumber}/{startPhotoNumber + JSON.parse(localStorage.getItem("list_of_ids_images")).ids.length - 2} из {totalPhotos}
+                                </Typography>
 
-                                </Card>
-                            </>
-                        ) : (
-                            <></>
-                        )}
+                            </Card>
+                        </>) : (<></>)}
                     </>
                 </>) : (<></>)
         }

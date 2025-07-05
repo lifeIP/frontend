@@ -11,12 +11,12 @@ import InvitationDialog from './components/InvitationDialog';
 export default function ProjectsPage() {
 
     const [value, setValue] = React.useState(0);
-    
-        // Обработчик изменения активной вкладки
-        const handleChange = (event, newValue) => {
-            setValue(newValue);
-        };
-    
+
+    // Обработчик изменения активной вкладки
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
+
     return (
         <Center>
             <Hat>

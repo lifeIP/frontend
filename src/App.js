@@ -88,16 +88,6 @@ function App() {
       );
     
   }
-  function RenderFooter() {
-    
-      return (
-        <Box marginBottom="1.85vh" sx={{bottom: 0, position: "absolute"}}>
-          <Footer />
-        </Box>
-      );
-    
-  }
-
 
   return (
     <ThemeProvider theme={selectedTheme}>
@@ -196,9 +186,7 @@ function App() {
 
         </Routes>
       </BrowserRouter>
-      <Box sx={{position: "fixed", bottom: 0}}>
-        <Footer/>
-      </Box>
+      <Footer/>
       <CssBaseline />
     </ThemeProvider>
   );

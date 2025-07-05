@@ -15,7 +15,7 @@ export default function HomePage() {
                 </Typography>
             </Hat>
 
-            <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px", marginBottom: '1.85vh' }}>
+            <Card sx={{ borderRadius: "12px", width: "51.05vw", minHeight: "100px" }}>
                 <CardContent>
                     <Typography variant="h4" component="div" gutterBottom align="center">
                         Простое решение для разметки изображений
