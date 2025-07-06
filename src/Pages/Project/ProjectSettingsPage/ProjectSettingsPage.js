@@ -210,7 +210,7 @@ export default function ProjectSettingsPage() {
                     </Grid>
                 </Grid>
             </Box>
-            <Box sx={{ display: "flex", justifyContent: "center", marginTop: '1.85vh', marginBottom: '1.85vh' }}>
+            <Box sx={{ display: "flex", justifyContent: "center", marginTop: '1.85vh' }}>
                 <ProjectMainSetting rows={rows} setRows={setRows} />
             </Box>
         </Center>

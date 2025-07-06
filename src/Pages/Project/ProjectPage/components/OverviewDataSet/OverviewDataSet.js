@@ -12,6 +12,7 @@ import settings from '../../../../../settings.json'
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import RuleOutlinedIcon from '@mui/icons-material/RuleOutlined';
 import BiotechOutlinedIcon from '@mui/icons-material/BiotechOutlined';
+import ListDatasetVersion from './ListDatasetVersion';
 
 const ImageViewer = ({ image_id }) => {
     const navigate = useNavigate();
@@ -173,12 +174,14 @@ export default function OverviewDataSet() {
                         <Card sx={{ width: "51.05vw", marginTop: '1.85vh' }}>
                             <Box alignItems="center" justifyContent="center" display="flex">
                                 <Tabs value={value} onChange={handleChange}>
-                                    <Tab label="Ваши проекты" variant="" />
+                                    <Tab label="Версии набора данных" variant="" />
                                     <Tab label="Исходные данные" />
                                 </Tabs>
                             </Box>
                         </Card>
-                        {value == 0 ? (<></>) : (<></>)}
+                        {value == 0 ? (<>
+                        <ListDatasetVersion/>
+                        </>) : (<></>)}
                         {value == 1 ? (<>
                             <Card sx={{ borderRadius: "12px", width: "51.05vw", marginTop: '1.85vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                 <CardContent>
@@ -211,7 +214,6 @@ export default function OverviewDataSet() {
                                 <Typography variant="h6" gutterBottom>
                                     Фото: {startPhotoNumber}/{startPhotoNumber + JSON.parse(localStorage.getItem("list_of_ids_images")).ids.length - 2} из {totalPhotos}
                                 </Typography>
-
                             </Card>
                         </>) : (<></>)}
                     </>
