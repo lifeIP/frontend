@@ -23,6 +23,7 @@ import ProjectSettingsPage from "./Pages/Project/ProjectSettingsPage/ProjectSett
 import ProjectsPage from "./Pages/Project/ProjectsPage/ProjectsPage";
 import WorkingFieldForTasks from "./Pages/Project/WorkingFieldForTasks/WorkingPage";
 import Footer from "./components/Footer/MyFooter";
+import VersionGeneration from "./Pages/Project/VersionGeneration/VersionGeneration";
 
 
 const lightTheme = createTheme({
@@ -133,6 +134,11 @@ function App() {
             <Route path="/upload-images" element={
               <div>
                 <UploadImagesPage />
+              </div>}
+            />
+            <Route path="/version-generation" element={
+              <div>
+                <VersionGeneration />
               </div>}
             />
           </>

@@ -13,7 +13,7 @@ export default function ListDatasetVersion() {
             <Card sx={{ borderRadius: "12px", width: "51.05vw", marginTop: '1.85vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <CardContent>
                     <Box sx={{ display: "flex", justifyContent: "center" }}>
-                        <Fab size="medium" aria-label="добавить фото в проект" onClick={() => { navigate("/upload-images") }}>
+                        <Fab size="medium" aria-label="добавить фото в проект" onClick={() => { navigate("/version-generation") }}>
                             <AddIcon />
                         </Fab>
                     </Box>
