@@ -1,7 +1,8 @@
 import React from 'react';
 import Center from '../../../components/Center/Center';
 import Hat from '../../../components/Hat/Hat';
-import { Card, CardContent, Typography } from '@mui/material';
+import { Button, Card, CardContent, Typography } from '@mui/material';
+import ParticipatingClasses from './components/ParticipatingClasses';
 
 
 export default function VersionGeneration() {
@@ -14,15 +15,10 @@ export default function VersionGeneration() {
                 </Typography>
             </Hat>
 
-            <Card sx={{ borderRadius: "12px", width: "51.05vw", marginBottom: '1.85vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <CardContent>
-                    <Typography gutterBottom variant="h3" component="div" textAlign="center">
-                        Участвующие классы
-                    </Typography>
-                </CardContent>
-            </Card>
+           
+            <ParticipatingClasses/>
 
-            <Card sx={{ borderRadius: "12px", width: "51.05vw", marginBottom: '1.85vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            {/* <Card sx={{ borderRadius: "12px", width: "51.05vw", marginBottom: '1.85vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <CardContent>
                     <Typography gutterBottom variant="h3" component="div" textAlign="center">
                         Ребалансировка классов train/test/valid
@@ -100,7 +96,8 @@ export default function VersionGeneration() {
                         Яркость
                     </Typography>
                 </CardContent>
-            </Card>
+            </Card> */}
+            <Button variant='contained' fullWidth>Сгенерировать датасет</Button>
         </Center>
     );
 }
