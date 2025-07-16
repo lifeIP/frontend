@@ -89,13 +89,33 @@ function SomePie() {
     const otherProps = {
         width: 450,
         height: 250,
-        sx: {
-            [`.${legendClasses.root}`]: {
-                transform: 'translate(30px, 0)',
-            },
-        },
     };
 
+
+    async function getSeries(project_id) {
+        let url = "/get_series_for_pie/" + project_id;
+
+        try {
+            axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+            const res = await axios.get(`${settings.server.addr}${url}`);
+
+            if (res.status === 200 || res.status === 201) {
+                // setSeries(res.data.series);
+                console.log(res.data)
+                let data = []
+                res.data.map((item)=>{
+                    data.push({value: 25, label: item.class_name, color: item.class_color});
+                });
+                setSeries([{data: data}]);
+            } else {
+            }
+        } catch (err) {
+            // console.error(err);
+        }
+    }
+    useEffect(() => {
+        getSeries(localStorage.getItem("last_project_id"));
+    }, []);
 
     return (
         <Box sx={{ height: 300, width: 350, display: "flex", justifyContent: "center" }}>
