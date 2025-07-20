@@ -4,6 +4,7 @@ import Hat from '../../../components/Hat/Hat';
 import { Button, Card, CardContent, Typography } from '@mui/material';
 import ParticipatingClasses from './components/ParticipatingClasses';
 import RebalancingClasses from './components/RebalancingClasses';
+import PreProcessing from './components/PreProcessing';
 
 
 
@@ -19,15 +20,8 @@ export default function VersionGeneration() {
 
             <ParticipatingClasses/>
             <RebalancingClasses/>
-
-            {/* <Card sx={{ borderRadius: "12px", width: "51.05vw", marginBottom: '1.85vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <CardContent>
-                    <Typography gutterBottom variant="h3" component="div" textAlign="center">
-                        Ребалансировка классов train/test/valid
-                    </Typography>
-                </CardContent>
-            </Card>
-
+            <PreProcessing/>
+            {/* 
             <Card sx={{ borderRadius: "12px", width: "51.05vw", marginBottom: '1.85vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <CardContent>
                     <Typography gutterBottom variant="h3" component="div" textAlign="center">
