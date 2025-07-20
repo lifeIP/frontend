@@ -99,12 +99,12 @@ function SomeClass({ id, class_name, class_color, class_description, class_count
                     </Box>
                 }
             />
-            <ListSubheader>
+            {/* <ListSubheader> */}
                 <Checkbox
                     checked={checked}
                     onChange={handleChange}
                 />
-            </ListSubheader>
+            {/* </ListSubheader> */}
         </>
     );
 }
