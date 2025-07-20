@@ -77,7 +77,6 @@ function SomeClass({ id, class_name, class_color, class_description, class_count
                 secondary={
                     <Box
                         sx={{
-                            minWidth: "40vw"
                         }}>
                         <Typography variant="body2" color="text.secondary" >
                             {class_description != "" ? class_description : "Нет описания"}
@@ -133,13 +132,13 @@ function SomePie({ listOfClasses, hideClass, is_load }) {
         console.log(hideClass)
         console.log(listOfClasses)
         listOfClasses.map((item) => {
-            if(hideClass?.filter((item2) => item2 == item.class_id).length == 0){
-            data.push(
-                {
-                    value: item.class_count,
-                    label: item.class_name,
-                    color: item.class_color
-                });
+            if (hideClass?.filter((item2) => item2 == item.class_id).length == 0) {
+                data.push(
+                    {
+                        value: item.class_count,
+                        label: item.class_name,
+                        color: item.class_color
+                    });
             }
 
         });
@@ -195,16 +194,19 @@ export default function ParticipatingClasses() {
                 borderRadius: "12px",
                 width: "51.05vw",
                 marginBottom: '1.85vh',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center'
             }}>
             <CardContent>
                 <Typography gutterBottom variant="h3" component="div" textAlign="center">
                     Участвующие классы
                 </Typography>
             </CardContent>
+            <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center'
+            }}>
             <SomePie listOfClasses={listOfClasses} hideClass={hideClass} is_load={true} />
+            </Box>
             <CardContent>
                 <List disablePadding
                     sx={{

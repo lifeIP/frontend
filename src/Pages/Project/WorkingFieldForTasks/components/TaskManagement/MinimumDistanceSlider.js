@@ -6,7 +6,7 @@ import axios from 'axios';
 import settings from '../../../../../settings.json';
 
 function valuetext(value) {
-  return `${value}°C`;
+  return `${value}%`;
 }
 
 const minDistance = 0;

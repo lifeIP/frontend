@@ -3,6 +3,8 @@ import Center from '../../../components/Center/Center';
 import Hat from '../../../components/Hat/Hat';
 import { Button, Card, CardContent, Typography } from '@mui/material';
 import ParticipatingClasses from './components/ParticipatingClasses';
+import RebalancingClasses from './components/RebalancingClasses';
+
 
 
 export default function VersionGeneration() {
@@ -15,8 +17,8 @@ export default function VersionGeneration() {
                 </Typography>
             </Hat>
 
-           
             <ParticipatingClasses/>
+            <RebalancingClasses/>
 
             {/* <Card sx={{ borderRadius: "12px", width: "51.05vw", marginBottom: '1.85vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <CardContent>
