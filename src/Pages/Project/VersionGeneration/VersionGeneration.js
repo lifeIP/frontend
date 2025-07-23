@@ -7,6 +7,23 @@ import RebalancingClasses from './components/RebalancingClasses';
 import PreProcessing from './components/PreProcessing';
 
 
+function ListOfActions() {
+
+    return (<>
+        <Card
+            sx={{
+                borderRadius: "12px",
+                width: "51.05vw",
+                marginBottom: '1.85vh',
+            }}>
+            <CardContent>
+                <Typography gutterBottom variant="h3" component="div" textAlign="center">
+                    Список действий
+                </Typography>
+            </CardContent>
+        </Card>
+    </>);
+}
 
 export default function VersionGeneration() {
 
@@ -18,33 +35,12 @@ export default function VersionGeneration() {
                 </Typography>
             </Hat>
 
-            <ParticipatingClasses/>
-            <RebalancingClasses/>
-            <PreProcessing/>
+            <ParticipatingClasses />
+            <RebalancingClasses />
+            <PreProcessing />
+            <ListOfActions />
             {/* 
-            <Card sx={{ borderRadius: "12px", width: "51.05vw", marginBottom: '1.85vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <CardContent>
-                    <Typography gutterBottom variant="h3" component="div" textAlign="center">
-                        Изоляция объектов в отдельном кадре
-                    </Typography>
-                </CardContent>
-            </Card>
-
-            <Card sx={{ borderRadius: "12px", width: "51.05vw", marginBottom: '1.85vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <CardContent>
-                    <Typography gutterBottom variant="h3" component="div" textAlign="center">
-                        Изменение размеров
-                    </Typography>
-                </CardContent>
-            </Card>
-
-            <Card sx={{ borderRadius: "12px", width: "51.05vw", marginBottom: '1.85vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <CardContent>
-                    <Typography gutterBottom variant="h3" component="div" textAlign="center">
-                        grayscale
-                    </Typography>
-                </CardContent>
-            </Card>
+            
 
             <Card sx={{ borderRadius: "12px", width: "51.05vw", marginBottom: '1.85vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <CardContent>
