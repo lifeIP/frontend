@@ -381,12 +381,15 @@ export default function SmartMarkup({ project_id, taskId }) {
                     setEdit={setEdit}
                     setStateEditing={setStateEditing}
                     onLeftButtonClicked={() => {
-                        console.log("left")
+                        // console.log("left")
                         leftButtonClicked();
                     }}
                     onRightButtonClicked={() => {
-                        console.log("right")
+                        // console.log("right")
                         rightButtonClicked();
+                    }}
+                    onFullscreenButtonCliked={()=>{
+                        
                     }}
                 />
                 <ClassesList

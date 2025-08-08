@@ -15,7 +15,7 @@ import PolylineOutlinedIcon from '@mui/icons-material/PolylineOutlined';
 import FullscreenOutlinedIcon from '@mui/icons-material/FullscreenOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
-export default function Actions({setMaskType, setEdit, setStateEditing, onRightButtonClicked=()=>{}, onLeftButtonClicked=()=>{}}) {
+export default function Actions({setMaskType, setEdit, setStateEditing, onRightButtonClicked=()=>{}, onLeftButtonClicked=()=>{}, onFullscreenButtonCliked=()=>{}}) {
     return (
         <Box sx={{
             position: 'fixed',
@@ -60,7 +60,8 @@ export default function Actions({setMaskType, setEdit, setStateEditing, onRightB
                             setEdit(false);
                         }}><ArrowForwardIosOutlinedIcon /></IconButton>
                         
-                        <IconButton disabled onClick={() => {
+                        <IconButton onClick={() => {
+                            onFullscreenButtonCliked();
                         }}><FullscreenOutlinedIcon /></IconButton>
                     </Box>
                 </CardActions>

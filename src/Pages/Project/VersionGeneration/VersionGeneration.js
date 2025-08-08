@@ -5,6 +5,8 @@ import { Button, Card, CardContent, Typography } from '@mui/material';
 import ParticipatingClasses from './components/ParticipatingClasses';
 import RebalancingClasses from './components/RebalancingClasses';
 import PreProcessing from './components/PreProcessing';
+import { ActionsContext } from './VersionGenerationContext';
+import VersionGenerationContextProvider from './VersionGenerationContextProvider';
 
 
 function ListOfActions() {
@@ -26,7 +28,7 @@ function ListOfActions() {
 }
 
 export default function VersionGeneration() {
-
+    
     return (
         <Center>
             <Hat>
@@ -34,11 +36,12 @@ export default function VersionGeneration() {
                     Генерация версий датасета
                 </Typography>
             </Hat>
-
-            <ParticipatingClasses />
-            <RebalancingClasses />
-            <PreProcessing />
-            <ListOfActions />
+            <VersionGenerationContextProvider>
+                <ParticipatingClasses />
+                <RebalancingClasses />
+                <PreProcessing />
+                <ListOfActions />
+            </VersionGenerationContextProvider>
             {/* 
             
 

@@ -24,6 +24,7 @@ import ProjectsPage from "./Pages/Project/ProjectsPage/ProjectsPage";
 import WorkingFieldForTasks from "./Pages/Project/WorkingFieldForTasks/WorkingPage";
 import Footer from "./components/Footer/MyFooter";
 import VersionGeneration from "./Pages/Project/VersionGeneration/VersionGeneration";
+import DatasetGenerationGame from "./Pages/DatasetGenerationGame/DatasetGenerationGame";
 
 
 const lightTheme = createTheme({
@@ -140,6 +141,17 @@ function App() {
               <div>
                 <VersionGeneration />
               </div>}
+            />
+            <Route path="/markup_fullscreen" element={
+              <Box sx={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100vw",
+                height: "100vh"
+              }}>
+                <DatasetGenerationGame />
+              </Box>}
             />
           </>
           {/* Работа с проектом */}

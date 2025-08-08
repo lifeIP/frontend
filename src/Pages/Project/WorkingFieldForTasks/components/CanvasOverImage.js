@@ -160,9 +160,6 @@ const CanvasOverImage = ({ maskType, edit, data_markup_classes, currentClass, cu
                 rect_pos_y = mouse_pos_y;
             }
         }
-
-
-
     };
 
     const handleLeftButtonReleased = (event) => {

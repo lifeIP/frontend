@@ -219,7 +219,7 @@ export default function ParticipatingClasses() {
                     {listOfClasses.map((item) =>
                         <ListItem
                             divider
-                            key={item.id}
+                            key={item.class_id}
                         >
                             <SomeClass id={item.class_id}
                                 class_name={item.class_name}
