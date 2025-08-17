@@ -5,9 +5,6 @@ import markUpStore from "./store/store";
 import {
     TransformWrapper,
     TransformComponent,
-    useControls,
-    useTransformEffect,
-    useTransformContext
 } from "react-zoom-pan-pinch";
 import Actions from './Actions/Actions';
 
@@ -18,8 +15,10 @@ function MarkUpPage() {
     const [resizedFlag, setResizedFlag] = useState(false);
 
     const [stateEditing, setStateEditing] = useState(true);
-    const [isActive, setIsActive] = useState(false);
 
+    const [currentScale, setCurrentScale] = useState(1);
+    const [currentPositionOffsetX, setCurrentPositionOffsetX] = useState(0);
+    const [currentPositionOffsetY, setCurrentPositionOffsetY] = useState(0);
 
     let mouse_pos_x = -1;
     let mouse_pos_y = -1;
@@ -32,17 +31,22 @@ function MarkUpPage() {
 
         mouse_pos_x = relativeX;
         mouse_pos_y = relativeY;
-        drawCanvas(!stateEditing);
+
+        drawCanvas();
     };
 
     function handleMouseButtonPressed(event) {
-        
+
         // Нажата левая кнопка мыши
-        if (event.button === 0){
+        if (event.button === 0) {
 
             // Курсор мыши должен находиться внутри фотографии
-            if(inBox()){
-                markUpStore.addPoligonPoint(mouse_pos_x, mouse_pos_y);
+            if (inBox()) {
+
+                markUpStore.addPoligonPoint(
+                    (mouse_pos_x - currentPositionOffsetX)/ currentScale,
+                    (mouse_pos_y - currentPositionOffsetY)/ currentScale
+                );
             }
         }
     }
@@ -56,24 +60,21 @@ function MarkUpPage() {
         setResizedFlag(true);
     };
 
-    function handleWheelScroll(event) {
-        console.log(event.deltaY);
-    }
 
-    function drawCanvas(isEdit) {
+    function drawCanvas() {
         if (canvasRef.current) {
             const context = canvasRef.current.getContext('2d');
-            
+
             context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
             context.lineWidth = 1.8;
 
-        
+
             drawCordinateRuler(context);
-            drawNewPoligon(context);
-        
+            // drawNewPoligon(context);
+
 
             // Рисование линий для более удобной навигации по фотографии(крестик)
-            function drawCordinateRuler(context){
+            function drawCordinateRuler(context) {
                 const path1 = new Path2D();
                 context.strokeStyle = "#000000";
 
@@ -86,67 +87,64 @@ function MarkUpPage() {
                 context.stroke(path1);
             }
 
-            function drawNewPoligon(context){
-                const path1 = new Path2D();
-                context.strokeStyle = "#4aff02ff";
-                markUpStore.poligon_points.map((point, index) => {
-                    if (index == 0) {
-                        path1.moveTo(point.x, point.y);
-                    }
-                    path1.lineTo(point.x, point.y);
-                    path1.moveTo(point.x, point.y);
-                    context.fillRect(point.x - 3, point.y - 3, 6, 6);
-                })
-                if (mouse_pos_x > 0 || mouse_pos_y > 0) {
-                    path1.lineTo(mouse_pos_x, mouse_pos_y);
-                    path1.moveTo(mouse_pos_x, mouse_pos_y);
-                    context.fillRect(mouse_pos_x - 3, mouse_pos_y - 3, 6, 6);
+
+            const path1 = new Path2D();
+            context.strokeStyle = "#4aff02ff";
+            markUpStore.poligon_points.map((point, index) => {
+                if (index == 0) {
+                    path1.moveTo(point.x * currentScale + currentPositionOffsetX, point.y * currentScale + currentPositionOffsetY);
                 }
-                path1.closePath();
-                context.stroke(path1);
+                path1.lineTo(point.x * currentScale + currentPositionOffsetX, point.y * currentScale + currentPositionOffsetY);
+                path1.moveTo(point.x * currentScale + currentPositionOffsetX, point.y * currentScale + currentPositionOffsetY);
+                context.fillRect(point.x * currentScale + currentPositionOffsetX - 3, point.y * currentScale + currentPositionOffsetY - 3, 6, 6);
+            })
+            if (mouse_pos_x > 0 || mouse_pos_y > 0) {
+                path1.lineTo(mouse_pos_x, mouse_pos_y);
+                path1.moveTo(mouse_pos_x, mouse_pos_y);
+                context.fillRect(mouse_pos_x - 3, mouse_pos_y - 3, 6, 6);
             }
+            path1.closePath();
+            context.stroke(path1);
+
         }
     };
 
     function inBox() {
         const rect = imageRef.current.getBoundingClientRect()
 
-        if(rect.left > mouse_pos_x){
+        if (rect.left > mouse_pos_x) {
             return false;
         }
-        if(rect.top > mouse_pos_y){
+        if (rect.top > mouse_pos_y) {
             return false;
         }
-        if(rect.right < mouse_pos_x){
+        if (rect.right < mouse_pos_x) {
             return false;
         }
-        if(rect.bottom < mouse_pos_y){
+        if (rect.bottom < mouse_pos_y) {
             return false;
         }
         return true;
     }
 
 
-
     useEffect(() => {
-        if(resizedFlag){
+        if (resizedFlag) {
             setResizedFlag(false);
         }
         document.addEventListener('mousemove', handleMouseMove);
         document.addEventListener('mouseup', handleMouseButtonReleased);
         document.addEventListener('mousedown', handleMouseButtonPressed);
         document.addEventListener('resize', handleResize);
-        document.addEventListener('wheel', handleWheelScroll);
         return () => {
             document.removeEventListener('mousemove', handleMouseMove);
             document.removeEventListener('mouseup', handleMouseButtonReleased);
             document.removeEventListener('mousedown', handleMouseButtonPressed);
             document.removeEventListener('resize', handleResize);
-            // document.removeEventListener('wheel', handleWheelScroll);
         };
-    }, [resizedFlag]);
+    }, [resizedFlag, currentScale, currentPositionOffsetX, currentPositionOffsetY]);
 
-    
+
 
     const activeStyles = {
         position: 'absolute',
@@ -177,19 +175,32 @@ function MarkUpPage() {
                     justifyContent: "center",
                 }}>
                     <Actions
-                        setEdit={() => {}}
+                        setEdit={() => { }}
                         setStateEditing={(flag) => {
                             setStateEditing(flag);
                         }}
-                        setMaskType={() => {}}
+                        setMaskType={() => { }}
                     />
                 </Box>
             </Box>
 
             <TransformWrapper
                 disabled={stateEditing}
+                onTransformed={(e) => {
+                    setCurrentScale(e.state.scale);
+                    setCurrentPositionOffsetX(e.state.positionX);
+                    setCurrentPositionOffsetY(e.state.positionY);
+                    // console.log(e.state);
+                }}
             >
+                  <canvas
+                    ref={canvasRef}
+                    width={window.innerWidth}
+                    height={window.innerHeight}
+                    style={activeStyles}
+                /> 
                 <TransformComponent>
+                   
                     <Box sx={{
                         width: "100vw",
                         height: "100vh",
@@ -225,12 +236,6 @@ function MarkUpPage() {
                         </Box>
                     </Box>
                 </TransformComponent>
-                <canvas
-                    ref={canvasRef}
-                    width={window.innerWidth}
-                    height={window.innerHeight}
-                    style={activeStyles}
-                />
             </TransformWrapper>
         </Box>
     </>

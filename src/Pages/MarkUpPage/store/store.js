@@ -11,6 +11,7 @@ class MarkUpStore {
     }
 
     addPoligonPoint(x, y){
+        console.log(x, y);
         this.poligon_points.push({
             x: x,
             y: y
