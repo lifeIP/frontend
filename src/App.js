@@ -24,7 +24,7 @@ import ProjectsPage from "./Pages/Project/ProjectsPage/ProjectsPage";
 import WorkingFieldForTasks from "./Pages/Project/WorkingFieldForTasks/WorkingPage";
 import Footer from "./components/Footer/MyFooter";
 import VersionGeneration from "./Pages/Project/VersionGeneration/VersionGeneration";
-import DatasetGenerationGame from "./Pages/DatasetGenerationGame/DatasetGenerationGame";
+import MarkUpPage from "./Pages/MarkUpPage/MarkUpPage";
 
 
 const lightTheme = createTheme({
@@ -150,7 +150,7 @@ function App() {
                 width: "100vw",
                 height: "100vh"
               }}>
-                <DatasetGenerationGame />
+                <MarkUpPage/>
               </Box>}
             />
           </>
