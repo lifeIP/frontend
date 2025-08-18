@@ -13,12 +13,13 @@ function MarkUpPage() {
     const imageRef = useRef(null);
 
     const [resizedFlag, setResizedFlag] = useState(false);
-
-    const [stateEditing, setStateEditing] = useState(true);
+    
 
     const [currentScale, setCurrentScale] = useState(1);
     const [currentPositionOffsetX, setCurrentPositionOffsetX] = useState(0);
     const [currentPositionOffsetY, setCurrentPositionOffsetY] = useState(0);
+
+
 
     let mouse_pos_x = -1;
     let mouse_pos_y = -1;
@@ -41,7 +42,8 @@ function MarkUpPage() {
         if (event.button === 0) {
 
             // Курсор мыши должен находиться внутри фотографии
-            if (inBox()) {
+            //console.log(!markUpStore.stateShiftPressed);
+            if (inBox() && !markUpStore.stateShiftPressed) {
                 if (mouse_pos_x == -1 || mouse_pos_y == -1) return;
                 if (markUpStore.poligon_points.length == 0) {
                     // markUpStore.initNewPoligon(
@@ -55,11 +57,6 @@ function MarkUpPage() {
                 );
             }
         }
-        else if (event.button === 2) {
-            markUpStore.clearPoligonPoints();
-        }
-        console.log(event.button);
-
     }
 
     function handleMouseButtonReleased(event) {
@@ -69,7 +66,7 @@ function MarkUpPage() {
     }
 
     function handleResize() {
-        console.log("resized");
+        //console.log("resized");
         setResizedFlag(true);
     };
 
@@ -82,7 +79,7 @@ function MarkUpPage() {
             context.lineWidth = 1.8;
 
 
-            drawCordinateRuler(context);
+            if(!markUpStore.stateShiftPressed)drawCordinateRuler(context);
             drawNewPoligon(context);
             drawAllPoligons(context);
 
@@ -140,8 +137,6 @@ function MarkUpPage() {
                     context.stroke(path1);
                 });
             }
-
-
         }
     }
 
@@ -164,9 +159,49 @@ function MarkUpPage() {
         return true;
     }
 
+
+
+    let lastRightClickTime = 0;
+    const DOUBLE_CLICK_THRESHOLD = 500;
+    function handleContextMenu(event) {
+        event.preventDefault();
+
+        const now = Date.now();
+        if (now - lastRightClickTime <= DOUBLE_CLICK_THRESHOLD) {
+            // Произошёл двойной клик правой кнопкой мыши
+            handleDoubleRightClick(event);
+        }
+
+        lastRightClickTime = now;
+    }
+
+    function handleDoubleRightClick(event) {
+        //console.log('Двойной клик правой кнопкой мыши:', event);
+        markUpStore.clearPoligonPoints();
+        // Ваша логика обработки двойного клика
+    }
+
+    function handleKeyDown(event) {
+        if (event.key === 'Shift') {
+            //console.log('Клавиша Shift нажата.');
+            markUpStore.setStateShiftPressed(true);
+            // Тут можно добавить логику, которая должна выполняться при удерживании Shift
+        }
+    }
+
+    function handleKeyUp(event) {
+        if (event.key === 'Shift') {
+            //console.log('Клавиша Shift отпущена.');
+            markUpStore.setStateShiftPressed(false);
+            // Тут можно добавить логику, которая должна выполняться после отпускания Shift
+        }
+    }
+
+
+
     useEffect(() => {
         drawCanvas();
-    }, [currentScale, currentPositionOffsetX, currentPositionOffsetY]);
+    }, [currentScale, currentPositionOffsetX, currentPositionOffsetY, markUpStore.poligon_points, markUpStore.stateShiftPressed]);
 
     useEffect(() => {
         if (resizedFlag) {
@@ -176,17 +211,17 @@ function MarkUpPage() {
         document.addEventListener('mouseup', handleMouseButtonReleased);
         document.addEventListener('mousedown', handleMouseButtonPressed);
         document.addEventListener('resize', handleResize);
-        document.addEventListener('contextmenu', (event) => {
-            event.preventDefault();
-        });
+        document.addEventListener('contextmenu', handleContextMenu);
+        document.addEventListener('keydown', handleKeyDown);
+        document.addEventListener('keyup', handleKeyUp);
         return () => {
             document.removeEventListener('mousemove', handleMouseMove);
             document.removeEventListener('mouseup', handleMouseButtonReleased);
             document.removeEventListener('mousedown', handleMouseButtonPressed);
             document.removeEventListener('resize', handleResize);
-            document.removeEventListener('contextmenu', (event) => {
-                event.preventDefault();
-            });
+            document.removeEventListener('contextmenu', handleContextMenu);
+            document.removeEventListener('keydown', handleKeyDown);
+            document.removeEventListener('keyup', handleKeyUp);
         };
     }, [resizedFlag, currentScale, currentPositionOffsetX, currentPositionOffsetY]);
 
@@ -220,18 +255,23 @@ function MarkUpPage() {
                     alignItems: "center",
                     justifyContent: "center",
                 }}>
-                    <Actions
-                        setEdit={() => { }}
-                        setStateEditing={(flag) => {
-                            setStateEditing(flag);
-                        }}
-                        setMaskType={() => { }}
-                    />
+                    {
+                        markUpStore.stateShiftPressed ? (
+                            <Actions
+                                setEdit={() => { }}
+                                setStateEditing={(flag) => {
+                                    // setStateEditing(flag);
+                                }}
+                                setMaskType={() => { }}
+                            />) : (
+                            <></>
+                        )
+                    }
                 </Box>
             </Box>
 
             <TransformWrapper
-                disabled={stateEditing}
+                disabled={!markUpStore.stateShiftPressed}
 
                 zoomAnimation={{
                     disabled: false,

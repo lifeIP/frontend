@@ -20,10 +20,10 @@ export default function Actions({ setMaskType, setEdit, setStateEditing, onRight
         <Card sx={{ borderRadius: "12px" }}>
             <CardActions >
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <IconButton onClick={() => {
+                    {/* <IconButton onClick={() => {
                         setStateEditing(false);
                         setEdit(false);
-                    }}><PanToolOutlinedIcon /></IconButton>
+                    }}><PanToolOutlinedIcon /></IconButton> */}
 
                     <IconButton onClick={() => {
                         setMaskType(0);

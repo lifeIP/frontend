@@ -3,6 +3,9 @@ import { makeAutoObservable } from 'mobx';
 
 
 class MarkUpStore {
+    stateShiftPressed = false;
+
+
     rect_list = [];
     poligon_points = [];
 
@@ -63,6 +66,10 @@ class MarkUpStore {
         this.poligon_points = [];
     }
 
+
+    setStateShiftPressed(state){
+        this.stateShiftPressed = state;
+    }
 }
 
 export default new MarkUpStore(); // Экспортируем экземпляр класса
