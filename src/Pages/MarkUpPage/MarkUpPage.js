@@ -42,10 +42,10 @@ function MarkUpPage() {
 
             // Курсор мыши должен находиться внутри фотографии
             if (inBox()) {
-                if(mouse_pos_x == -1 || mouse_pos_y == -1) return;
-                if(markUpStore.poligon_points.length == 0){
+                if (mouse_pos_x == -1 || mouse_pos_y == -1) return;
+                if (markUpStore.poligon_points.length == 0) {
                     // markUpStore.initNewPoligon(
-                        // 
+                    // 
                     // );
                     // TODO: Надо добавить
                 }
@@ -54,13 +54,17 @@ function MarkUpPage() {
                     (mouse_pos_y - currentPositionOffsetY) / currentScale
                 );
             }
-
         }
+        else if (event.button === 2) {
+            markUpStore.clearPoligonPoints();
+        }
+        console.log(event.button);
+
     }
 
     function handleMouseButtonReleased(event) {
         if (event.button === 0) {
-            
+
         }
     }
 
@@ -118,17 +122,17 @@ function MarkUpPage() {
             }
 
             function drawAllPoligons(context) {
-                markUpStore.rect_list.map((item)=>{
+                markUpStore.rect_list.map((item) => {
                     const path1 = new Path2D();
                     context.strokeStyle = item.class_color;
                     item.points.map((point, index) => {
                         if (index == 0) {
                             path1.moveTo(point.x * currentScale + currentPositionOffsetX, point.y * currentScale + currentPositionOffsetY);
-                        }    
+                        }
                         path1.lineTo(point.x * currentScale + currentPositionOffsetX, point.y * currentScale + currentPositionOffsetY);
                         path1.moveTo(point.x * currentScale + currentPositionOffsetX, point.y * currentScale + currentPositionOffsetY);
                         context.fillRect(point.x * currentScale + currentPositionOffsetX - 3, point.y * currentScale + currentPositionOffsetY - 3, 6, 6);
-                        if (index == item.points.length-1) {
+                        if (index == item.points.length - 1) {
                             path1.lineTo(item.points[0].x * currentScale + currentPositionOffsetX, item.points[0].y * currentScale + currentPositionOffsetY);
                         }
                     })
@@ -136,8 +140,8 @@ function MarkUpPage() {
                     context.stroke(path1);
                 });
             }
-            
-            
+
+
         }
     }
 
@@ -172,11 +176,17 @@ function MarkUpPage() {
         document.addEventListener('mouseup', handleMouseButtonReleased);
         document.addEventListener('mousedown', handleMouseButtonPressed);
         document.addEventListener('resize', handleResize);
+        document.addEventListener('contextmenu', (event) => {
+            event.preventDefault();
+        });
         return () => {
             document.removeEventListener('mousemove', handleMouseMove);
             document.removeEventListener('mouseup', handleMouseButtonReleased);
             document.removeEventListener('mousedown', handleMouseButtonPressed);
             document.removeEventListener('resize', handleResize);
+            document.removeEventListener('contextmenu', (event) => {
+                event.preventDefault();
+            });
         };
     }, [resizedFlag, currentScale, currentPositionOffsetX, currentPositionOffsetY]);
 
@@ -239,7 +249,6 @@ function MarkUpPage() {
                     setCurrentScale(e.state.scale);
                     setCurrentPositionOffsetX(e.state.positionX);
                     setCurrentPositionOffsetY(e.state.positionY);
-                    // console.log(e.state);
                 }}
             >
                 <canvas

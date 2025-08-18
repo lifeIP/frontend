@@ -59,6 +59,10 @@ class MarkUpStore {
 
     }
 
+    clearPoligonPoints(){
+        this.poligon_points = [];
+    }
+
 }
 
 export default new MarkUpStore(); // Экспортируем экземпляр класса
