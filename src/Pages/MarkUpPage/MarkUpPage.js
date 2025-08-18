@@ -42,17 +42,26 @@ function MarkUpPage() {
 
             // Курсор мыши должен находиться внутри фотографии
             if (inBox()) {
-
+                if(mouse_pos_x == -1 || mouse_pos_y == -1) return;
+                if(markUpStore.poligon_points.length == 0){
+                    // markUpStore.initNewPoligon(
+                        // 
+                    // );
+                    // TODO: Надо добавить
+                }
                 markUpStore.addPoligonPoint(
-                    (mouse_pos_x - currentPositionOffsetX)/ currentScale,
-                    (mouse_pos_y - currentPositionOffsetY)/ currentScale
+                    (mouse_pos_x - currentPositionOffsetX) / currentScale,
+                    (mouse_pos_y - currentPositionOffsetY) / currentScale
                 );
             }
+
         }
     }
 
     function handleMouseButtonReleased(event) {
-
+        if (event.button === 0) {
+            
+        }
     }
 
     function handleResize() {
@@ -70,7 +79,8 @@ function MarkUpPage() {
 
 
             drawCordinateRuler(context);
-            // drawNewPoligon(context);
+            drawNewPoligon(context);
+            drawAllPoligons(context);
 
 
             // Рисование линий для более удобной навигации по фотографии(крестик)
@@ -87,27 +97,50 @@ function MarkUpPage() {
                 context.stroke(path1);
             }
 
-
-            const path1 = new Path2D();
-            context.strokeStyle = "#4aff02ff";
-            markUpStore.poligon_points.map((point, index) => {
-                if (index == 0) {
+            function drawNewPoligon(context) {
+                const path1 = new Path2D();
+                context.strokeStyle = "#4aff02ff";
+                markUpStore.poligon_points.map((point, index) => {
+                    if (index == 0) {
+                        path1.moveTo(point.x * currentScale + currentPositionOffsetX, point.y * currentScale + currentPositionOffsetY);
+                    }
+                    path1.lineTo(point.x * currentScale + currentPositionOffsetX, point.y * currentScale + currentPositionOffsetY);
                     path1.moveTo(point.x * currentScale + currentPositionOffsetX, point.y * currentScale + currentPositionOffsetY);
+                    context.fillRect(point.x * currentScale + currentPositionOffsetX - 3, point.y * currentScale + currentPositionOffsetY - 3, 6, 6);
+                })
+                if (mouse_pos_x > 0 || mouse_pos_y > 0) {
+                    path1.lineTo(mouse_pos_x, mouse_pos_y);
+                    path1.moveTo(mouse_pos_x, mouse_pos_y);
+                    context.fillRect(mouse_pos_x - 3, mouse_pos_y - 3, 6, 6);
                 }
-                path1.lineTo(point.x * currentScale + currentPositionOffsetX, point.y * currentScale + currentPositionOffsetY);
-                path1.moveTo(point.x * currentScale + currentPositionOffsetX, point.y * currentScale + currentPositionOffsetY);
-                context.fillRect(point.x * currentScale + currentPositionOffsetX - 3, point.y * currentScale + currentPositionOffsetY - 3, 6, 6);
-            })
-            if (mouse_pos_x > 0 || mouse_pos_y > 0) {
-                path1.lineTo(mouse_pos_x, mouse_pos_y);
-                path1.moveTo(mouse_pos_x, mouse_pos_y);
-                context.fillRect(mouse_pos_x - 3, mouse_pos_y - 3, 6, 6);
+                path1.closePath();
+                context.stroke(path1);
             }
-            path1.closePath();
-            context.stroke(path1);
 
+            function drawAllPoligons(context) {
+                markUpStore.rect_list.map((item)=>{
+                    const path1 = new Path2D();
+                    context.strokeStyle = item.class_color;
+                    item.points.map((point, index) => {
+                        if (index == 0) {
+                            path1.moveTo(point.x * currentScale + currentPositionOffsetX, point.y * currentScale + currentPositionOffsetY);
+                        }    
+                        path1.lineTo(point.x * currentScale + currentPositionOffsetX, point.y * currentScale + currentPositionOffsetY);
+                        path1.moveTo(point.x * currentScale + currentPositionOffsetX, point.y * currentScale + currentPositionOffsetY);
+                        context.fillRect(point.x * currentScale + currentPositionOffsetX - 3, point.y * currentScale + currentPositionOffsetY - 3, 6, 6);
+                        if (index == item.points.length-1) {
+                            path1.lineTo(item.points[0].x * currentScale + currentPositionOffsetX, item.points[0].y * currentScale + currentPositionOffsetY);
+                        }
+                    })
+                    path1.closePath();
+                    context.stroke(path1);
+                });
+            }
+            
+            
         }
-    };
+    }
+
 
     function inBox() {
         const rect = imageRef.current.getBoundingClientRect()
@@ -127,6 +160,9 @@ function MarkUpPage() {
         return true;
     }
 
+    useEffect(() => {
+        drawCanvas();
+    }, [currentScale, currentPositionOffsetX, currentPositionOffsetY]);
 
     useEffect(() => {
         if (resizedFlag) {
@@ -186,6 +222,19 @@ function MarkUpPage() {
 
             <TransformWrapper
                 disabled={stateEditing}
+
+                zoomAnimation={{
+                    disabled: false,
+                    animationTime: 0,
+                }}
+                alignmentAnimation={{
+                    disabled: false,
+                    animationTime: 0,
+                }}
+                velocityAnimation={{
+                    disabled: false,
+                    animationTime: 0,
+                }}
                 onTransformed={(e) => {
                     setCurrentScale(e.state.scale);
                     setCurrentPositionOffsetX(e.state.positionX);
@@ -193,14 +242,14 @@ function MarkUpPage() {
                     // console.log(e.state);
                 }}
             >
-                  <canvas
+                <canvas
                     ref={canvasRef}
                     width={window.innerWidth}
                     height={window.innerHeight}
                     style={activeStyles}
-                /> 
+                />
                 <TransformComponent>
-                   
+
                     <Box sx={{
                         width: "100vw",
                         height: "100vh",
