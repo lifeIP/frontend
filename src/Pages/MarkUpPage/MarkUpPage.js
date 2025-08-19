@@ -199,7 +199,8 @@ function MarkUpPage() {
     }
 
 
-    useEffect(()=>{
+    useEffect(() => {
+        markUpStore.loadImageFromServer();
         markUpStore.loadClassesFromServer();
     }, []);
 
@@ -230,7 +231,7 @@ function MarkUpPage() {
     }, [resizedFlag, currentScale, currentPositionOffsetX, currentPositionOffsetY]);
 
 
-
+    
     const activeStyles = {
         position: 'absolute',
         top: 0,
@@ -265,7 +266,7 @@ function MarkUpPage() {
                                 setEdit={() => { }}
                                 setStateEditing={(flag) => {
                                 }}
-                                setMaskType={() => { 
+                                setMaskType={() => {
 
                                 }}
                             />) : (
@@ -276,7 +277,7 @@ function MarkUpPage() {
             </Box>
             {
                 markUpStore.stateShiftPressed ? (
-                    <ClassesList/>
+                    <ClassesList />
                 ) : (<></>)}
             <TransformWrapper
                 disabled={!markUpStore.stateShiftPressed}
@@ -326,7 +327,7 @@ function MarkUpPage() {
                                 <CardMedia
                                     ref={imageRef}
                                     component="img"
-                                    src='https://avatars.mds.yandex.net/i?id=7396ac3ba788305bacfed2318fba8ca3_l-5267277-images-thumbs&n=13'
+                                    src={markUpStore.image}
                                     alt="Фотография"
                                     sx={{
                                         width: '100%',   // Ширина фотографии — 100% ширины контейнера

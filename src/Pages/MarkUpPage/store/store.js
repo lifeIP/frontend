@@ -4,28 +4,67 @@ import settings from '../../../settings.json'
 
 class MarkUpStore {
     project_id = 1;
-
+    
     stateShiftPressed = false;
 
+
+    // Списковые параметры.
     rect_list = [];
     poligon_points = [];
     classes_list = []; // список класов типа [{id, class_name, class_color}]
 
 
+
     mask_type = 0; // 0 - прямоугольник, 1 - полигон 
+    
     canvasWidth = 0;
     canvasHeight = 0;
 
+
+    // Параметры для работы с классами. 
+    // Заполяются методом selectClassById 
+    // после получения списка с сервера 
+    // методом loadClassesFromServer
     class_id = 0;
     class_color = "";
     class_name = "";
 
 
+    // Параметры для работы с фотографиями
+    image_id = 32;
+    image = "https://orthomoda.ru/bitrix/templates/.default/img/no-photo.jpg";
+    image_is_loaded = false;
+
     constructor() {
         makeAutoObservable(this); // Преобразуем объект в Observable
     }
 
+    loadImageFromServer(){
+        // Этото метод должен выполняться каждый раз,
+        // когда нам нужна новая фотография.
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+        axios.get(`${settings.server.addr}/get-image-by-id/${this.image_id}?t=${Date.now()}`, {
+            responseType: "arraybuffer"
+        })
+            .then(res => {
+                const base64 = btoa(
+                    new Uint8Array(res.data).reduce(
+                        (data, byte) => data + String.fromCharCode(byte),
+                        ''
+                    )
+                )
+                this.image = `data:image/jpeg;charset=utf-8;base64,${base64}`;
+                this.image_is_loaded = true;
+                
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+
     loadClassesFromServer() {
+        // Этот метод должен выполняться только 1 
+        // раз при заходе на страницу для разметки фотографий.
         if (this.project_id === 0) return
         axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
         axios.get(settings.server.addr + "/get_list_of_classes_in_project/" + this.project_id)
@@ -39,25 +78,18 @@ class MarkUpStore {
     }
 
     selectClassById(id) {
+        // Эта функция должна выполняться при 
+        // каждом выборе класса. Инкапсулируй мразь.
         this.class_id = this.classes_list.at(id).class_id;
         this.class_name = this.classes_list.at(id).class_name;
         this.class_color = this.classes_list.at(id).class_color;
     }
 
-    // Нужно вызывать перед тем, как добавлять новую фигуру
-    // initNewPoligon(mask_type, canvasWidth, canvasHeight, class_id, class_color, class_name) {
-    //     this.mask_type = mask_type;
-    //     this.canvasWidth = canvasWidth;
-    //     this.canvasHeight = canvasHeight;
-    //     this.class_id = class_id;
-    //     this.class_color = class_color;
-    //     this.class_name = class_name;
-    // }
 
-
-
-    // Вызывается для добавления точек
     addPoligonPoint(x, y) {
+        // Добавляет в новый полигон ещё одну точку. 
+        // Эту функцию надо применять только для
+        // работы в режиме полигона.
         if (
             this.poligon_points.length > 2
             && Math.abs(this.poligon_points[0].x - x) < 3
@@ -82,11 +114,16 @@ class MarkUpStore {
         });
     }
 
+
     clearPoligonPoints() {
+        // Очищает список всех точек полигона
         this.poligon_points = [];
     }
 
     setStateShiftPressed(state) {
+        // Устанавливает флаг зажатого шифта. 
+        // Это нужно для правильной работы 
+        // компонента zoom-pan-pinch.
         this.stateShiftPressed = state;
     }
 }
