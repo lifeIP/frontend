@@ -7,18 +7,19 @@ import {
     TransformComponent,
 } from "react-zoom-pan-pinch";
 import Actions from './Actions/Actions';
+import ClassesList from './ClassList/ClassesList';
 
 function MarkUpPage() {
     const canvasRef = useRef(null);
     const imageRef = useRef(null);
 
     const [resizedFlag, setResizedFlag] = useState(false);
-    
+
 
     const [currentScale, setCurrentScale] = useState(1);
     const [currentPositionOffsetX, setCurrentPositionOffsetX] = useState(0);
     const [currentPositionOffsetY, setCurrentPositionOffsetY] = useState(0);
-
+    const [selectedClass, setSelectedClass] = useState(0);
 
 
     let mouse_pos_x = -1;
@@ -79,7 +80,7 @@ function MarkUpPage() {
             context.lineWidth = 1.8;
 
 
-            if(!markUpStore.stateShiftPressed)drawCordinateRuler(context);
+            if (!markUpStore.stateShiftPressed) drawCordinateRuler(context);
             drawNewPoligon(context);
             drawAllPoligons(context);
 
@@ -100,7 +101,7 @@ function MarkUpPage() {
 
             function drawNewPoligon(context) {
                 const path1 = new Path2D();
-                context.strokeStyle = "#4aff02ff";
+                context.strokeStyle = markUpStore.class_color;
                 markUpStore.poligon_points.map((point, index) => {
                     if (index == 0) {
                         path1.moveTo(point.x * currentScale + currentPositionOffsetX, point.y * currentScale + currentPositionOffsetY);
@@ -198,10 +199,13 @@ function MarkUpPage() {
     }
 
 
+    useEffect(()=>{
+        markUpStore.loadClassesFromServer();
+    }, []);
 
     useEffect(() => {
         drawCanvas();
-    }, [currentScale, currentPositionOffsetX, currentPositionOffsetY, markUpStore.poligon_points, markUpStore.stateShiftPressed]);
+    }, [currentScale, currentPositionOffsetX, currentPositionOffsetY]);
 
     useEffect(() => {
         if (resizedFlag) {
@@ -260,16 +264,20 @@ function MarkUpPage() {
                             <Actions
                                 setEdit={() => { }}
                                 setStateEditing={(flag) => {
-                                    // setStateEditing(flag);
                                 }}
-                                setMaskType={() => { }}
+                                setMaskType={() => { 
+
+                                }}
                             />) : (
                             <></>
                         )
                     }
                 </Box>
             </Box>
-
+            {
+                markUpStore.stateShiftPressed ? (
+                    <ClassesList/>
+                ) : (<></>)}
             <TransformWrapper
                 disabled={!markUpStore.stateShiftPressed}
 
