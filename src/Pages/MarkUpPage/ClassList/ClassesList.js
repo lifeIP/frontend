@@ -11,7 +11,7 @@ function ClassesList() {
             position: 'fixed',
             right: "5px",
             top: "23.8%",
-            zIndex: 15,
+            zIndex: 20,
             display: "flex",
             justifyContent: "left",
         }}>
