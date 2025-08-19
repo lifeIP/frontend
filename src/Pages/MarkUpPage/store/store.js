@@ -4,9 +4,9 @@ import settings from '../../../settings.json'
 
 class MarkUpStore {
     project_id = 1;
-    
-    stateShiftPressed = false;
 
+    stateShiftPressed = false;
+    currentScale = 1.0;
 
     // Списковые параметры.
     rect_list = [];
@@ -16,7 +16,7 @@ class MarkUpStore {
 
 
     mask_type = 0; // 0 - прямоугольник, 1 - полигон 
-    
+
     canvasWidth = 0;
     canvasHeight = 0;
 
@@ -39,7 +39,11 @@ class MarkUpStore {
         makeAutoObservable(this); // Преобразуем объект в Observable
     }
 
-    loadImageFromServer(){
+    setCurrentScale(scale){
+        this.currentScale = scale;
+    }
+
+    loadImageFromServer() {
         // Этото метод должен выполняться каждый раз,
         // когда нам нужна новая фотография.
         axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
@@ -55,7 +59,7 @@ class MarkUpStore {
                 )
                 this.image = `data:image/jpeg;charset=utf-8;base64,${base64}`;
                 this.image_is_loaded = true;
-                
+
             })
             .catch(err => {
                 console.log(err);
@@ -92,8 +96,8 @@ class MarkUpStore {
         // работы в режиме полигона.
         if (
             this.poligon_points.length > 2
-            && Math.abs(this.poligon_points[0].x - x) < 3
-            && Math.abs(this.poligon_points[0].y - y) < 3) {
+            && Math.abs(this.poligon_points[0].x - x) < 3/this.currentScale
+            && Math.abs(this.poligon_points[0].y - y) < 3/this.currentScale) {
 
             this.rect_list.push({
                 mask_type: this.mask_type,
@@ -107,6 +111,13 @@ class MarkUpStore {
             this.poligon_points = []
             return;
         }
+        if (
+            this.poligon_points.length > 0
+            && Math.abs(this.poligon_points[this.poligon_points.length - 1].x - x) < 10/this.currentScale
+            && Math.abs(this.poligon_points[this.poligon_points.length - 1].y - y) < 10/this.currentScale) {
+            return;
+        }
+
         this.poligon_points.push({
             id: this.poligon_points.length,
             x: x,

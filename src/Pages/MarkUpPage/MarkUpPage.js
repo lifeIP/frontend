@@ -16,7 +16,6 @@ function MarkUpPage() {
     const [resizedFlag, setResizedFlag] = useState(false);
 
 
-    const [currentScale, setCurrentScale] = useState(1);
     const [currentPositionOffsetX, setCurrentPositionOffsetX] = useState(0);
     const [currentPositionOffsetY, setCurrentPositionOffsetY] = useState(0);
     const [selectedClass, setSelectedClass] = useState(0);
@@ -53,8 +52,8 @@ function MarkUpPage() {
                     // TODO: Надо добавить
                 }
                 markUpStore.addPoligonPoint(
-                    (mouse_pos_x - currentPositionOffsetX) / currentScale,
-                    (mouse_pos_y - currentPositionOffsetY) / currentScale
+                    (mouse_pos_x - currentPositionOffsetX) / markUpStore.currentScale,
+                    (mouse_pos_y - currentPositionOffsetY) / markUpStore.currentScale
                 );
             }
         }
@@ -104,11 +103,11 @@ function MarkUpPage() {
                 context.strokeStyle = markUpStore.class_color;
                 markUpStore.poligon_points.map((point, index) => {
                     if (index == 0) {
-                        path1.moveTo(point.x * currentScale + currentPositionOffsetX, point.y * currentScale + currentPositionOffsetY);
+                        path1.moveTo(point.x * markUpStore.currentScale + currentPositionOffsetX, point.y * markUpStore.currentScale + currentPositionOffsetY);
                     }
-                    path1.lineTo(point.x * currentScale + currentPositionOffsetX, point.y * currentScale + currentPositionOffsetY);
-                    path1.moveTo(point.x * currentScale + currentPositionOffsetX, point.y * currentScale + currentPositionOffsetY);
-                    context.fillRect(point.x * currentScale + currentPositionOffsetX - 3, point.y * currentScale + currentPositionOffsetY - 3, 6, 6);
+                    path1.lineTo(point.x * markUpStore.currentScale + currentPositionOffsetX, point.y * markUpStore.currentScale + currentPositionOffsetY);
+                    path1.moveTo(point.x * markUpStore.currentScale + currentPositionOffsetX, point.y * markUpStore.currentScale + currentPositionOffsetY);
+                    context.fillRect(point.x * markUpStore.currentScale + currentPositionOffsetX - 3, point.y * markUpStore.currentScale + currentPositionOffsetY - 3, 6, 6);
                 })
                 if (mouse_pos_x > 0 || mouse_pos_y > 0) {
                     path1.lineTo(mouse_pos_x, mouse_pos_y);
@@ -125,13 +124,13 @@ function MarkUpPage() {
                     context.strokeStyle = item.class_color;
                     item.points.map((point, index) => {
                         if (index == 0) {
-                            path1.moveTo(point.x * currentScale + currentPositionOffsetX, point.y * currentScale + currentPositionOffsetY);
+                            path1.moveTo(point.x * markUpStore.currentScale + currentPositionOffsetX, point.y * markUpStore.currentScale + currentPositionOffsetY);
                         }
-                        path1.lineTo(point.x * currentScale + currentPositionOffsetX, point.y * currentScale + currentPositionOffsetY);
-                        path1.moveTo(point.x * currentScale + currentPositionOffsetX, point.y * currentScale + currentPositionOffsetY);
-                        context.fillRect(point.x * currentScale + currentPositionOffsetX - 3, point.y * currentScale + currentPositionOffsetY - 3, 6, 6);
+                        path1.lineTo(point.x * markUpStore.currentScale + currentPositionOffsetX, point.y * markUpStore.currentScale + currentPositionOffsetY);
+                        path1.moveTo(point.x * markUpStore.currentScale + currentPositionOffsetX, point.y * markUpStore.currentScale + currentPositionOffsetY);
+                        context.fillRect(point.x * markUpStore.currentScale + currentPositionOffsetX - 3, point.y * markUpStore.currentScale + currentPositionOffsetY - 3, 6, 6);
                         if (index == item.points.length - 1) {
-                            path1.lineTo(item.points[0].x * currentScale + currentPositionOffsetX, item.points[0].y * currentScale + currentPositionOffsetY);
+                            path1.lineTo(item.points[0].x * markUpStore.currentScale + currentPositionOffsetX, item.points[0].y * markUpStore.currentScale + currentPositionOffsetY);
                         }
                     })
                     path1.closePath();
@@ -206,7 +205,7 @@ function MarkUpPage() {
 
     useEffect(() => {
         drawCanvas();
-    }, [currentScale, currentPositionOffsetX, currentPositionOffsetY]);
+    }, [markUpStore.currentScale, currentPositionOffsetX, currentPositionOffsetY]);
 
     useEffect(() => {
         if (resizedFlag) {
@@ -228,7 +227,7 @@ function MarkUpPage() {
             document.removeEventListener('keydown', handleKeyDown);
             document.removeEventListener('keyup', handleKeyUp);
         };
-    }, [resizedFlag, currentScale, currentPositionOffsetX, currentPositionOffsetY]);
+    }, [resizedFlag, markUpStore.currentScale, currentPositionOffsetX, currentPositionOffsetY]);
 
 
     
@@ -295,7 +294,7 @@ function MarkUpPage() {
                     animationTime: 0,
                 }}
                 onTransformed={(e) => {
-                    setCurrentScale(e.state.scale);
+                    markUpStore.setCurrentScale(e.state.scale);
                     setCurrentPositionOffsetX(e.state.positionX);
                     setCurrentPositionOffsetY(e.state.positionY);
                 }}
