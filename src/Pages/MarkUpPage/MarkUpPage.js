@@ -42,7 +42,6 @@ function MarkUpPage() {
         if (event.button === 0) {
 
             // Курсор мыши должен находиться внутри фотографии
-            //console.log(!markUpStore.stateShiftPressed);
             if (inBox() && !markUpStore.stateShiftPressed) {
                 if (mouse_pos_x == -1 || mouse_pos_y == -1) return;
                 if (markUpStore.poligon_points.length == 0) {
@@ -66,7 +65,6 @@ function MarkUpPage() {
     }
 
     function handleResize() {
-        //console.log("resized");
         setResizedFlag(true);
     };
 
@@ -176,14 +174,12 @@ function MarkUpPage() {
     }
 
     function handleDoubleRightClick(event) {
-        //console.log('Двойной клик правой кнопкой мыши:', event);
         markUpStore.clearPoligonPoints();
         // Ваша логика обработки двойного клика
     }
 
     function handleKeyDown(event) {
         if (event.key === 'Shift') {
-            //console.log('Клавиша Shift нажата.');
             markUpStore.setStateShiftPressed(true);
             // Тут можно добавить логику, которая должна выполняться при удерживании Shift
         }
@@ -191,7 +187,6 @@ function MarkUpPage() {
 
     function handleKeyUp(event) {
         if (event.key === 'Shift') {
-            //console.log('Клавиша Shift отпущена.');
             markUpStore.setStateShiftPressed(false);
             // Тут можно добавить логику, которая должна выполняться после отпускания Shift
         }
@@ -245,7 +240,6 @@ function MarkUpPage() {
 
         useEffect(() => {
             function handle(event) {
-                // console.log(event.code);
                 if (event.code === key) {
                     callback.current(event);
                 } else if (key === 's' && event.key === 's') {
@@ -276,21 +270,19 @@ function MarkUpPage() {
 
 
     function rightButtonClicked() {
-        console.log("rightButtonClicked");
         // TODO: Добавить обработку нажатия
-        console.log(markUpStore.list_of_ids_images);
-        console.log(markUpStore.image_id);
+        
         if(markUpStore.list_of_ids_images.length==0){
             markUpStore.loadListOfImages();
         }
-        let index_now = markUpStore.list_of_ids_images.ids.indexOf(markUpStore.image_id);
+        let index_now = markUpStore.list_of_ids_images.indexOf(markUpStore.image_id);
         if (index_now == 0) {
             index_now = -1;
             localStorage.setItem("task_flag", true);
             markUpStore.image_is_loaded=false;
         }
-        if (markUpStore.list_of_ids_images.ids.length - 1 > index_now) {
-            markUpStore.image_id = markUpStore.list_of_ids_images.ids[index_now + 1]
+        if (markUpStore.list_of_ids_images.length - 1 > index_now) {
+            markUpStore.image_id = markUpStore.list_of_ids_images[index_now + 1]
             markUpStore.clearPoligonPoints();
             markUpStore.clearRectList();
             markUpStore.setImageId(markUpStore.image_id + 1);
@@ -342,11 +334,9 @@ function MarkUpPage() {
 
                                 }}
                                 onLeftButtonClicked={() => {
-                                    // console.log("left")
                                     leftButtonClicked();
                                 }}
                                 onRightButtonClicked={() => {
-                                    // console.log("right")
                                     rightButtonClicked();
                                 }}
                             />) : (

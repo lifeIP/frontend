@@ -13,10 +13,7 @@ class MarkUpStore {
     rect_list = [];
     poligon_points = [];
     classes_list = []; // список класов типа [{id, class_name, class_color}]
-    list_of_ids_images = {
-        startIndex: 0,
-        ids: []
-    };
+    list_of_ids_images = [];
 
 
     mask_type = 0; // 0 - прямоугольник, 1 - полигон 
@@ -38,29 +35,34 @@ class MarkUpStore {
     image_id = 33;
     image = "https://orthomoda.ru/bitrix/templates/.default/img/no-photo.jpg";
     image_is_loaded = false;
+    image_last_index = 0;
+    list_loading = false;
     marked = 2;
 
     constructor() {
         makeAutoObservable(this); // Преобразуем объект в Observable
     }
 
-    setImageId(id){
+    setImageId(id) {
         this.image_id = id;
         this.loadImageFromServer();
     }
 
-    setCurrentScale(scale){
+    setCurrentScale(scale) {
         this.currentScale = scale;
     }
 
-    loadListOfImages(startIndex=0, marked=this.marked){
-        console.error("loadListOfImages");
-        let url = "/get_task_images_list/" + this.taskId + "/" + (this.list_of_ids_images.startIndex + startIndex);
-        if(marked == 0){
-            url = "/get_task_images_not_marked_up_list/" + this.taskId + "/" + (this.list_of_ids_images.startIndex + startIndex);
+    loadListOfImages(startIndex = 0, marked = this.marked) {
+        // console.log("loadListOfImages: ", this.image_last_index, startIndex);
+
+        if (this.list_loading) return;
+        this.list_loading = true;
+        let url = "/get_task_images_list/" + this.taskId + "/" + (this.image_last_index + startIndex);
+        if (marked == 0) {
+            url = "/get_task_images_not_marked_up_list/" + this.taskId + "/" + (this.image_last_index + startIndex);
         }
-        else if(marked == 1){
-            url = "/get_task_images_marked_up_list/" + this.taskId + "/" + (this.list_of_ids_images.startIndex + startIndex);
+        else if (marked == 1) {
+            url = "/get_task_images_marked_up_list/" + this.taskId + "/" + (this.image_last_index + startIndex);
         }
 
         axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
@@ -68,10 +70,10 @@ class MarkUpStore {
 
             if (res.status === 200 || res.status === 201) {
                 if (res.data.ids.length != 0) {
-                    // localStorage.setItem("list_of_ids_images", JSON.stringify({ startIndex: this.list_of_ids_images.startIndex + startIndex, ids: res.data.ids }));
-                    this.list_of_ids_images = { startIndex: this.list_of_ids_images.startIndex + startIndex, ids: res.data.ids }
+                    this.list_of_ids_images = res.data.ids;
+                    this.image_last_index += startIndex;
+                    this.list_loading = false;
                 }
-                console.log(res.data.ids);
             } else {
             }
         }).catch((err) => {
@@ -98,7 +100,6 @@ class MarkUpStore {
 
             })
             .catch(err => {
-                console.log(err);
             })
     }
 
@@ -113,7 +114,6 @@ class MarkUpStore {
                 this.selectClassById(0);
             })
             .catch(err => {
-                console.log(err);
             })
     }
 
@@ -132,8 +132,8 @@ class MarkUpStore {
         // работы в режиме полигона.
         if (
             this.poligon_points.length > 2
-            && Math.abs(this.poligon_points[0].x - x) < 3/this.currentScale
-            && Math.abs(this.poligon_points[0].y - y) < 3/this.currentScale) {
+            && Math.abs(this.poligon_points[0].x - x) < 3 / this.currentScale
+            && Math.abs(this.poligon_points[0].y - y) < 3 / this.currentScale) {
 
             this.rect_list.push({
                 mask_type: this.mask_type,
@@ -149,8 +149,8 @@ class MarkUpStore {
         }
         if (
             this.poligon_points.length > 0
-            && Math.abs(this.poligon_points[this.poligon_points.length - 1].x - x) < 10/this.currentScale
-            && Math.abs(this.poligon_points[this.poligon_points.length - 1].y - y) < 10/this.currentScale) {
+            && Math.abs(this.poligon_points[this.poligon_points.length - 1].x - x) < 10 / this.currentScale
+            && Math.abs(this.poligon_points[this.poligon_points.length - 1].y - y) < 10 / this.currentScale) {
             return;
         }
 
@@ -170,7 +170,7 @@ class MarkUpStore {
         // Очищает список всех точек полигона
         this.rect_list = [];
     }
-    
+
 
     setStateShiftPressed(state) {
         // Устанавливает флаг зажатого шифта. 
