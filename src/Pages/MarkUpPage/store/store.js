@@ -4,6 +4,7 @@ import settings from '../../../settings.json'
 
 class MarkUpStore {
     project_id = 1;
+    taskId = 1;
 
     stateShiftPressed = false;
     currentScale = 1.0;
@@ -12,7 +13,10 @@ class MarkUpStore {
     rect_list = [];
     poligon_points = [];
     classes_list = []; // список класов типа [{id, class_name, class_color}]
-
+    list_of_ids_images = {
+        startIndex: 0,
+        ids: []
+    };
 
 
     mask_type = 0; // 0 - прямоугольник, 1 - полигон 
@@ -31,16 +35,48 @@ class MarkUpStore {
 
 
     // Параметры для работы с фотографиями
-    image_id = 32;
+    image_id = 33;
     image = "https://orthomoda.ru/bitrix/templates/.default/img/no-photo.jpg";
     image_is_loaded = false;
+    marked = 2;
 
     constructor() {
         makeAutoObservable(this); // Преобразуем объект в Observable
     }
 
+    setImageId(id){
+        this.image_id = id;
+        this.loadImageFromServer();
+    }
+
     setCurrentScale(scale){
         this.currentScale = scale;
+    }
+
+    loadListOfImages(startIndex=0, marked=this.marked){
+        console.error("loadListOfImages");
+        let url = "/get_task_images_list/" + this.taskId + "/" + (this.list_of_ids_images.startIndex + startIndex);
+        if(marked == 0){
+            url = "/get_task_images_not_marked_up_list/" + this.taskId + "/" + (this.list_of_ids_images.startIndex + startIndex);
+        }
+        else if(marked == 1){
+            url = "/get_task_images_marked_up_list/" + this.taskId + "/" + (this.list_of_ids_images.startIndex + startIndex);
+        }
+
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+        axios.get(`${settings.server.addr}${url}`).then((res) => {
+
+            if (res.status === 200 || res.status === 201) {
+                if (res.data.ids.length != 0) {
+                    // localStorage.setItem("list_of_ids_images", JSON.stringify({ startIndex: this.list_of_ids_images.startIndex + startIndex, ids: res.data.ids }));
+                    this.list_of_ids_images = { startIndex: this.list_of_ids_images.startIndex + startIndex, ids: res.data.ids }
+                }
+                console.log(res.data.ids);
+            } else {
+            }
+        }).catch((err) => {
+            console.error(err);
+        });
     }
 
     loadImageFromServer() {
@@ -130,6 +166,11 @@ class MarkUpStore {
         // Очищает список всех точек полигона
         this.poligon_points = [];
     }
+    clearRectList() {
+        // Очищает список всех точек полигона
+        this.rect_list = [];
+    }
+    
 
     setStateShiftPressed(state) {
         // Устанавливает флаг зажатого шифта. 

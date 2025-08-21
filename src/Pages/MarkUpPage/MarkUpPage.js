@@ -199,6 +199,12 @@ function MarkUpPage() {
 
 
     useEffect(() => {
+        markUpStore.list_of_ids_images = JSON.parse(localStorage.getItem("list_of_ids_images"));
+        markUpStore.project_id = JSON.parse(localStorage.getItem("last_project_id"));
+        markUpStore.taskId = JSON.parse(localStorage.getItem("last_task_id"));
+        
+
+        markUpStore.loadListOfImages();
         markUpStore.loadImageFromServer();
         markUpStore.loadClassesFromServer();
     }, []);
@@ -229,8 +235,75 @@ function MarkUpPage() {
         };
     }, [resizedFlag, markUpStore.currentScale, currentPositionOffsetX, currentPositionOffsetY]);
 
+    function useKey(key, cb) {
+        const callback = useRef(cb);
 
-    
+        useEffect(() => {
+            callback.current = cb;
+        })
+
+
+        useEffect(() => {
+            function handle(event) {
+                // console.log(event.code);
+                if (event.code === key) {
+                    callback.current(event);
+                } else if (key === 's' && event.key === 's') {
+                    callback.current(event);
+                } else if (key === 'a' && event.key === 'a') {
+                    callback.current(event);
+                } else if (key === 'd' && event.key === 'd') {
+                    callback.current(event);
+                } else if (key === 'e' && event.key === 'e') {
+                    callback.current(event);
+                }
+                else if (key === 'ShiftLeft' && event.key === 'ShiftLeft') {
+                    callback.current(event);
+                }
+                else if (key === 'ControlLeft' && event.key === 'ControlLeft') {
+                    callback.current(event);
+                }
+            }
+
+            document.addEventListener('keydown', handle);
+            return () => document.removeEventListener("keydown", handle)
+        }, [key])
+    }
+
+    useKey('a', () => leftButtonClicked());
+    useKey('d', () => rightButtonClicked());
+
+
+
+    function rightButtonClicked() {
+        console.log("rightButtonClicked");
+        // TODO: Добавить обработку нажатия
+        console.log(markUpStore.list_of_ids_images);
+        console.log(markUpStore.image_id);
+        if(markUpStore.list_of_ids_images.length==0){
+            markUpStore.loadListOfImages();
+        }
+        let index_now = markUpStore.list_of_ids_images.ids.indexOf(markUpStore.image_id);
+        if (index_now == 0) {
+            index_now = -1;
+            localStorage.setItem("task_flag", true);
+            markUpStore.image_is_loaded=false;
+        }
+        if (markUpStore.list_of_ids_images.ids.length - 1 > index_now) {
+            markUpStore.image_id = markUpStore.list_of_ids_images.ids[index_now + 1]
+            markUpStore.clearPoligonPoints();
+            markUpStore.clearRectList();
+            markUpStore.setImageId(markUpStore.image_id + 1);
+            return
+        }
+        markUpStore.loadListOfImages(1);
+    }
+    function leftButtonClicked() {
+        console.log("leftButtonClicked");
+        // TODO: Добавить обработку нажатия
+    }
+
+
     const activeStyles = {
         position: 'absolute',
         top: 0,
@@ -267,6 +340,14 @@ function MarkUpPage() {
                                 }}
                                 setMaskType={() => {
 
+                                }}
+                                onLeftButtonClicked={() => {
+                                    // console.log("left")
+                                    leftButtonClicked();
+                                }}
+                                onRightButtonClicked={() => {
+                                    // console.log("right")
+                                    rightButtonClicked();
                                 }}
                             />) : (
                             <></>
