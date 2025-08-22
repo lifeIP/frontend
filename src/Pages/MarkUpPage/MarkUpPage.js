@@ -197,7 +197,7 @@ function MarkUpPage() {
         markUpStore.list_of_ids_images = JSON.parse(localStorage.getItem("list_of_ids_images"));
         markUpStore.project_id = JSON.parse(localStorage.getItem("last_project_id"));
         markUpStore.taskId = JSON.parse(localStorage.getItem("last_task_id"));
-        
+
 
         markUpStore.loadListOfImages();
         markUpStore.loadImageFromServer();
@@ -271,15 +271,15 @@ function MarkUpPage() {
 
     function rightButtonClicked() {
         // TODO: Добавить обработку нажатия
-        
-        if(markUpStore.list_of_ids_images.length==0){
+
+        if (markUpStore.list_of_ids_images.length == 0) {
             markUpStore.loadListOfImages();
         }
         let index_now = markUpStore.list_of_ids_images.indexOf(markUpStore.image_id);
         if (index_now == 0) {
             index_now = -1;
             localStorage.setItem("task_flag", true);
-            markUpStore.image_is_loaded=false;
+            markUpStore.image_is_loaded = false;
         }
         if (markUpStore.list_of_ids_images.length - 1 > index_now) {
             markUpStore.image_id = markUpStore.list_of_ids_images[index_now + 1]
@@ -308,6 +308,8 @@ function MarkUpPage() {
 
     return <>
         <Box sx={{
+            top: 0,
+            left: 0,
             position: 'absolute',
             width: "100vw",
             height: "100vh",
