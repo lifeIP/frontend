@@ -27,7 +27,7 @@ function Center(props) {
 }
 
 export default function LoginPage() {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
  
     const {
         values,

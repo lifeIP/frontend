@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { Drawer, List, Divider, ListItem, ListItemIcon, ListItemText, Tooltip, CssBaseline, Box, IconButton, Badge, Avatar, Typography, Popover } from '@mui/material';
+
+
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -8,9 +10,15 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
+import FolderIcon from '@mui/icons-material/Folder';
+import DownloadIcon from '@mui/icons-material/Download';
+import { useNavigate } from 'react-router-dom';
+
+
 const drawerWidth = 240;
 
 export default function NavigationPanel() {
+    const navigate = useNavigate();
     const [open, setOpen] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -31,11 +39,10 @@ export default function NavigationPanel() {
     const avatarInitials = username.charAt(0).toUpperCase();
 
     const menuItems = [
-        { label: 'Dashboard', icon: <DashboardIcon />, link: '/', tooltip: 'Открыть dashboard' },
-        { label: 'Profile', icon: <PersonIcon />, link: '/profile', tooltip: 'Просмотреть профиль' },
-        { label: 'Messages', icon: <Badge badgeContent={4} color="error"><MailIcon /></Badge>, link: '/messages', tooltip: 'Новые сообщения' },
+        { label: 'Projects', icon: <FolderIcon />, link: '/projects', tooltip: 'Проекты' },
+        { label: 'Upload', icon: <DownloadIcon />, link: '/upload', tooltip: 'Загрузить фото' },
+        { label: 'Notifications', icon: <Badge badgeContent={0} color="warning"><NotificationsIcon /></Badge>, link: '/notifications', tooltip: 'Уведомления' },
         { label: 'Settings', icon: <SettingsIcon />, link: '/settings', tooltip: 'Редактировать настройки' },
-        { label: 'Notifications', icon: <Badge badgeContent={10} color="warning"><NotificationsIcon /></Badge>, link: '/notifications', tooltip: 'Уведомления' },
     ];
 
     return (
@@ -78,7 +85,7 @@ export default function NavigationPanel() {
                     </ListItem>
 
                     {menuItems.map(({ label, icon, link, tooltip }, index) => (
-                        <ListItem button key={label} sx={{ height: "60px" }}>
+                        <ListItem button key={label} sx={{ height: "60px" }} onClick={()=>{navigate(link);}}>
                             <Tooltip title={tooltip} placement="right-start" enterDelay={200} leaveDelay={100}>
                                 <ListItemIcon>
                                     <Box sx={{

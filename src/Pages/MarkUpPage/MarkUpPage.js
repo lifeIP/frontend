@@ -29,7 +29,8 @@ function MarkUpPage() {
 
     /*Отслеживание перемещений мыши*/
     function handleMouseMove(event) {
-        const rect = canvasRef.current.getBoundingClientRect();
+        const rect = canvasRef?.current?.getBoundingClientRect();
+        if(rect == null) return;
         const relativeX = event.clientX - rect.left;
         const relativeY = event.clientY - rect.top;
 
