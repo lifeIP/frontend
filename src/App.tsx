@@ -5,10 +5,13 @@ import RegistrationPage from './pages/Auth/Registration/RegistrationPage';
 import NavigationPanel from './NavigationPanel/NavigationPanel';
 import MarkUpPage from './pages/MarkUpPage/MarkUpPage';
 
+import { observer } from 'mobx-react';
+import mainStore from "./store";
+
 function App() {
   return (
     <BrowserRouter>
-    <NavigationPanel/>
+    {mainStore.visibleNavigationPanel?(<NavigationPanel/>):(<></>)}
       <Routes>
         <Route path="/login" element={<LoginPage />}/>
         <Route path="/registration" element={<RegistrationPage />} />
@@ -18,4 +21,4 @@ function App() {
   );
 }
 
-export default App;
+export default observer(App);

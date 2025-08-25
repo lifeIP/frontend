@@ -1,7 +1,10 @@
 import { Box, CardMedia, Typography } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
+
 import { observer } from 'mobx-react';
+import mainStore from "../../store";
 import markUpStore from "./store/store";
+
 import {
     TransformWrapper,
     TransformComponent,
@@ -327,7 +330,7 @@ function MarkUpPage() {
                     justifyContent: "center",
                 }}>
                     {
-                        markUpStore.stateShiftPressed ? (
+                        markUpStore.stateShiftPressed || Math.abs(markUpStore.currentScale - 1.0) < 0.1 ? (
                             <Actions
                                 setEdit={() => { }}
                                 setStateEditing={(flag) => {
@@ -348,7 +351,7 @@ function MarkUpPage() {
                 </Box>
             </Box>
             {
-                markUpStore.stateShiftPressed ? (
+                markUpStore.stateShiftPressed || Math.abs(markUpStore.currentScale - 1.0) < 0.1 ? (
                     <ClassesList />
                 ) : (<></>)}
             <TransformWrapper
@@ -367,6 +370,7 @@ function MarkUpPage() {
                     animationTime: 0,
                 }}
                 onTransformed={(e) => {
+                    mainStore.setVisibleNavigationPanel(Math.abs(e.state.scale - 1.0) < 0.1);
                     markUpStore.setCurrentScale(e.state.scale);
                     setCurrentPositionOffsetX(e.state.positionX);
                     setCurrentPositionOffsetY(e.state.positionY);
