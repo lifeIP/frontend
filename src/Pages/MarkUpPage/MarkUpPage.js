@@ -18,7 +18,6 @@ function MarkUpPage() {
 
     const [currentPositionOffsetX, setCurrentPositionOffsetX] = useState(0);
     const [currentPositionOffsetY, setCurrentPositionOffsetY] = useState(0);
-    const [selectedClass, setSelectedClass] = useState(0);
 
 
     let mouse_pos_x = -1;

@@ -31,11 +31,13 @@ import CanvasOverImage from "./CanvasOverImage";
 import PhotoPagination from "./PhotoPagination";
 import PhotoMarkedUpPagination from "./PhotoMarkedUpPagination";
 import TaskManagement from "./TaskManagement/TaskManagement";
+import { useNavigate } from "react-router";
 
 
 
 
 export default function SmartMarkup({ project_id, taskId }) {
+    const navigate = useNavigate();
     const mainRef = useRef(null);
     const [inBoundingBox, setInBoundingBox] = useState(true);
 
@@ -389,7 +391,7 @@ export default function SmartMarkup({ project_id, taskId }) {
                         rightButtonClicked();
                     }}
                     onFullscreenButtonCliked={()=>{
-                        
+                        navigate("/markup_fullscreen");
                     }}
                 />
                 <ClassesList
