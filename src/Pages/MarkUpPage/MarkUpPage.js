@@ -193,10 +193,12 @@ function MarkUpPage() {
 
 
     useEffect(() => {
+        markUpStore.image_id = JSON.parse(localStorage.getItem("working-field-image-id"));
         markUpStore.list_of_ids_images = JSON.parse(localStorage.getItem("list_of_ids_images"));
         markUpStore.project_id = JSON.parse(localStorage.getItem("last_project_id"));
         markUpStore.taskId = JSON.parse(localStorage.getItem("last_task_id"));
-        
+        markUpStore.image_list_index = JSON.parse(localStorage.getItem("working-field-image-id"));
+
 
         markUpStore.loadListOfImages();
         markUpStore.loadImageFromServer();
@@ -205,7 +207,7 @@ function MarkUpPage() {
 
     useEffect(() => {
         drawCanvas();
-    }, [markUpStore.currentScale, currentPositionOffsetX, currentPositionOffsetY]);
+    });
 
     useEffect(() => {
         if (resizedFlag) {
@@ -263,36 +265,39 @@ function MarkUpPage() {
         }, [key])
     }
 
-    useKey('a', () => leftButtonClicked());
-    useKey('d', () => rightButtonClicked());
+    useKey('a', () => throttledLeftButtonClicked());
+    useKey('d', () => throttledRightButtonClicked());
 
 
 
-    function rightButtonClicked() {
-        // TODO: Добавить обработку нажатия
-        
-        if(markUpStore.list_of_ids_images.length==0){
-            markUpStore.loadListOfImages();
-        }
-        let index_now = markUpStore.list_of_ids_images.indexOf(markUpStore.image_id);
-        if (index_now == 0) {
-            index_now = -1;
-            localStorage.setItem("task_flag", true);
-            markUpStore.image_is_loaded=false;
-        }
-        if (markUpStore.list_of_ids_images.length - 1 > index_now) {
-            markUpStore.image_id = markUpStore.list_of_ids_images[index_now + 1]
-            markUpStore.clearPoligonPoints();
-            markUpStore.clearRectList();
-            markUpStore.setImageId(markUpStore.image_id + 1);
-            return
-        }
-        markUpStore.loadListOfImages(1);
+    let canInvoke = true; // Флаг готовности к выполнению
+    let timeoutId = null; // Идентификатор таймера
+
+    function throttle(action, delay = 250) {
+        return function (...args) {
+            if (!canInvoke) return; // Возвращаемся, если нельзя вызвать функцию
+            canInvoke = false; // Заблокировали возможность повторного вызова
+            try {
+                action(...args); // Выполняем саму функцию
+            } finally {
+                timeoutId = setTimeout(() => {
+                    canInvoke = true; // Через delay мс разрешаем повторить вызов
+                }, delay);
+            }
+        };
     }
-    function leftButtonClicked() {
+
+    const throttledRightButtonClicked = throttle(() => {
+        console.log("rightButtonClicked");
+        markUpStore.rightInImageList();
+    });
+
+    const throttledLeftButtonClicked = throttle(() => {
         console.log("leftButtonClicked");
-        // TODO: Добавить обработку нажатия
-    }
+        markUpStore.leftInImageList();
+    });
+
+
 
 
     const activeStyles = {
@@ -324,7 +329,7 @@ function MarkUpPage() {
                     justifyContent: "center",
                 }}>
                     {
-                        markUpStore.stateShiftPressed ? (
+                        markUpStore.stateShiftPressed || Math.abs(markUpStore.currentScale - 1.0) < 0.1 ? (
                             <Actions
                                 setEdit={() => { }}
                                 setStateEditing={(flag) => {
@@ -333,10 +338,10 @@ function MarkUpPage() {
 
                                 }}
                                 onLeftButtonClicked={() => {
-                                    leftButtonClicked();
+                                    throttledLeftButtonClicked();
                                 }}
                                 onRightButtonClicked={() => {
-                                    rightButtonClicked();
+                                    throttledRightButtonClicked();
                                 }}
                             />) : (
                             <></>
@@ -345,7 +350,7 @@ function MarkUpPage() {
                 </Box>
             </Box>
             {
-                markUpStore.stateShiftPressed ? (
+                markUpStore.stateShiftPressed || Math.abs(markUpStore.currentScale - 1.0) < 0.1 ? (
                     <ClassesList />
                 ) : (<></>)}
             <TransformWrapper
