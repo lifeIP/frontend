@@ -3,13 +3,13 @@ import { makeAutoObservable } from 'mobx';
 
 
 class MainStore {
-    visibleNavigationPanel: boolean = true;
+    visibleNavigationPanel = true;
 
     constructor() {
         makeAutoObservable(this); // Преобразуем объект в Observable
     }
 
-    setVisibleNavigationPanel(flag: boolean){
+    setVisibleNavigationPanel(flag){
         this.visibleNavigationPanel = flag;
     }
 }

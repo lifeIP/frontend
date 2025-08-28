@@ -3,78 +3,56 @@ import { makeAutoObservable } from 'mobx';
 import settings from '../../../settings.json'
 
 class MarkUpStore {
-    project_id: number = 1;
-    taskId: number = 1;
+    project_id = 1;
+    taskId = 1;
 
-    stateShiftPressed: boolean = false;
-    currentScale: number = 1.0;
+    stateShiftPressed = false;
+    currentScale = 1.0;
 
     // Списковые параметры.
-    rect_list: {
-        mask_type: number;
-        canvasWidth: number,
-        canvasHeight: number,
-        class_id: number,
-        class_color: string,
-        class_name: string,
-        points: {
-            id: number;
-            x: number;
-            y: number;
-        }[]
-    }[] = [];
-    poligon_points: {
-        id: number;
-        x: number;
-        y: number;
-    }[] = [];
-
-    classes_list: {
-        class_id: number;
-        class_name: string;
-        class_color: string;
-    }[] = []; // список класов типа [{id, class_name, class_color}]
-
-    list_of_ids_images: number[] = [];
+    rect_list = [];
+    poligon_points = [];
+    classes_list = []; // список класов типа [{id, class_name, class_color}]
+    list_of_ids_images = [];
 
 
-    mask_type: number = 0; // 0 - прямоугольник, 1 - полигон 
+    mask_type = 0; // 0 - прямоугольник, 1 - полигон 
 
-    canvasWidth: number = 0;
-    canvasHeight: number = 0;
+    canvasWidth = 0;
+    canvasHeight = 0;
 
 
     // Параметры для работы с классами. 
     // Заполяются методом selectClassById 
     // после получения списка с сервера 
     // методом loadClassesFromServer
-    class_id: number = 0;
-    class_color: string = "";
-    class_name: string = "";
+    class_id = 0;
+    class_color = "";
+    class_name = "";
 
 
     // Параметры для работы с фотографиями
-    image_id: number = 33;
-    image: string = "https://orthomoda.ru/bitrix/templates/.default/img/no-photo.jpg";
-    image_is_loaded: boolean = false;
-    image_last_index: number = 0;
-    list_loading: boolean = false;
-    marked: number = 2;
+    image_id = 33;
+    image = "https://orthomoda.ru/bitrix/templates/.default/img/no-photo.jpg";
+    image_is_loaded = false;
+    image_last_index = 0;
+    list_loading = false;
+    marked = 2;
 
     constructor() {
         makeAutoObservable(this); // Преобразуем объект в Observable
     }
 
-    setImageId(id: number) {
+    setImageId(id) {
         this.image_id = id;
         this.loadImageFromServer();
     }
 
-    setCurrentScale(scale: number) {
+    setCurrentScale(scale) {
         this.currentScale = scale;
     }
 
-    loadListOfImages(startIndex: number = 0, marked: number = this.marked) {
+    loadListOfImages(startIndex = 0, marked = this.marked) {
         // console.log("loadListOfImages: ", this.image_last_index, startIndex);
 
         if (this.list_loading) return;
@@ -139,42 +117,23 @@ class MarkUpStore {
             })
     }
 
-    selectClassById(id: number) {
+    selectClassById(id) {
         // Эта функция должна выполняться при 
         // каждом выборе класса. Инкапсулируй мразь.
-        const class_id = this?.classes_list?.at(id)?.class_id;
-        const class_name = this?.classes_list?.at(id)?.class_name;
-        const class_color = this?.classes_list?.at(id)?.class_color;
-
-        if (class_id === undefined || class_name === undefined || class_color === undefined) return;
-
-        this.class_id = class_id;
-        this.class_name = class_name;
-        this.class_color = class_color;
+        this.class_id = this.classes_list.at(id).class_id;
+        this.class_name = this.classes_list.at(id).class_name;
+        this.class_color = this.classes_list.at(id).class_color;
     }
 
 
-    addPoligonPoint(x: number, y: number) {
+    addPoligonPoint(x, y) {
         // Добавляет в новый полигон ещё одну точку. 
         // Эту функцию надо применять только для
         // работы в режиме полигона.
-
-
-        if (
-            this.poligon_points.length > 0
-            && Math.abs(this.poligon_points[this.poligon_points.length - 1].x - x) < 10 / this.currentScale
-            && Math.abs(this.poligon_points[this.poligon_points.length - 1].y - y) < 10 / this.currentScale) {
-            return;
-        }
-
-        const inside_x = this.poligon_points[0]?.x;
-        const inside_y = this.poligon_points[0]?.y;
-        if (inside_x === undefined || inside_y === undefined) return;
-
         if (
             this.poligon_points.length > 2
-            && Math.abs(inside_x - x) < 3 / this.currentScale
-            && Math.abs(inside_y - y) < 3 / this.currentScale) {
+            && Math.abs(this.poligon_points[0].x - x) < 3 / this.currentScale
+            && Math.abs(this.poligon_points[0].y - y) < 3 / this.currentScale) {
 
             this.rect_list.push({
                 mask_type: this.mask_type,
@@ -188,7 +147,12 @@ class MarkUpStore {
             this.poligon_points = []
             return;
         }
-
+        if (
+            this.poligon_points.length > 0
+            && Math.abs(this.poligon_points[this.poligon_points.length - 1].x - x) < 10 / this.currentScale
+            && Math.abs(this.poligon_points[this.poligon_points.length - 1].y - y) < 10 / this.currentScale) {
+            return;
+        }
 
         this.poligon_points.push({
             id: this.poligon_points.length,
@@ -208,7 +172,7 @@ class MarkUpStore {
     }
 
 
-    setStateShiftPressed(state: boolean) {
+    setStateShiftPressed(state) {
         // Устанавливает флаг зажатого шифта. 
         // Это нужно для правильной работы 
         // компонента zoom-pan-pinch.
