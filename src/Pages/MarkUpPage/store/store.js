@@ -22,6 +22,14 @@ class MarkUpStore {
     canvasHeight = 0;
 
 
+    // параметры для рисования прямоугольников
+    rect_change = false;
+    rect_pos_x = 0;
+    rect_pos_y = 0;
+    rect_shape_w = 0;
+    rect_shape_h = 0;
+
+
     // Параметры для работы с классами. 
     // Заполяются методом selectClassById 
     // после получения списка с сервера 
@@ -45,6 +53,13 @@ class MarkUpStore {
         makeAutoObservable(this); // Преобразуем объект в Observable
     }
 
+    setMaskType(type) {
+        if (this.mask_type == type) return;
+        this.mask_type = type;
+        this.clearPoligonPoints();
+    }
+
+
     rightInImageList() {
         console.log(this.navigate_lock, this.image_list_index, this.list_of_ids_images.length, this.startIndex)
         if (this.navigate_lock) return;
@@ -55,7 +70,7 @@ class MarkUpStore {
             localStorage.setItem("working-field-image-id", this.list_of_ids_images[this.image_list_index])
             localStorage.setItem('rect_list', JSON.stringify([]));
             localStorage.setItem('poligon_points_list', JSON.stringify([]));
-            
+
             if (this.startIndex >= 1) {
                 this.startIndex += 1;
             }
@@ -122,11 +137,11 @@ class MarkUpStore {
                     this.list_of_ids_images = res.data.ids;
                     this.list_loading = false;
                     localStorage.setItem("list_of_ids_images", JSON.stringify({ startIndex: this.startIndex, ids: res.data.ids }));
-                    
-                    if(this.image_list_index < 1){
+
+                    if (this.image_list_index < 1) {
                         this.image_list_index = this.list_of_ids_images.length - 1;
                     }
-                    else{
+                    else {
                         this.image_list_index = 0;
                     }
                 }
@@ -222,12 +237,54 @@ class MarkUpStore {
             y: y
         });
     }
+    addRect() {
+        if (Math.abs(this.rect_shape_w) < 8 / this.currentScale && Math.abs(this.rect_shape_h) < 8 / this.currentScale) return;
+        
+        this.rect_list.push({
+            mask_type: 0,
+            canvasWidth: this.canvasWidth,
+            canvasHeight: this.canvasHeight,
+            class_id: this.class_id,
+            class_color: this.class_color,
+            class_name: this.class_name,
+            points: [
+                {
+                    id: 0,
+                    x: this.rect_pos_x,
+                    y: this.rect_pos_y,
+                },
+                {
+                    id: 1,
+                    x: this.rect_pos_x + this.rect_shape_w,
+                    y: this.rect_pos_y,
+                },
+                {
+                    id: 2,
+                    x: this.rect_pos_x + this.rect_shape_w,
+                    y: this.rect_pos_y + this.rect_shape_h,
+                },
+                {
+                    id: 3,
+                    x: this.rect_pos_x,
+                    y: this.rect_pos_y + this.rect_shape_h,
+                }
+            ]
+        })
+    }
 
 
     clearPoligonPoints() {
         // Очищает список всех точек полигона
         this.poligon_points = [];
+
+        // Очищает все параметры прямоугольника
+        this.rect_pos_x = 0;
+        this.rect_pos_y = 0;
+        this.rect_shape_w = 0;
+        this.rect_shape_h = 0;
+        this.rect_change = false;
     }
+
     clearRectList() {
         // Очищает список всех точек полигона
         this.rect_list = [];

@@ -31,10 +31,17 @@ function MarkUpPage() {
 
         mouse_pos_x = relativeX;
         mouse_pos_y = relativeY;
+        
+        if(markUpStore.rect_change && inBox()){
+            markUpStore.rect_shape_w = mouse_pos_x - markUpStore.rect_pos_x;
+            markUpStore.rect_shape_h = mouse_pos_y - markUpStore.rect_pos_y;
+        }
 
         drawCanvas();
     };
 
+
+    
     function handleMouseButtonPressed(event) {
 
         // Нажата левая кнопка мыши
@@ -43,16 +50,24 @@ function MarkUpPage() {
             // Курсор мыши должен находиться внутри фотографии
             if (inBox() && !markUpStore.stateShiftPressed) {
                 if (mouse_pos_x == -1 || mouse_pos_y == -1) return;
-                if (markUpStore.poligon_points.length == 0) {
-                    // markUpStore.initNewPoligon(
-                    // 
-                    // );
-                    // TODO: Надо добавить
+
+                if (markUpStore.mask_type == 0) {
+                    if(!markUpStore.rect_change){
+                        markUpStore.rect_change=true;
+                        markUpStore.rect_pos_x = mouse_pos_x;
+                        markUpStore.rect_pos_y = mouse_pos_y;
+                    }
+                    else {
+                        markUpStore.addRect();
+                        markUpStore.rect_change=false;
+                    }
                 }
-                markUpStore.addPoligonPoint(
-                    (mouse_pos_x - currentPositionOffsetX) / markUpStore.currentScale,
-                    (mouse_pos_y - currentPositionOffsetY) / markUpStore.currentScale
-                );
+                else {
+                    markUpStore.addPoligonPoint(
+                        (mouse_pos_x - currentPositionOffsetX) / markUpStore.currentScale,
+                        (mouse_pos_y - currentPositionOffsetY) / markUpStore.currentScale
+                    );
+                }
             }
         }
     }
@@ -96,24 +111,42 @@ function MarkUpPage() {
             }
 
             function drawNewPoligon(context) {
-                const path1 = new Path2D();
-                context.strokeStyle = markUpStore.class_color;
-                markUpStore.poligon_points.map((point, index) => {
-                    if (index == 0) {
-                        path1.moveTo(point.x * markUpStore.currentScale + currentPositionOffsetX, point.y * markUpStore.currentScale + currentPositionOffsetY);
-                    }
-                    path1.lineTo(point.x * markUpStore.currentScale + currentPositionOffsetX, point.y * markUpStore.currentScale + currentPositionOffsetY);
-                    path1.moveTo(point.x * markUpStore.currentScale + currentPositionOffsetX, point.y * markUpStore.currentScale + currentPositionOffsetY);
-                    context.fillRect(point.x * markUpStore.currentScale + currentPositionOffsetX - 3, point.y * markUpStore.currentScale + currentPositionOffsetY - 3, 6, 6);
-                })
-                if (mouse_pos_x > 0 || mouse_pos_y > 0) {
-                    path1.lineTo(mouse_pos_x, mouse_pos_y);
-                    path1.moveTo(mouse_pos_x, mouse_pos_y);
-                    context.fillRect(mouse_pos_x - 3, mouse_pos_y - 3, 6, 6);
+                if (markUpStore.mask_type == 0) {
+                    const path1 = new Path2D();
+                    context.strokeStyle = markUpStore.class_color;
+                    path1.rect(markUpStore.rect_pos_x, markUpStore.rect_pos_y, markUpStore.rect_shape_w, markUpStore.rect_shape_h)
+                    path1.closePath();
+                    context.stroke(path1);
+
+                    context.strokeStyle = "#000000";
+                    context.fillRect(markUpStore.rect_pos_x - 3, markUpStore.rect_pos_y - 3, 6, 6);
+                    context.fillRect(markUpStore.rect_pos_x + markUpStore.rect_shape_w - 3, markUpStore.rect_pos_y + markUpStore.rect_shape_h - 3, 6, 6);
+                    context.fillRect(markUpStore.rect_pos_x - 3, markUpStore.rect_pos_y + markUpStore.rect_shape_h - 3, 6, 6);
+                    context.fillRect(markUpStore.rect_pos_x + markUpStore.rect_shape_w - 3, markUpStore.rect_pos_y - 3, 6, 6);
+                    context.strokeStyle = markUpStore.class_color;
                 }
-                path1.closePath();
-                context.stroke(path1);
+                else {
+                    const path1 = new Path2D();
+                    context.strokeStyle = markUpStore.class_color;
+                    markUpStore.poligon_points.map((point, index) => {
+                        if (index == 0) {
+                            path1.moveTo(point.x * markUpStore.currentScale + currentPositionOffsetX, point.y * markUpStore.currentScale + currentPositionOffsetY);
+                        }
+                        path1.lineTo(point.x * markUpStore.currentScale + currentPositionOffsetX, point.y * markUpStore.currentScale + currentPositionOffsetY);
+                        path1.moveTo(point.x * markUpStore.currentScale + currentPositionOffsetX, point.y * markUpStore.currentScale + currentPositionOffsetY);
+                        context.fillRect(point.x * markUpStore.currentScale + currentPositionOffsetX - 3, point.y * markUpStore.currentScale + currentPositionOffsetY - 3, 6, 6);
+                    })
+                    if (mouse_pos_x > 0 || mouse_pos_y > 0) {
+                        path1.lineTo(mouse_pos_x, mouse_pos_y);
+                        path1.moveTo(mouse_pos_x, mouse_pos_y);
+                        context.fillRect(mouse_pos_x - 3, mouse_pos_y - 3, 6, 6);
+                    }
+                    path1.closePath();
+                    context.stroke(path1);
+                }
             }
+
+
 
             function drawAllPoligons(context) {
                 markUpStore.rect_list.map((item) => {
@@ -174,6 +207,7 @@ function MarkUpPage() {
 
     function handleDoubleRightClick(event) {
         markUpStore.clearPoligonPoints();
+
         // Ваша логика обработки двойного клика
     }
 
@@ -193,6 +227,9 @@ function MarkUpPage() {
 
 
     useEffect(() => {
+        markUpStore.clearRectList();
+        markUpStore.clearPoligonPoints();
+        
         markUpStore.image_id = JSON.parse(localStorage.getItem("working-field-image-id"));
         markUpStore.list_of_ids_images = JSON.parse(localStorage.getItem("list_of_ids_images"));
         markUpStore.project_id = JSON.parse(localStorage.getItem("last_project_id"));
@@ -334,8 +371,8 @@ function MarkUpPage() {
                                 setEdit={() => { }}
                                 setStateEditing={(flag) => {
                                 }}
-                                setMaskType={() => {
-
+                                setMaskType={(type) => {
+                                    markUpStore.setMaskType(type);
                                 }}
                                 onLeftButtonClicked={() => {
                                     throttledLeftButtonClicked();
