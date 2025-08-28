@@ -112,6 +112,7 @@ function MarkUpPage() {
 
             function drawNewPoligon(context) {
                 if (markUpStore.mask_type == 0) {
+                    if(markUpStore.rect_pos_x == 0 || markUpStore.rect_pos_y == 0) return;
                     const path1 = new Path2D();
                     context.strokeStyle = markUpStore.class_color;
                     path1.rect(markUpStore.rect_pos_x, markUpStore.rect_pos_y, markUpStore.rect_shape_w, markUpStore.rect_shape_h)
@@ -229,7 +230,7 @@ function MarkUpPage() {
     useEffect(() => {
         markUpStore.clearRectList();
         markUpStore.clearPoligonPoints();
-        
+
         markUpStore.image_id = JSON.parse(localStorage.getItem("working-field-image-id"));
         markUpStore.list_of_ids_images = JSON.parse(localStorage.getItem("list_of_ids_images"));
         markUpStore.project_id = JSON.parse(localStorage.getItem("last_project_id"));
