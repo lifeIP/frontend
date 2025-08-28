@@ -31,17 +31,17 @@ function MarkUpPage() {
 
         mouse_pos_x = relativeX;
         mouse_pos_y = relativeY;
-        
-        if(markUpStore.rect_change && inBox()){
+
+        if (markUpStore.rect_change && inBox()) {
             markUpStore.rect_shape_w = mouse_pos_x - markUpStore.rect_pos_x;
             markUpStore.rect_shape_h = mouse_pos_y - markUpStore.rect_pos_y;
         }
 
-        drawCanvas();
+        // drawCanvas();
     };
 
 
-    
+
     function handleMouseButtonPressed(event) {
 
         // Нажата левая кнопка мыши
@@ -52,14 +52,14 @@ function MarkUpPage() {
                 if (mouse_pos_x == -1 || mouse_pos_y == -1) return;
 
                 if (markUpStore.mask_type == 0) {
-                    if(!markUpStore.rect_change){
-                        markUpStore.rect_change=true;
+                    if (!markUpStore.rect_change) {
+                        markUpStore.rect_change = true;
                         markUpStore.rect_pos_x = mouse_pos_x;
                         markUpStore.rect_pos_y = mouse_pos_y;
                     }
                     else {
-                        markUpStore.addRect();
-                        markUpStore.rect_change=false;
+                        markUpStore.addRect(currentPositionOffsetX, currentPositionOffsetY);
+                        markUpStore.rect_change = false;
                     }
                 }
                 else {
@@ -91,10 +91,10 @@ function MarkUpPage() {
             context.lineWidth = 1.8;
 
 
-            if (!markUpStore.stateShiftPressed) drawCordinateRuler(context);
+
             drawNewPoligon(context);
             drawAllPoligons(context);
-
+            if (!markUpStore.stateShiftPressed) drawCordinateRuler(context);
 
             // Рисование линий для более удобной навигации по фотографии(крестик)
             function drawCordinateRuler(context) {
@@ -112,7 +112,7 @@ function MarkUpPage() {
 
             function drawNewPoligon(context) {
                 if (markUpStore.mask_type == 0) {
-                    if(markUpStore.rect_pos_x == 0 || markUpStore.rect_pos_y == 0) return;
+                    if (markUpStore.rect_pos_x == 0 || markUpStore.rect_pos_y == 0) return;
                     const path1 = new Path2D();
                     context.strokeStyle = markUpStore.class_color;
                     path1.rect(markUpStore.rect_pos_x, markUpStore.rect_pos_y, markUpStore.rect_shape_w, markUpStore.rect_shape_h)
@@ -150,6 +150,7 @@ function MarkUpPage() {
 
 
             function drawAllPoligons(context) {
+
                 markUpStore.rect_list.map((item) => {
                     const path1 = new Path2D();
                     context.strokeStyle = item.class_color;
@@ -244,8 +245,14 @@ function MarkUpPage() {
     }, []);
 
     useEffect(() => {
-        drawCanvas();
-    });
+        const intervalId = setInterval(() => {
+            drawCanvas();
+        }, 8); // Повторение каждые 8 мс
+
+        return () => {
+            clearInterval(intervalId); // Очистка интервала при размонтировании компонента
+        };
+    }, [currentPositionOffsetX, currentPositionOffsetY]);
 
     useEffect(() => {
         if (resizedFlag) {
@@ -441,6 +448,12 @@ function MarkUpPage() {
                                     component="img"
                                     src={markUpStore.image}
                                     alt="Фотография"
+                                    onLoad={(e) => {
+                                        console.log(e, e.target.x, e.target.y);
+                                        markUpStore.setCanvasParam(e.target.width, e.target.height);
+                                        markUpStore.setCurrentPositionOffset(e.target.offsetLeft, e.target.offsetTop)
+                                        markUpStore.loadMaskFromServer();
+                                    }}
                                     sx={{
                                         width: '100%',   // Ширина фотографии — 100% ширины контейнера
                                         maxHeight: '100%',

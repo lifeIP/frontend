@@ -8,6 +8,9 @@ class MarkUpStore {
 
     stateShiftPressed = false;
     currentScale = 1.0;
+    currentPositionOffsetX = 0;
+    currentPositionOffsetY = 0;
+
 
     // Списковые параметры.
     rect_list = [];
@@ -51,6 +54,68 @@ class MarkUpStore {
 
     constructor() {
         makeAutoObservable(this); // Преобразуем объект в Observable
+    }
+
+    setCurrentPositionOffset(x, y){
+        this.currentPositionOffsetX = x;
+        this.currentPositionOffsetY = y;
+    }
+
+    setCanvasParam(w, h) {
+        this.canvasHeight = h;
+        this.canvasWidth = w;
+    }
+
+    loadMaskFromServer() {
+        const findByClassId = (arr, targetClassId) => {
+            // Поиск первого совпадающего элемента по полю class_id
+            const foundItem = arr.find(item => item.id === targetClassId);
+            return foundItem || null; // вернем найденный элемент или null, если ничего не найдено
+        };
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization")
+        axios.get(`${settings.server.addr}/get_mask_on_image/${this.image_id}`)
+            .then(res => {
+                if (res.data.forms.length === 0) localStorage.setItem("now_is_last_list", true)
+                res.data.forms.map((item) => {
+
+                    let finded_item = findByClassId(this.classes_list, item.class_id);
+                    let new_poligon = {...item};
+                    
+                    let multiplier_w = 1;
+                    let multiplier_h = 1;
+                    if (this.canvasWidth !== item.canvasWidth) {
+                        multiplier_w = (item.canvasWidth / this.canvasWidth);
+                    }
+                    else {
+                        multiplier_w = 1;
+                    }
+                    if (this.canvasHeight !== item.canvasHeight) {
+                        multiplier_h = (item.canvasHeight / this.canvasHeight);
+                    }
+                    else {
+                        multiplier_h = 1;
+                    }
+                    let points = [];
+                    
+                    new_poligon.points.map((point)=>{
+                        points.push({
+                            id: point.id,
+                            x: point.x/multiplier_w + this.currentPositionOffsetX,
+                            y: point.y/multiplier_h + this.currentPositionOffsetY,
+                        });
+                    });
+                    new_poligon.points = points;
+                    this.rect_list.push({
+                        ...finded_item,
+                        ...new_poligon,
+                    })
+                })
+                // localStorage.setItem('rect_list', JSON.stringify(rect_list));
+                // localStorage.setItem('poligon_points_list', JSON.stringify(poligon_points));
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }
 
     setMaskType(type) {
@@ -237,9 +302,9 @@ class MarkUpStore {
             y: y
         });
     }
-    addRect() {
+    addRect(currentPositionOffsetX, currentPositionOffsetY) {
         if (Math.abs(this.rect_shape_w) < 8 / this.currentScale && Math.abs(this.rect_shape_h) < 8 / this.currentScale) return;
-        
+
         this.rect_list.push({
             mask_type: 0,
             canvasWidth: this.canvasWidth,
@@ -250,26 +315,27 @@ class MarkUpStore {
             points: [
                 {
                     id: 0,
-                    x: this.rect_pos_x,
-                    y: this.rect_pos_y,
+                    x: (this.rect_pos_x - currentPositionOffsetX) / this.currentScale,
+                    y: (this.rect_pos_y - currentPositionOffsetY) / this.currentScale,
                 },
                 {
                     id: 1,
-                    x: this.rect_pos_x + this.rect_shape_w,
-                    y: this.rect_pos_y,
+                    x: ((this.rect_pos_x + this.rect_shape_w) - currentPositionOffsetX) / this.currentScale,
+                    y: (this.rect_pos_y - currentPositionOffsetY) / this.currentScale,
                 },
                 {
                     id: 2,
-                    x: this.rect_pos_x + this.rect_shape_w,
-                    y: this.rect_pos_y + this.rect_shape_h,
+                    x: ((this.rect_pos_x + this.rect_shape_w) - currentPositionOffsetX) / this.currentScale,
+                    y: ((this.rect_pos_y + this.rect_shape_h) - currentPositionOffsetY) / this.currentScale,
                 },
                 {
                     id: 3,
-                    x: this.rect_pos_x,
-                    y: this.rect_pos_y + this.rect_shape_h,
+                    x: (this.rect_pos_x - currentPositionOffsetX) / this.currentScale,
+                    y: ((this.rect_pos_y + this.rect_shape_h) - currentPositionOffsetY) / this.currentScale,
                 }
             ]
         })
+        this.clearPoligonPoints();
     }
 
 
